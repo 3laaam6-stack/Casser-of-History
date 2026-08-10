@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caeser of History – إدارة المجموعات</title>
+  <!-- أيقونة للتطبيق -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f1f4f8; }
+    .app-container { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 240px; background: #2c3e50; color: #fff; padding: 20px;
+    }
+    .sidebar h2 { font-size: 22px; border-bottom: 1px solid #4a627a; padding-bottom: 12px; margin-bottom: 24px; }
+    .sidebar ul { list-style: none; }
+    .sidebar button {
+      display: block; width: 100%; background: none; border: none; color: #fff; padding: 12px 10px;
+      text-align: right; font-size: 16px; cursor: pointer; border-radius: 6px; margin-bottom: 4px;
+    }
+    .sidebar button:hover { background: #1a252f; }
+    .content { flex: 1; padding: 30px; background: #fff; margin: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow-y: auto; }
+
+    form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    form input, form select, form button {
+      padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px;
+    }
+    form button { background: #2980b9; color: #fff; border: none; cursor: pointer; font-weight: bold; }
+    form button:hover { background: #1c6ea4; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #e0e0e0; padding: 10px; text-align: center; }
+    th { background: #f8f9fa; font-weight: bold; }
+    tr:nth-child(even) { background: #fcfcfc; }
+    td button { padding: 4px 10px; margin: 0 2px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+    .edit-btn { background: #f39c12; color: #fff; }
+    .delete-btn { background: #e74c3c; color: #fff; }
+
+    .report-card {
+      background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+      <h2>📜 Caeser of History</h2>
+      <ul>
+        <li><button onclick="navigateTo('students')">👨‍🎓 الطلاب</button></li>
+        <li><button onclick="navigateTo('groups')">👥 المجموعات</button></li>
+        <li><button onclick="navigateTo('attendance')">📋 الحضور</button></li>
+        <li><button onclick="navigateTo('payments')">💰 المدفوعات</button></li>
+        <li><button onclick="navigateTo('exams')">📝 الامتحانات</button></li>
+        <li><button onclick="navigateTo('reports')">📊 التقارير</button></li>
+      </ul>
+    </nav>
+    <main id="main-content" class="content"></main>
+  </div>
+
+  <script>
+    // ==================== DATA LAYER ====================
+    const KEYS = {
+      students: 'caeser_students',
+      groups: 'caeser_groups',
+      attendance: 'caeser_attendance',
+      payments: 'caeser_payments',
+      exams: 'caeser_exams'
+    };
+
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+
+    function getData(key) {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : [];
+    }
+    function saveData(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function getStudents() { return getData(KEYS.students); }
+    function saveStudents(students) { saveData(KEYS.students, students); }
+    function getStudentById(id) { return getStudents().find(s => s.id === id); }
+
+    function getGroups() { return getData(KEYS.groups); }
+    function saveGroups(groups) { saveData(KEYS.groups, groups); }
+    function getGroupById(id) { return getGroups().find(g => g.id === id); }
+
+    function getAttendance() { return getData(KEYS.attendance); }
+    function saveAttendance(records) { saveData(KEYS.attendance, records); }
+
+    function getPayments() { return getData(KEYS.payments); }
+    function savePayments(payments) { saveData(KEYS.payments, payments); }
+
+    function getExams() { return getData(KEYS.exams); }
+    function saveExams(exams) { saveData(KEYS.exams, exams); }
+
+    // ==================== NAVIGATION ====================
+    function navigateTo(pageName) {
+      const main = document.getElementById('main-content');
+      main.innerHTML = '<p style="text-align:center;padding:40px;">⏳ جاري التحميل...</p>';
+      const loadFn = window[`load${capitalize(pageName)}`];
+      if (typeof loadFn === 'function') {
+        loadFn();
+      } else {
+        main.innerHTML = '<p>عذراً، الصفحة غير موجودة.</p>';
+      }
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => navigateTo('students'));
+
+    // ==================== PAGES ====================
+    // ---- الطلاب ----
+    function loadStudents() {
+      const main = document.getElementById('main-content');
+      const students = getStudents();
+      const groups = getGroups();
+      const groupOptions = groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+
+      let html = `
+        <h2>👨‍🎓 الطلاب</h2>
+        <form id="student-form">
+          <input type="text" id="student-name" placeholder="اسم الطالب" required>
+          <input type="tel" id="student-phone" placeholder="رقم الهاتف" required>
+          <select id="student-group">
+            <option value="">-- اختر مجموعة --</option>
+            ${groupOptions}
+          </select>
+          <button type="submit">➕ إضافة طالب</button>
+        </form>
+        <table>
+          <thead><tr><th>الاسم</th><th>الهاتف</th><th>المجموعة</th><th>إجراءات</th></tr></thead>
+          <tbody>`;
+
+      if (students.length === 0) {
+        html += '<tr><td colspan="4">لا يوجد طلاب.</td></tr>';
+      } else {
+        students.forEach(s => {
+          const group = getGroupById(s.groupId);
+          html += `
+            <tr>
+              <td>${s.name}</td>
+              <td><a href="tel:${s.phone}">${s.phone}</a></td>
+              <td>${group ? group.name : '—'}</td>
+              <td>
+                <button class="edit-btn" onclick="editStudent('${s.id}')">✏️</button>
+                <button class="delete-btn" onclick="deleteStudent('${s.id}')">🗑️</button>
+              </td>
+            </tr>`;
+        });
+      }
+      html += `</tbody></table>`;
+      main.innerHTML = html;
+
+      document.getElementById('student-form').onsubmit = (e) => {
+        e.preventDefault();
+        const name = document.getElementById('student-name').value.trim();
+        const phone = document.getElementById('student-phone').value.trim();
+        const groupId = document.getElementById('student-group').value;
+        if (!name || !phone) return alert('الاسم والهاتف مطلوبان');
+        const newStudent = { id: generateId(), name, phone, groupId: groupId || null };
+        const all = getStudents();
+        all.push(newStudent);
+        saveStudents(all);
+        loadStudents();
+      };
+    }
+
+    function editStudent(id) {
+      const student = getStudentById(id);
+      if (!student) return;
+      const name = prompt('الاسم:', student.name);
+      if (name === null) return;
+      const phone = prompt('الهاتف:', student.phone);
+      if (phone === null) return;
+      const groups = getGroups();
+      const groupList = groups.map((g, i) => `${i+1}- ${g.name}`).join('\n');
+      const groupChoice = prompt(`اختر رقم المجموعة من:\n${groupList}\n(أو اتركه فارغًا)`, student.groupId ? groups.findIndex(g=>g.id===student.groupId)+1 : '');
+      let newGroupId = null;
+      if (groupChoice && !isNaN(groupChoice) && groups[groupChoice-1]) {
+        newGroupId = groups[groupChoice-1].id;
+      }
+      const students = getStudents();
+      const idx = students.findIndex(s => s.id === id);
+      students[idx] = { ...students[idx], name, phone, groupId: newGroupId || null };
+      saveStudents(students);
+      loadStudents();
+    }
+
+    function deleteStudent(id) {
+      if (!confirm('حذف الطالب؟')) return;
+      let students = getStudents();
+      students = students.filter(s => s.id !== id);
+      saveStudents(students);
+      loadStudents();
+    }
+
+    // ---- المجموعات ----
+    function loadGroups() {
+      const main = document.getElementById('main-content');
+      const groups = getGroups();
+
+      let html = `
+        <h2>👥 المجموعات</h2>
+        <form id="group-form">
+          <input type="text" id="group-name" placeholder="اسم المجموعة" required>
+          <input type="text" id="group-schedule" placeholder="المواعيد (مثال: السبت 5 عصرًا)">
+          <button type="submit">➕ إضافة مجموعة</button>
+        </form>
+        <table>
+          <thead><tr><th>المجموعة</th><th>المواعيد</th><th>عدد الطلاب</th><th>إجراءات</th></tr></thead>
+          <tbody>`;
+
+      groups.forEach(g => {
+        const count = getStudents().filter(s => s.groupId === g.id).length;
+        html += `
+          <tr>
+            <td>${g.name}</td>
+            <td>${g.schedule || '—'}</td>
+            <td>${count}</td>
+            <td>
+              <button class="edit-btn" onclick="editGroup('${g.id}')">✏️</button>
+              <button class="delete-btn" onclick="deleteGroup('${g.id}')">🗑️</button>
+            </td>
+          </tr>`;
+      });
+      if (groups.length === 0) html += '<tr><td colspan="4">لا توجد مجموعات.</td></tr>';
+      html += '</tbody></table>';
+      main.innerHTML = html;
+
+      document.getElementById('group-form').onsubmit = (e) => {
+        e.preventDefault();
+        const name = document.getElementById('group-name').value.trim();
+        const schedule = document.getElementById('group-schedule').value.trim();
+        if (!name) return;
+        const newGroup = { id: generateId(), name, schedule };
+        const all = getGroups();
+        all.push(newGroup);
+        saveGroups(all);
+        loadGroups();
+      };
+    }
+
+    function editGroup(id) {
+      const group = getGroupById(id);
+      if (!group) return;
+      const name = prompt('اسم المجموعة:', group.name);
+      if (name === null) return;
+      const schedule = prompt('المواعيد:', group.schedule || '');
+      const groups = getGroups();
+      const idx = groups.findIndex(g => g.id === id);
+      groups[idx] = { ...groups[idx], name, schedule };
+      saveGroups(groups);
+      loadGroups();
+    }
+
+    function deleteGroup(id) {
+      if (!confirm('حذف المجموعة؟ قد يترك طلاباً بدون مجموعة.')) return;
+      let groups = getGroups();
+      groups = groups.filter(g => g.id !== id);
+      saveGroups(groups);
+      const students = getStudents().map(s => s.groupId === id ? {...s, groupId: null} : s);
+      saveStudents(students);
+      loadGroups();
+    }
+
+    // ---- الحضور ----
+    function loadAttendance() {
+      const main = document.getElementById('main-content');
+      const groups = getGroups();
+      const groupOptions = groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+
+      let html = `
+        <h2>📋 الحضور والغياب</h2>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+          <select id="att-group"><option value="">-- اختر مجموعة --</option>${groupOptions}</select>
+          <input type="date" id="att-date">
+          <button id="load-att-btn">📅 عرض الطلاب</button>
+        </div>
+        <div id="attendance-form"></div>
+        <h3 style="margin-top:30px;">سجل سابق</h3>
+        <div id="past-attendance"></div>
+      `;
+      main.innerHTML = html;
+
+      document.getElementById('load-att-btn').onclick = () => {
+        const groupId = document.getElementById('att-group').value;
+        const date = document.getElementById('att-date').value;
+        if (!groupId || !date) return alert('اختر المجموعة والتاريخ');
+
+        const students = getStudents().filter(s => s.groupId === groupId);
+        if (students.length === 0) {
+          document.getElementById('attendance-form').innerHTML = '<p>لا يوجد طلاب في هذه المجموعة.</p>';
+          return;
+        }
+
+        const existing = getAttendance().filter(a => a.groupId === groupId && a.date === date);
+        const statusMap = {};
+        existing.forEach(a => { statusMap[a.studentId] = a.status; });
+
+        let formHtml = '<form id="save-attendance"><table><thead><tr><th>الطالب</th><th>حاضر</th><th>غائب</th></tr></thead><tbody>';
+        students.forEach(s => {
+          const checkedPresent = (statusMap[s.id] !== 'absent') ? 'checked' : '';
+          const checkedAbsent = (statusMap[s.id] === 'absent') ? 'checked' : '';
+          formHtml += `
+            <tr>
+              <td>${s.name}</td>
+              <td><input type="radio" name="att-${s.id}" value="present" ${checkedPresent}></td>
+              <td><input type="radio" name="att-${s.id}" value="absent" ${checkedAbsent}></td>
+            </tr>`;
+        });
+        formHtml += '</tbody></table><button type="submit" style="margin-top:10px;">💾 حفظ الحضور</button></form>';
+        document.getElementById('attendance-form').innerHTML = formHtml;
+
+        document.getElementById('save-attendance').onsubmit = function(e) {
+          e.preventDefault();
+          const newRecords = [];
+          students.forEach(s => {
+            const radio = document.querySelector(`input[name="att-${s.id}"]:checked`);
+            if (radio) {
+              newRecords.push({
+                id: generateId(),
+                studentId: s.id,
+                groupId,
+                date,
+                status: radio.value
+              });
+            }
+          });
+          let allAttendance = getAttendance().filter(a => !(a.groupId === groupId && a.date === date));
+          allAttendance = allAttendance.concat(newRecords);
+          saveAttendance(allAttendance);
+          alert('تم حفظ الحضور!');
+          loadAttendance();
+        };
+      };
+
+      const allAttendance = getAttendance();
+      if (allAttendance.length === 0) {
+        document.getElementById('past-attendance').innerHTML = '<p>لا يوجد سجل حضور بعد.</p>';
+      } else {
+        let htmlPast = '<table><thead><tr><th>التاريخ</th><th>المجموعة</th><th>عدد الحضور</th><th>الغياب</th></tr></thead><tbody>';
+        const grouped = {};
+        allAttendance.forEach(a => {
+          const key = a.date + a.groupId;
+          if (!grouped[key]) grouped[key] = { date: a.date, groupId: a.groupId, present: 0, absent: 0 };
+          if (a.status === 'present') grouped[key].present++;
+          else grouped[key].absent++;
+        });
+        Object.values(grouped).forEach(rec => {
+          const group = getGroupById(rec.groupId);
+          htmlPast += `<tr><td>${rec.date}</td><td>${group ? group.name : '—'}</td><td>${rec.present}</td><td>${rec.absent}</td></tr>`;
+        });
+        htmlPast += '</tbody></table>';
+        document.getElementById('past-attendance').innerHTML = htmlPast;
+      }
+    }
+
+    // ---- المدفوعات ----
+    function loadPayments() {
+      const main = document.getElementById('main-content');
+      const students = getStudents();
+      const studentOptions = students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      const payments = getPayments();
+
+      let html = `
+        <h2>💰 المدفوعات</h2>
+        <form id="payment-form">
+          <select id="pay-student" required><option value="">-- اختر طالب --</option>${studentOptions}</select>
+          <input type="number" id="pay-amount" placeholder="المبلغ" required>
+          <input type="date" id="pay-date" required>
+          <input type="text" id="pay-notes" placeholder="ملاحظات (اختياري)">
+          <button type="submit">➕ تسجيل دفعة</button>
+        </form>
+        <table>
+          <thead><tr><th>الطالب</th><th>المبلغ</th><th>التاريخ</th><th>ملاحظات</th><th>إجراءات</th></tr></thead>
+          <tbody>`;
+
+      payments.forEach(p => {
+        const student = getStudentById(p.studentId);
+        html += `
+          <tr>
+            <td>${student ? student.name : '—'}</td>
+            <td>${p.amount} ج.م</td>
+            <td>${p.date}</td>
+            <td>${p.notes || ''}</td>
+            <td><button class="delete-btn" onclick="deletePayment('${p.id}')">🗑️</button></td>
+          </tr>`;
+      });
+      if (payments.length === 0) html += '<tr><td colspan="5">لا توجد مدفوعات.</td></tr>';
+      html += '</tbody></table>';
+      main.innerHTML = html;
+
+      document.getElementById('payment-form').onsubmit = (e) => {
+        e.preventDefault();
+        const studentId = document.getElementById('pay-student').value;
+        const amount = parseFloat(document.getElementById('pay-amount').value);
+        const date = document.getElementById('pay-date').value;
+        const notes = document.getElementById('pay-notes').value.trim();
+        if (!studentId || isNaN(amount) || !date) return alert('البيانات ناقصة');
+        const newPayment = { id: generateId(), studentId, amount, date, notes };
+        const all = getPayments();
+        all.push(newPayment);
+        savePayments(all);
+        loadPayments();
+      };
+    }
+
+    function deletePayment(id) {
+      if (!confirm('حذف الدفعة؟')) return;
+      let payments = getPayments().filter(p => p.id !== id);
+      savePayments(payments);
+      loadPayments();
+    }
+
+    // ---- الامتحانات ----
+    function loadExams() {
+      const main = document.getElementById('main-content');
+      const students = getStudents();
+      const studentOptions = students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      const exams = getExams();
+
+      let html = `
+        <h2>📝 الامتحانات</h2>
+        <form id="exam-form">
+          <select id="exam-student" required><option value="">-- اختر طالب --</option>${studentOptions}</select>
+          <input type="text" id="exam-name" placeholder="اسم الامتحان" required>
+          <input type="number" id="exam-score" placeholder="الدرجة" required min="0" max="100">
+          <input type="date" id="exam-date" required>
+          <button type="submit">➕ تسجيل امتحان</button>
+        </form>
+        <table>
+          <thead><tr><th>الطالب</th><th>الامتحان</th><th>الدرجة</th><th>التاريخ</th><th>إجراءات</th></tr></thead>
+          <tbody>`;
+
+      exams.forEach(ex => {
+        const student = getStudentById(ex.studentId);
+        html += `
+          <tr>
+            <td>${student ? student.name : '—'}</td>
+            <td>${ex.examName}</td>
+            <td>${ex.score}</td>
+            <td>${ex.date}</td>
+            <td><button class="delete-btn" onclick="deleteExam('${ex.id}')">🗑️</button></td>
+          </tr>`;
+      });
+      if (exams.length === 0) html += '<tr><td colspan="5">لا توجد امتحانات.</td></tr>';
+      html += '</tbody></table>';
+      main.innerHTML = html;
+
+      document.getElementById('exam-form').onsubmit = (e) => {
+        e.preventDefault();
+        const studentId = document.getElementById('exam-student').value;
+        const examName = document.getElementById('exam-name').value.trim();
+        const score = parseInt(document.getElementById('exam-score').value);
+        const date = document.getElementById('exam-date').value;
+        if (!studentId || !examName || isNaN(score) || !date) return;
+        const newExam = { id: generateId(), studentId, examName, score, date };
+        const all = getExams();
+        all.push(newExam);
+        saveExams(all);
+        loadExams();
+      };
+    }
+
+    function deleteExam(id) {
+      if (!confirm('حذف الامتحان؟')) return;
+      let exams = getExams().filter(e => e.id !== id);
+      saveExams(exams);
+      loadExams();
+    }
+
+    // ---- التقارير ----
+    function loadReports() {
+      const main = document.getElementById('main-content');
+      const students = getStudents();
+      const attendance = getAttendance();
+      const payments = getPayments();
+      const exams = getExams();
+      const groups = getGroups();
+
+      let reportHtml = `<h2>📊 التقارير</h2>`;
+      
+      reportHtml += `<div class="report-card"><h3>📋 ملخص الطلاب</h3><table>
+        <thead><tr><th>الطالب</th><th>المجموعة</th><th>نسبة الحضور</th><th>إجمالي المدفوعات</th><th>متوسط الدرجات</th></tr></thead><tbody>`;
+
+      students.forEach(s => {
+        const group = getGroupById(s.groupId);
+        const studentAtt = attendance.filter(a => a.studentId === s.id);
+        const totalAtt = studentAtt.length;
+        const presentAtt = studentAtt.filter(a => a.status === 'present').length;
+        const attPercent = totalAtt ? Math.round((presentAtt / totalAtt) * 100) : 0;
+        const studentPayments = payments.filter(p => p.studentId === s.id);
+        const totalPaid = studentPayments.reduce((sum, p) => sum + p.amount, 0);
+        const studentExams = exams.filter(e => e.studentId === s.id);
+        const avgScore = studentExams.length ? (studentExams.reduce((sum, e) => sum + e.score, 0) / studentExams.length).toFixed(1) : 0;
+
+        reportHtml += `<tr>
+          <td>${s.name}</td>
+          <td>${group ? group.name : '—'}</td>
+          <td>${attPercent}%</td>
+          <td>${totalPaid} ج.م</td>
+          <td>${avgScore}</td>
+        </tr>`;
+      });
+      reportHtml += `</tbody></table></div>`;
+
+      reportHtml += `<div class="report-card"><h3>👥 ملخص المجموعات</h3><table>
+        <thead><tr><th>المجموعة</th><th>عدد الطلاب</th><th>متوسط الحضور</th></tr></thead><tbody>`;
+      groups.forEach(g => {
+        const groupStudents = students.filter(s => s.groupId === g.id);
+        if (groupStudents.length === 0) return;
+        let totalAttPercent = 0;
+        groupStudents.forEach(s => {
+          const stAtt = attendance.filter(a => a.studentId === s.id);
+          const present = stAtt.filter(a => a.status === 'present').length;
+          totalAttPercent += stAtt.length ? (present / stAtt.length)*100 : 0;
+        });
+        const avg = (totalAttPercent / groupStudents.length).toFixed(1);
+        reportHtml += `<tr><td>${g.name}</td><td>${groupStudents.length}</td><td>${avg}%</td></tr>`;
+      });
+      reportHtml += `</tbody></table></div>`;
+
+      main.innerHTML = reportHtml;
+    }
+  </script>
+</body>
+  </html>
