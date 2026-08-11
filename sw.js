@@ -1,37 +1,36 @@
-const CACHE_NAME = "caeser-of-history-v1";
-
-const FILES_TO_CACHE = [
-  "/Casser-of-History/",
-  "/Casser-of-History/index.html",
-  "/Casser-of-History/manifest.json"
+const CACHE_NAME = 'caeser-v2';
+const urlsToCache = [
+  './',
+  './Caeser.html'
 ];
 
-self.addEventListener("install", event => {
+self.addEventListener('install', function(event) {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(FILES_TO_CACHE);
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.addAll(urlsToCache);
     })
   );
-  self.skipWaiting();
 });
 
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      )
-    )
-  );
-  self.clients.claim();
-});
-
-self.addEventListener("fetch", event => {
+self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      return cachedResponse || fetch(event.request);
+    caches.match(event.request).then(function(response) {
+      if (response) return response;
+      return fetch(event.request);
+    })
+  );
+});
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.filter(function(name) {
+          return name !== CACHE_NAME;
+        }).map(function(name) {
+          return caches.delete(name);
+        })
+      );
     })
   );
 });
