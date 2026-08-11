@@ -45,17 +45,51 @@
 </head>
 <body>
   <div class="app-container">
-    <nav class="sidebar">
-      <h2>📜 Caeser of History</h2>
-      <ul>
-        <li><button onclick="navigateTo('students')">👨‍🎓 الطلاب</button></li>
-        <li><button onclick="navigateTo('groups')">👥 المجموعات</button></li>
-        <li><button onclick="navigateTo('attendance')">📋 الحضور</button></li>
-        <li><button onclick="navigateTo('payments')">💰 المدفوعات</button></li>
-        <li><button onclick="navigateTo('exams')">📝 الامتحانات</button></li>
-        <li><button onclick="navigateTo('reports')">📊 التقارير</button></li>
-      </ul>
-    </nav>
+    <div class="mobile-header">
+  <div class="app-logo">📜</div>
+  <div>
+    <h1>Caeser of History</h1>
+    <p>إدارة الطلاب والمجموعات</p>
+  </div>
+</div>
+
+<div class="dashboard-menu">
+  <button onclick="navigateTo('students')">
+    <span>👨‍🎓</span>
+    <strong>الطلاب</strong>
+    <small>إدارة الطلاب</small>
+  </button>
+
+  <button onclick="navigateTo('groups')">
+    <span>👥</span>
+    <strong>المجموعات</strong>
+    <small>إدارة المجموعات</small>
+  </button>
+
+  <button onclick="navigateTo('attendance')">
+    <span>📋</span>
+    <strong>الحضور</strong>
+    <small>تسجيل الحضور والغياب</small>
+  </button>
+
+  <button onclick="navigateTo('payments')">
+    <span>💰</span>
+    <strong>المدفوعات</strong>
+    <small>متابعة المدفوعات</small>
+  </button>
+
+  <button onclick="navigateTo('exams')">
+    <span>📝</span>
+    <strong>الامتحانات</strong>
+    <small>الدرجات والاختبارات</small>
+  </button>
+
+  <button onclick="navigateTo('reports')">
+    <span>📊</span>
+    <strong>التقارير</strong>
+    <small>الإحصائيات والتقارير</small>
+  </button>
+</div>
     <main id="main-content" class="content"></main>
   </div>
 
