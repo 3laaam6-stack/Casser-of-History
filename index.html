@@ -13,78 +13,388 @@
       --text: #1e293b;
       --text-light: #64748b;
       --border: #e2e8f0;
-      --primary: #4f46e5;
-      --primary-dark: #3730a3;
-      --shadow: 0 2px 8px rgba(0,0,0,0.06);
-      --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --shadow: 0 4px 15px rgba(0,0,0,0.06);
+      --shadow-lg: 0 15px 40px rgba(0,0,0,0.12);
+      --radius: 16px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .animate-in { animation: fadeInUp 0.5s ease-out; }
+    .animate-slide { animation: slideInLeft 0.4s ease-out; }
+    .animate-card { animation: fadeInUp 0.5s ease-out; }
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+    .stagger-5 { animation-delay: 0.5s; }
+    .stagger-6 { animation-delay: 0.6s; }
+
     .app-container { display: flex; min-height: 100vh; }
 
+    /* ========== SIDEBAR ========== */
     .sidebar {
-      width: 260px; background: linear-gradient(180deg, #1e293b, #0f172a); color: #fff;
-      padding: 20px 10px; display: flex; flex-direction: column; position: fixed;
-      right: 0; top: 0; bottom: 0; z-index: 100; box-shadow: 4px 0 25px rgba(0,0,0,0.3); overflow-y: auto;
+      width: 290px;
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      color: #fff;
+      padding: 25px 15px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 100;
+      box-shadow: 6px 0 35px rgba(0,0,0,0.35);
+      overflow-y: auto;
+      transition: all 0.3s ease;
     }
-    .sidebar .logo { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #334155; }
-    .sidebar .logo .sicon { font-size: 48px; display: block; }
-    .sidebar .logo h2 { font-size: 20px; color: #a5b4fc; margin: 6px 0; }
-    .sidebar .logo p { font-size: 11px; color: #94a3b8; }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+    .sidebar .logo {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba(255,255,255,0.08);
+      animation: float 3s ease-in-out infinite;
+    }
+    .sidebar .logo .sicon { font-size: 55px; display: block; margin-bottom: 8px; }
+    .sidebar .logo h2 { font-size: 24px; background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; margin: 6px 0; }
+    .sidebar .logo p { font-size: 13px; color: #94a3b8; letter-spacing: 0.5px; }
+
     .sidebar nav { flex: 1; }
+    .sidebar nav .nav-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #64748b;
+      letter-spacing: 1.5px;
+      padding: 0 14px;
+      margin: 18px 0 8px;
+      font-weight: 700;
+    }
     .sidebar nav button {
-      display: flex; align-items: center; gap: 10px; width: 100%; background: none;
-      border: none; color: #cbd5e1; padding: 13px 12px; font-size: 15px;
-      cursor: pointer; border-radius: 10px; margin-bottom: 2px; transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      padding: 15px 16px;
+      font-size: 17px;
+      cursor: pointer;
+      border-radius: 14px;
+      margin-bottom: 4px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
     }
-    .sidebar nav button:hover { background: rgba(255,255,255,0.1); color: #fff; }
-    .sidebar nav button.active { background: var(--primary); color: #fff; font-weight: 700; }
-    .sidebar .bottom { margin-top: auto; padding-top: 12px; border-top: 1px solid #334155; display: flex; flex-direction: column; gap: 6px; }
+    .sidebar nav button:hover {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      transform: translateX(-6px);
+    }
+    .sidebar nav button.active {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 8px 25px rgba(99,102,241,0.4);
+    }
+    .sidebar nav button.active::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #fff;
+      border-radius: 0 4px 4px 0;
+    }
+    .sidebar nav button .nav-icon { font-size: 24px; width: 36px; text-align: center; transition: transform 0.3s; }
+    .sidebar nav button:hover .nav-icon { transform: scale(1.15); }
+
+    .sidebar .bottom {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 2px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
     .sidebar .bottom button {
-      width: 100%; padding: 10px; border: none; border-radius: 8px; cursor: pointer;
-      font-weight: 600; font-size: 13px; color: #fff;
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      color: #fff;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .btn-ex { background: #10b981; }
-    .btn-im { background: #8b5cf6; }
+    .sidebar .bottom button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+    .btn-ex { background: linear-gradient(135deg, #10b981, #059669); }
+    .btn-im { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
-    .content { flex: 1; margin-right: 260px; padding: 24px; }
-    .dash-header { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; padding: 28px 24px; border-radius: 16px; margin-bottom: 22px; }
-    .dash-header h1 { font-size: 26px; margin-bottom: 4px; }
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px; }
-    .stat-card { background: var(--card); padding: 18px; border-radius: 14px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 14px; }
-    .stat-card .sicon { font-size: 36px; }
-    .stat-card .sval { font-size: 24px; font-weight: 800; }
-    .stat-card .slbl { font-size: 12px; color: var(--text-light); }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 14px; }
-    .dash-card { background: var(--card); border-radius: 14px; padding: 22px 14px; text-align: center; cursor: pointer; box-shadow: var(--shadow); transition: 0.2s; border-top: 4px solid var(--primary); }
-    .dash-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-    .dash-card .ico { font-size: 42px; display: block; margin-bottom: 8px; }
-    .dash-card .ttl { font-weight: 700; font-size: 15px; }
-    .dash-card .sub { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+    /* ========== CONTENT ========== */
+    .content {
+      flex: 1;
+      margin-right: 290px;
+      padding: 30px;
+      min-height: 100vh;
+      transition: all 0.3s ease;
+    }
 
-    .page { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
-    .page h2 { margin-bottom: 18px; font-size: 22px; }
-    .search { margin-bottom: 14px; }
-    .search input { padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; width: 250px; font-size: 14px; background: var(--card); color: var(--text); }
-    form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; background: #f8fafc; padding: 14px; border-radius: 12px; align-items: flex-end; }
-    form input, form select { padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: #fff; color: var(--text); }
-    form button { padding: 9px 16px; background: var(--primary); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; }
-    form button:hover { background: var(--primary-dark); }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th { background: #f1f5f9; padding: 12px 8px; font-weight: 700; border-bottom: 2px solid var(--primary); font-size: 14px; }
-    td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: center; font-size: 13px; }
-    .btn { padding: 6px 11px; margin: 2px; border: none; border-radius: 6px; cursor: pointer; color: #fff; font-weight: 600; font-size: 12px; }
-    .btn-edit { background: #f59e0b; } .btn-del { background: #ef4444; } .btn-view { background: #3b82f6; }
-    .btn-wa { background: #25D366; } .btn-save { background: #10b981; } .btn-back { background: #64748b; }
-    .alert { background: #fef3c7; padding: 12px; border-radius: 10px; margin: 14px 0; color: #92400e; font-weight: 600; }
-    .chart-wrap { background: var(--card); padding: 18px; border-radius: 14px; margin: 18px 0; box-shadow: var(--shadow); }
+    /* ========== DASHBOARD ========== */
+    .dash-header {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
+      color: #fff;
+      padding: 35px 30px;
+      border-radius: var(--radius);
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.6s ease-out;
+    }
+    .dash-header::after {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: -80px;
+      width: 280px;
+      height: 280px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+      animation: pulse 4s infinite;
+    }
+    .dash-header h1 { font-size: 32px; margin-bottom: 6px; position: relative; z-index: 1; font-weight: 800; }
+    .dash-header p { font-size: 16px; opacity: 0.9; position: relative; z-index: 1; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--card);
+      padding: 22px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: all 0.3s;
+      cursor: default;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .stat-card .sicon {
+      font-size: 40px;
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sicon.blue { background: #dbeafe; } .sicon.green { background: #d1fae5; }
+    .sicon.orange { background: #fef3c7; } .sicon.purple { background: #ede9fe; }
+    .stat-card .sval { font-size: 30px; font-weight: 800; }
+    .stat-card .slbl { font-size: 14px; color: var(--text-light); margin-top: 2px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 18px;
+    }
+    .dash-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px 18px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      border-top: 5px solid var(--primary);
+      position: relative;
+      overflow: hidden;
+    }
+    .dash-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+      border-top-color: #8b5cf6;
+    }
+    .dash-card:hover .ico { animation: pulse 0.6s ease-out; }
+    .dash-card .ico { font-size: 50px; display: block; margin-bottom: 12px; transition: transform 0.3s; }
+    .dash-card .ttl { font-weight: 800; font-size: 17px; margin-bottom: 4px; }
+    .dash-card .sub { font-size: 13px; color: var(--text-light); }
+
+    /* ========== PAGE STYLES ========== */
+    .page {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.5s ease-out;
+    }
+    .page h2 { margin-bottom: 22px; font-size: 26px; display: flex; align-items: center; gap: 12px; }
+    .search { margin-bottom: 18px; }
+    .search input {
+      padding: 13px 18px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      width: 280px;
+      font-size: 15px;
+      background: var(--bg);
+      color: var(--text);
+      transition: all 0.3s;
+    }
+    .search input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+      background: var(--bg);
+      padding: 18px;
+      border-radius: 14px;
+      align-items: flex-end;
+    }
+    form input, form select {
+      padding: 12px 15px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      background: #fff;
+      color: var(--text);
+      transition: all 0.3s;
+    }
+    form input:focus, form select:focus { border-color: var(--primary); outline: none; }
+    form button {
+      padding: 12px 22px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    form button:hover { transform: scale(1.04); box-shadow: 0 6px 20px rgba(99,102,241,0.3); }
+    .file-upload-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 18px;
+      background: #f1f5f9;
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-light);
+      transition: all 0.3s;
+    }
+    .file-upload-label:hover { border-color: var(--primary); color: var(--primary); }
+    input[type="file"] { display: none; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    th {
+      background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+      padding: 15px 10px;
+      font-weight: 700;
+      border-bottom: 3px solid var(--primary);
+      font-size: 15px;
+    }
+    td {
+      padding: 13px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    tr:hover td { background: #f8fafc; }
+
+    .btn {
+      padding: 7px 14px;
+      margin: 2px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+    .btn:hover { transform: scale(1.08); }
+    .btn-edit { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .btn-del { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .btn-view { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .btn-wa { background: linear-gradient(135deg, #25D366, #128C7E); }
+    .btn-save { background: linear-gradient(135deg, #10b981, #059669); }
+    .btn-back { background: linear-gradient(135deg, #64748b, #475569); }
+    .btn-download { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+    .alert {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      padding: 15px;
+      border-radius: 12px;
+      margin: 16px 0;
+      color: #92400e;
+      font-weight: 600;
+      border-right: 4px solid #f59e0b;
+    }
+    .chart-wrap {
+      background: var(--card);
+      padding: 22px;
+      border-radius: var(--radius);
+      margin: 20px 0;
+      box-shadow: var(--shadow);
+    }
     canvas { max-width: 100%; }
-    .act-bar { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+    .act-bar { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+    .file-link { color: var(--primary); text-decoration: none; font-weight: 600; }
+    .file-link:hover { text-decoration: underline; }
 
     @media (max-width: 768px) {
       .app-container { flex-direction: column; }
-      .sidebar { position: relative; width: 100%; padding: 14px; }
-      .content { margin-right: 0; padding: 14px; }
+      .sidebar { position: relative; width: 100%; padding: 18px; }
+      .content { margin-right: 0; padding: 18px; }
       .grid { grid-template-columns: repeat(2, 1fr); }
       .stats-row { grid-template-columns: repeat(2, 1fr); }
     }
@@ -94,15 +404,19 @@
 <div class="app-container">
   <!-- Sidebar -->
   <nav class="sidebar">
-    <div class="logo"><span class="sicon">📜</span><h2>Caeser of History</h2><p>إدارة المجموعات</p></div>
+    <div class="logo">
+      <span class="sicon">📜</span>
+      <h2>Caeser of History</h2>
+      <p>إدارة المجموعات التعليمية</p>
+    </div>
     <nav>
-      <button class="active" onclick="navigateTo('dashboard')"><span>🏠</span> الرئيسية</button>
-      <button onclick="navigateTo('students')"><span>👨‍🎓</span> الطلاب</button>
-      <button onclick="navigateTo('groups')"><span>👥</span> المجموعات</button>
-      <button onclick="navigateTo('attendance')"><span>📋</span> الحضور</button>
-      <button onclick="navigateTo('payments')"><span>💰</span> المدفوعات</button>
-      <button onclick="navigateTo('exams')"><span>📝</span> الامتحانات</button>
-      <button onclick="navigateTo('reports')"><span>📊</span> التقارير</button>
+      <button class="active" onclick="navigateTo('dashboard')"><span class="nav-icon">🏠</span> الرئيسية</button>
+      <button onclick="navigateTo('students')"><span class="nav-icon">👨‍🎓</span> الطلاب</button>
+      <button onclick="navigateTo('groups')"><span class="nav-icon">👥</span> المجموعات</button>
+      <button onclick="navigateTo('attendance')"><span class="nav-icon">📋</span> الحضور</button>
+      <button onclick="navigateTo('payments')"><span class="nav-icon">💰</span> المدفوعات</button>
+      <button onclick="navigateTo('exams')"><span class="nav-icon">📝</span> الامتحانات</button>
+      <button onclick="navigateTo('reports')"><span class="nav-icon">📊</span> التقارير</button>
     </nav>
     <div class="bottom">
       <button class="btn-ex" onclick="exportAllData()">💾 تصدير البيانات</button>
@@ -125,6 +439,14 @@
   const attendance = () => get('attendance'), saveAttendance = (v) => set('attendance', v);
   const payments = () => get('payments'), savePayments = (v) => set('payments', v);
   const exams = () => get('exams'), saveExams = (v) => set('exams', v);
+
+  function fileToBase64(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
+  }
 
   // ==================== EXPORT / IMPORT ====================
   function exportAllData() {
@@ -157,18 +479,8 @@
     if (fn) fn();
     document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active'));
     const buttons = document.querySelectorAll('.sidebar nav button');
-    buttons.forEach(b => {
-      const txt = b.textContent.trim();
-      if ((page === 'dashboard' && txt.includes('الرئيسية')) ||
-          (page === 'students' && txt.includes('الطلاب')) ||
-          (page === 'groups' && txt.includes('المجموعات')) ||
-          (page === 'attendance' && txt.includes('الحضور')) ||
-          (page === 'payments' && txt.includes('المدفوعات')) ||
-          (page === 'exams' && txt.includes('الامتحانات')) ||
-          (page === 'reports' && txt.includes('التقارير'))) {
-        b.classList.add('active');
-      }
-    });
+    const titles = { dashboard: 'الرئيسية', students: 'الطلاب', groups: 'المجموعات', attendance: 'الحضور', payments: 'المدفوعات', exams: 'الامتحانات', reports: 'التقارير' };
+    buttons.forEach(b => { if (b.textContent.includes(titles[page] || '')) b.classList.add('active'); });
   }
   window.addEventListener('DOMContentLoaded', () => navigateTo('dashboard'));
 
@@ -181,21 +493,21 @@
     const tot = pay.reduce((s,p) => s + p.amount, 0);
     const ov = st.filter(s => pay.filter(p => p.studentId === s.id).length === 0);
 
-    let h = `<div class="dash-header"><h1>👋 أهلاً بك</h1><p>Caeser of History - لوحة التحكم</p></div>
+    let h = `<div class="dash-header"><h1>👋 أهلاً بك في Caeser of History</h1><p>لوحة التحكم الرئيسية - إدارة متكاملة لمجموعاتك</p></div>
       <div class="stats-row">
-        <div class="stat-card"><div class="sicon">👨‍🎓</div><div><div class="sval">${st.length}</div><div class="slbl">طالب</div></div></div>
-        <div class="stat-card"><div class="sicon">👥</div><div><div class="sval">${gr.length}</div><div class="slbl">مجموعة</div></div></div>
-        <div class="stat-card"><div class="sicon">📋</div><div><div class="sval">${pres}</div><div class="slbl">حضور اليوم</div></div></div>
-        <div class="stat-card"><div class="sicon">💰</div><div><div class="sval">${tot} ج.م</div><div class="slbl">المدفوعات</div></div></div>
+        <div class="stat-card animate-card"><div class="sicon blue">👨‍🎓</div><div><div class="sval">${st.length}</div><div class="slbl">إجمالي الطلاب</div></div></div>
+        <div class="stat-card animate-card stagger-1"><div class="sicon green">👥</div><div><div class="sval">${gr.length}</div><div class="slbl">المجموعات</div></div></div>
+        <div class="stat-card animate-card stagger-2"><div class="sicon orange">📋</div><div><div class="sval">${pres}</div><div class="slbl">حضور اليوم</div></div></div>
+        <div class="stat-card animate-card stagger-3"><div class="sicon purple">💰</div><div><div class="sval">${tot} ج.م</div><div class="slbl">المدفوعات</div></div></div>
       </div>`;
-    if (ov.length) h += `<div class="alert">⚠️ ${ov.length} طلاب لم يسددوا: ${ov.map(s=>s.name).join('، ')}</div>`;
+    if (ov.length) h += `<div class="alert animate-slide">⚠️ ${ov.length} طلاب لم يسددوا بعد: ${ov.map(s=>s.name).join('، ')}</div>`;
     h += `<div class="grid">
-      <div class="dash-card" onclick="navigateTo('students')"><span class="ico">👨‍🎓</span><div class="ttl">الطلاب</div><div class="sub">${st.length} طالب</div></div>
-      <div class="dash-card" onclick="navigateTo('groups')"><span class="ico">👥</span><div class="ttl">المجموعات</div><div class="sub">${gr.length} مجموعة</div></div>
-      <div class="dash-card" onclick="navigateTo('attendance')"><span class="ico">📋</span><div class="ttl">الحضور</div><div class="sub">${pres} حاضر</div></div>
-      <div class="dash-card" onclick="navigateTo('payments')"><span class="ico">💰</span><div class="ttl">المدفوعات</div><div class="sub">${tot} ج.م</div></div>
-      <div class="dash-card" onclick="navigateTo('exams')"><span class="ico">📝</span><div class="ttl">الامتحانات</div><div class="sub">${ex.length} امتحان</div></div>
-      <div class="dash-card" onclick="navigateTo('reports')"><span class="ico">📊</span><div class="ttl">التقارير</div><div class="sub">عرض الكل</div></div>
+      <div class="dash-card animate-card stagger-1" onclick="navigateTo('students')"><span class="ico">👨‍🎓</span><div class="ttl">الطلاب</div><div class="sub">${st.length} طالب مسجل</div></div>
+      <div class="dash-card animate-card stagger-2" onclick="navigateTo('groups')"><span class="ico">👥</span><div class="ttl">المجموعات</div><div class="sub">${gr.length} مجموعة</div></div>
+      <div class="dash-card animate-card stagger-3" onclick="navigateTo('attendance')"><span class="ico">📋</span><div class="ttl">الحضور</div><div class="sub">${pres} حاضر اليوم</div></div>
+      <div class="dash-card animate-card stagger-4" onclick="navigateTo('payments')"><span class="ico">💰</span><div class="ttl">المدفوعات</div><div class="sub">${tot} ج.م</div></div>
+      <div class="dash-card animate-card stagger-5" onclick="navigateTo('exams')"><span class="ico">📝</span><div class="ttl">الامتحانات</div><div class="sub">${ex.length} امتحان</div></div>
+      <div class="dash-card animate-card stagger-6" onclick="navigateTo('reports')"><span class="ico">📊</span><div class="ttl">التقارير</div><div class="sub">عرض الإحصائيات</div></div>
     </div>`;
     m.innerHTML = h;
   }
@@ -203,9 +515,9 @@
   // ==================== STUDENTS ====================
   function loadStudents() {
     const m = document.getElementById('main-content'), gr = groups();
-    let h = `<div class="page"><h2>👨‍🎓 الطلاب</h2><div class="search"><input type="text" id="ss" placeholder="🔍 بحث..." oninput="filterStudents()"></div>
-      <form id="sf"><input type="text" id="sn" placeholder="اسم الطالب" required><input type="tel" id="sp" placeholder="الهاتف" required><input type="tel" id="sg" placeholder="ولي الأمر"><select id="sgr"><option value="">-- المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><button type="submit">➕ إضافة</button></form>
-      <table><thead><tr><th>الاسم</th><th>الهاتف</th><th>ولي الأمر</th><th>المجموعة</th><th>إجراءات</th></tr></thead><tbody id="stb"></tbody></table></div>`;
+    let h = `<div class="page"><h2>👨‍🎓 إدارة الطلاب</h2><div class="search"><input type="text" id="ss" placeholder="🔍 بحث عن طالب..." oninput="filterStudents()"></div>
+      <form id="sf"><input type="text" id="sn" placeholder="اسم الطالب كاملاً" required><input type="tel" id="sp" placeholder="رقم الهاتف" required><input type="tel" id="sg" placeholder="هاتف ولي الأمر"><select id="sgr"><option value="">-- اختر المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><button type="submit">➕ إضافة طالب</button></form>
+      <table><thead><tr><th>الاسم</th><th>الهاتف</th><th>ولي الأمر</th><th>المجموعة</th><th>الإجراءات</th></tr></thead><tbody id="stb"></tbody></table></div>`;
     m.innerHTML = h;
     renderStudentTable(students());
     document.getElementById('sf').onsubmit = function(e) {
@@ -266,7 +578,7 @@
       <tr><td><strong>📊 نسبة الحضور</strong></td><td>${pct}% (${pres}/${att.length})</td></tr>
       <tr><td><strong>💰 المدفوعات</strong></td><td>${tot} ج.م</td></tr>
       <tr><td><strong>📝 متوسط الدرجات</strong></td><td>${ex.length ? (ex.reduce((s,e)=>s+e.score,0)/ex.length).toFixed(1) : '—'}</td></tr></table>
-      <div class="act-bar"><button class="btn btn-back" onclick="loadStudents()">⬅️ رجوع</button></div></div>`;
+      <div class="act-bar"><button class="btn btn-back" onclick="loadStudents()">⬅️ رجوع للطلاب</button></div></div>`;
   }
 
   // ==================== GROUPS ====================
@@ -313,8 +625,8 @@
   function loadAttendance() {
     const m = document.getElementById('main-content'), gr = groups();
     let h = `<div class="page"><h2>📋 الحضور</h2>
-      <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;"><select id="ag"><option value="">-- المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><input type="date" id="ad"><button class="btn btn-view" onclick="showAttendance()">📅 عرض</button></div>
-      <div id="attf"></div><h3 style="margin-top:22px;">سجل سابق</h3><div id="atth"></div></div>`;
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;"><select id="ag"><option value="">-- المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><input type="date" id="ad"><button class="btn btn-view" onclick="showAttendance()">📅 عرض</button></div>
+      <div id="attf"></div><h3 style="margin-top:24px;">سجل سابق</h3><div id="atth"></div></div>`;
     m.innerHTML = h; renderAttHistory();
   }
   function showAttendance() {
@@ -366,21 +678,43 @@
   }
   function deletePayment(id) { if (!confirm('حذف؟')) return; savePayments(payments().filter(p => p.id !== id)); loadPayments(); }
 
-  // ==================== EXAMS ====================
+  // ==================== EXAMS (WITH FILE UPLOAD) ====================
   function loadExams() {
     const m = document.getElementById('main-content'), st = students(), ex = exams();
     let h = `<div class="page"><h2>📝 الامتحانات</h2>
-      <form id="ef"><select id="es" required><option value="">-- الطالب --</option>${st.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><input type="text" id="en" placeholder="اسم الامتحان" required><input type="number" id="esc" placeholder="الدرجة" required><input type="date" id="ed" required><button type="submit">➕ إضافة</button></form>
-      <table><thead><tr><th>الطالب</th><th>الامتحان</th><th>الدرجة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody>`;
-    ex.forEach(e => { const s = st.find(x => x.id === e.studentId); h += `<tr><td>${s?s.name:'—'}</td><td>${e.examName}</td><td>${e.score}</td><td>${e.date}</td><td><button class="btn btn-del" onclick="deleteExam('${e.id}')">🗑️</button></td></tr>`; });
+      <form id="ef">
+        <select id="es" required><option value="">-- اختر الطالب --</option>${st.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select>
+        <input type="text" id="en" placeholder="اسم الامتحان" required>
+        <input type="number" id="esc" placeholder="الدرجة" required>
+        <input type="date" id="ed" required>
+        <label class="file-upload-label" for="efile">📎 رفع ملف (PDF/صورة)</label>
+        <input type="file" id="efile" accept=".pdf,image/*" onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'لم يتم اختيار ملف'">
+        <span id="file-name" style="font-size:12px;color:var(--text-light);">لم يتم اختيار ملف</span>
+        <button type="submit">➕ تسجيل امتحان</button>
+      </form>
+      <table><thead><tr><th>الطالب</th><th>الامتحان</th><th>الدرجة</th><th>التاريخ</th><th>ملف</th><th>حذف</th></tr></thead><tbody>`;
+    ex.forEach(e => {
+      const s = st.find(x => x.id === e.studentId);
+      const fileLink = e.fileData ? `<a href="${e.fileData}" download="${e.fileName||'exam'}" class="file-link">📥 ${e.fileName||'تحميل'}</a>` : '—';
+      h += `<tr><td>${s?s.name:'—'}</td><td>${e.examName}</td><td>${e.score}</td><td>${e.date}</td><td>${fileLink}</td><td><button class="btn btn-del" onclick="deleteExam('${e.id}')">🗑️</button></td></tr>`;
+    });
     h += '</tbody></table></div>'; m.innerHTML = h;
-    document.getElementById('ef').onsubmit = function(e) {
+    document.getElementById('ef').onsubmit = async function(e) {
       e.preventDefault();
       const sid = document.getElementById('es').value, en = document.getElementById('en').value.trim();
       const sc = parseInt(document.getElementById('esc').value), date = document.getElementById('ed').value;
+      const fileInput = document.getElementById('efile');
       if (!sid || !en || isNaN(sc) || !date) return alert('بيانات ناقصة');
-      saveExams([...exams(), { id: gid(), studentId: sid, examName: en, score: sc, date }]);
-      alert('✅ تمت الإضافة'); loadExams();
+
+      let fileData = null, fileName = null;
+      if (fileInput.files[0]) {
+        if (fileInput.files[0].size > 5 * 1024 * 1024) return alert('حجم الملف كبير جداً. الحد الأقصى 5 ميجابايت');
+        fileData = await fileToBase64(fileInput.files[0]);
+        fileName = fileInput.files[0].name;
+      }
+
+      saveExams([...exams(), { id: gid(), studentId: sid, examName: en, score: sc, date, fileData, fileName }]);
+      alert('✅ تم تسجيل الامتحان'); loadExams();
     };
   }
   function deleteExam(id) { if (!confirm('حذف؟')) return; saveExams(exams().filter(e => e.id !== id)); loadExams(); }
@@ -395,7 +729,7 @@
       h += `<div class="chart-wrap"><h3>👥 توزيع الطلاب</h3><canvas id="groupChart" height="80"></canvas></div>`;
       setTimeout(() => {
         const ctx = document.getElementById('groupChart');
-        if (ctx) new Chart(ctx, { type: 'bar', data: { labels: gr.map(g => g.name), datasets: [{ label: 'الطلاب', data: gr.map(g => st.filter(s => s.groupId === g.id).length), backgroundColor: ['#4f46e5','#10b981','#f59e0b','#ef4444','#8b5cf6','#3b82f6'] }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
+        if (ctx) new Chart(ctx, { type: 'bar', data: { labels: gr.map(g => g.name), datasets: [{ label: 'الطلاب', data: gr.map(g => st.filter(s => s.groupId === g.id).length), backgroundColor: ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#3b82f6'] }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
       }, 100);
     }
 
@@ -422,4 +756,4 @@
   }
 </script>
 </body>
-</html>
+  </html>
