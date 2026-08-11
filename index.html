@@ -22,7 +22,6 @@
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
     .app-container { display: flex; min-height: 100vh; }
 
-    /* Sidebar */
     .sidebar {
       width: 260px; background: linear-gradient(180deg, #1e293b, #0f172a); color: #fff;
       padding: 20px 10px; display: flex; flex-direction: column; position: fixed;
@@ -48,7 +47,6 @@
     .btn-ex { background: #10b981; }
     .btn-im { background: #8b5cf6; }
 
-    /* Content */
     .content { flex: 1; margin-right: 260px; padding: 24px; }
     .dash-header { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; padding: 28px 24px; border-radius: 16px; margin-bottom: 22px; }
     .dash-header h1 { font-size: 26px; margin-bottom: 4px; }
@@ -98,13 +96,13 @@
   <nav class="sidebar">
     <div class="logo"><span class="sicon">📜</span><h2>Caeser of History</h2><p>إدارة المجموعات</p></div>
     <nav>
-      <button class="active" data-page="dashboard"><span>🏠</span> الرئيسية</button>
-      <button data-page="students"><span>👨‍🎓</span> الطلاب</button>
-      <button data-page="groups"><span>👥</span> المجموعات</button>
-      <button data-page="attendance"><span>📋</span> الحضور</button>
-      <button data-page="payments"><span>💰</span> المدفوعات</button>
-      <button data-page="exams"><span>📝</span> الامتحانات</button>
-      <button data-page="reports"><span>📊</span> التقارير</button>
+      <button class="active" onclick="navigateTo('dashboard')"><span>🏠</span> الرئيسية</button>
+      <button onclick="navigateTo('students')"><span>👨‍🎓</span> الطلاب</button>
+      <button onclick="navigateTo('groups')"><span>👥</span> المجموعات</button>
+      <button onclick="navigateTo('attendance')"><span>📋</span> الحضور</button>
+      <button onclick="navigateTo('payments')"><span>💰</span> المدفوعات</button>
+      <button onclick="navigateTo('exams')"><span>📝</span> الامتحانات</button>
+      <button onclick="navigateTo('reports')"><span>📊</span> التقارير</button>
     </nav>
     <div class="bottom">
       <button class="btn-ex" onclick="exportAllData()">💾 تصدير البيانات</button>
@@ -119,10 +117,9 @@
 
 <script>
   // ==================== DATA ====================
-  const PREFIX = 'caeser_';
   function gid() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
-  function get(key) { const d = localStorage.getItem(PREFIX + key); return d ? JSON.parse(d) : []; }
-  function set(key, v) { localStorage.setItem(PREFIX + key, JSON.stringify(v)); }
+  function get(key) { const d = localStorage.getItem('caeser_' + key); return d ? JSON.parse(d) : []; }
+  function set(key, v) { localStorage.setItem('caeser_' + key, JSON.stringify(v)); }
   const students = () => get('students'), saveStudents = (v) => set('students', v), studentById = (id) => students().find(s => s.id === id);
   const groups = () => get('groups'), saveGroups = (v) => set('groups', v), groupById = (id) => groups().find(g => g.id === id);
   const attendance = () => get('attendance'), saveAttendance = (v) => set('attendance', v);
@@ -159,7 +156,19 @@
     const fn = window['load' + page.charAt(0).toUpperCase() + page.slice(1)];
     if (fn) fn();
     document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active'));
-    document.querySelector(`.sidebar nav button[data-page="${page}"]`)?.classList.add('active');
+    const buttons = document.querySelectorAll('.sidebar nav button');
+    buttons.forEach(b => {
+      const txt = b.textContent.trim();
+      if ((page === 'dashboard' && txt.includes('الرئيسية')) ||
+          (page === 'students' && txt.includes('الطلاب')) ||
+          (page === 'groups' && txt.includes('المجموعات')) ||
+          (page === 'attendance' && txt.includes('الحضور')) ||
+          (page === 'payments' && txt.includes('المدفوعات')) ||
+          (page === 'exams' && txt.includes('الامتحانات')) ||
+          (page === 'reports' && txt.includes('التقارير'))) {
+        b.classList.add('active');
+      }
+    });
   }
   window.addEventListener('DOMContentLoaded', () => navigateTo('dashboard'));
 
@@ -202,15 +211,17 @@
     document.getElementById('sf').onsubmit = function(e) {
       e.preventDefault();
       const n = document.getElementById('sn').value.trim(), p = document.getElementById('sp').value.trim();
-      const g = document.getElementById('sg').value.trim(), gid = document.getElementById('sgr').value;
+      const g = document.getElementById('sg').value.trim(), gid2 = document.getElementById('sgr').value;
       if (!n || !p) return alert('الاسم والهاتف مطلوبان');
-      saveStudents([...students(), { id: gid(), name: n, phone: p, guardianPhone: g || null, groupId: gid || null }]);
+      saveStudents([...students(), { id: gid(), name: n, phone: p, guardianPhone: g || null, groupId: gid2 || null }]);
       alert('✅ تمت الإضافة'); loadStudents();
     };
   }
   function renderStudentTable(list) {
     const gr = groups();
-    document.getElementById('stb').innerHTML = list.map(s => {
+    const tbody = document.getElementById('stb');
+    if (!tbody) return;
+    tbody.innerHTML = list.map(s => {
       const g = gr.find(x => x.id === s.groupId);
       return `<tr><td><strong>${s.name}</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td><td>${s.guardianPhone||'—'}</td><td>${g?g.name:'—'}</td>
       <td><button class="btn btn-view" onclick="viewStudent('${s.id}')">👁️</button><button class="btn btn-edit" onclick="editStudent('${s.id}')">✏️</button><button class="btn btn-del" onclick="deleteStudentFull('${s.id}')">🗑️</button></td></tr>`;
@@ -227,9 +238,9 @@
     const g = prompt('ولي الأمر:', s.guardianPhone || '');
     const gr = groups();
     const c = prompt('رقم المجموعة:\n' + gr.map((x,i) => (i+1)+'-'+x.name).join('\n') + '\n(0=بدون)', s.groupId ? gr.findIndex(x=>x.id===s.groupId)+1 : '0');
-    let gid = null;
-    if (c && parseInt(c) > 0 && gr[parseInt(c)-1]) gid = gr[parseInt(c)-1].id;
-    const all = students(); all[all.findIndex(x=>x.id===id)] = { ...s, name: n, phone: p, guardianPhone: g||null, groupId: gid };
+    let gid2 = null;
+    if (c && parseInt(c) > 0 && gr[parseInt(c)-1]) gid2 = gr[parseInt(c)-1].id;
+    const all = students(); all[all.findIndex(x=>x.id===id)] = { ...s, name: n, phone: p, guardianPhone: g||null, groupId: gid2 };
     saveStudents(all); alert('✅ تم التعديل'); loadStudents();
   }
   function deleteStudentFull(id) {
@@ -291,8 +302,8 @@
     saveStudents(students().map(s => s.groupId === id ? {...s, groupId: null} : s));
     alert('🗑️ تم الحذف'); loadGroups();
   }
-  function sendWhatsapp(gid) {
-    const st = students().filter(s => s.groupId === gid);
+  function sendWhatsapp(gid2) {
+    const st = students().filter(s => s.groupId === gid2);
     if (!st.length) return alert('لا يوجد طلاب');
     const msg = prompt('الرسالة:'); if (!msg) return;
     st.forEach(s => { const p = s.phone.replace(/[^0-9]/g, ''); if (p) window.open('https://wa.me/' + p + '?text=' + encodeURIComponent(msg), '_blank'); });
@@ -307,11 +318,11 @@
     m.innerHTML = h; renderAttHistory();
   }
   function showAttendance() {
-    const gid = document.getElementById('ag').value, date = document.getElementById('ad').value;
-    if (!gid || !date) return alert('اختر المجموعة والتاريخ');
-    const st = students().filter(s => s.groupId === gid);
+    const gid2 = document.getElementById('ag').value, date = document.getElementById('ad').value;
+    if (!gid2 || !date) return alert('اختر المجموعة والتاريخ');
+    const st = students().filter(s => s.groupId === gid2);
     if (!st.length) return document.getElementById('attf').innerHTML = '<p>لا يوجد طلاب</p>';
-    const ex = attendance().filter(a => a.groupId === gid && a.date === date);
+    const ex = attendance().filter(a => a.groupId === gid2 && a.date === date);
     const map = {}; ex.forEach(a => map[a.studentId] = a.status);
     let f = '<form id="saf"><table><thead><tr><th>الطالب</th><th>حاضر</th><th>غائب</th></tr></thead><tbody>';
     st.forEach(s => f += `<tr><td>${s.name}</td><td><input type="radio" name="a-${s.id}" value="present" ${map[s.id]!=='absent'?'checked':''}></td><td><input type="radio" name="a-${s.id}" value="absent" ${map[s.id]==='absent'?'checked':''}></td></tr>`);
@@ -319,19 +330,21 @@
     document.getElementById('attf').innerHTML = f;
     document.getElementById('saf').onsubmit = function(e) {
       e.preventDefault();
-      let all = attendance().filter(a => !(a.groupId === gid && a.date === date));
-      st.forEach(s => { const r = document.querySelector('input[name="a-' + s.id + '"]:checked'); if (r) all.push({ id: gid(), studentId: s.id, groupId: gid, date, status: r.value }); });
+      let all = attendance().filter(a => !(a.groupId === gid2 && a.date === date));
+      st.forEach(s => { const r = document.querySelector('input[name="a-' + s.id + '"]:checked'); if (r) all.push({ id: gid(), studentId: s.id, groupId: gid2, date, status: r.value }); });
       saveAttendance(all); alert('✅ تم الحفظ'); loadAttendance();
     };
   }
   function renderAttHistory() {
     const all = attendance();
-    if (!all.length) return document.getElementById('atth').innerHTML = '<p>لا سجل</p>';
+    const atth = document.getElementById('atth');
+    if (!atth) return;
+    if (!all.length) return atth.innerHTML = '<p>لا سجل</p>';
     const grouped = {};
     all.forEach(a => { const k = a.date + a.groupId; if (!grouped[k]) grouped[k] = { date: a.date, groupId: a.groupId, present: 0, absent: 0 }; a.status === 'present' ? grouped[k].present++ : grouped[k].absent++; });
     let t = '<table><thead><tr><th>التاريخ</th><th>المجموعة</th><th>حضور</th><th>غياب</th></tr></thead><tbody>';
     Object.values(grouped).forEach(r => { const g = groupById(r.groupId); t += `<tr><td>${r.date}</td><td>${g?g.name:'—'}</td><td>${r.present}</td><td>${r.absent}</td></tr>`; });
-    t += '</tbody></table>'; document.getElementById('atth').innerHTML = t;
+    t += '</tbody></table>'; atth.innerHTML = t;
   }
 
   // ==================== PAYMENTS ====================
@@ -378,44 +391,25 @@
     const st = students(), att = attendance(), pay = payments(), ex = exams(), gr = groups();
     let h = `<div class="page"><h2>📊 التقارير</h2>`;
 
-    // Chart
     if (gr.length > 0) {
-      h += `<div class="chart-wrap"><h3>👥 توزيع الطلاب على المجموعات</h3><canvas id="groupChart" height="80"></canvas></div>`;
+      h += `<div class="chart-wrap"><h3>👥 توزيع الطلاب</h3><canvas id="groupChart" height="80"></canvas></div>`;
       setTimeout(() => {
         const ctx = document.getElementById('groupChart');
-        if (ctx) {
-          new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: gr.map(g => g.name),
-              datasets: [{
-                label: 'عدد الطلاب',
-                data: gr.map(g => st.filter(s => s.groupId === g.id).length),
-                backgroundColor: ['#4f46e5','#10b981','#f59e0b','#ef4444','#8b5cf6','#3b82f6','#ec4899']
-              }]
-            },
-            options: { responsive: true, plugins: { legend: { display: false } } }
-          });
-        }
+        if (ctx) new Chart(ctx, { type: 'bar', data: { labels: gr.map(g => g.name), datasets: [{ label: 'الطلاب', data: gr.map(g => st.filter(s => s.groupId === g.id).length), backgroundColor: ['#4f46e5','#10b981','#f59e0b','#ef4444','#8b5cf6','#3b82f6'] }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
       }, 100);
     }
 
-    // Students Summary
-    h += `<h3 style="margin-top:22px;">📋 ملخص الطلاب</h3>
-      <table><thead><tr><th>الطالب</th><th>المجموعة</th><th>حضور%</th><th>مدفوعات</th><th>متوسط</th></tr></thead><tbody>`;
+    h += `<h3 style="margin-top:22px;">📋 ملخص الطلاب</h3><table><thead><tr><th>الطالب</th><th>المجموعة</th><th>حضور%</th><th>مدفوعات</th><th>متوسط</th></tr></thead><tbody>`;
     st.forEach(s => {
-      const g = groupById(s.groupId), a = att.filter(x => x.studentId === s.id);
-      const pr = a.filter(x => x.status === 'present').length, pct = a.length ? Math.round((pr/a.length)*100) : 0;
+      const g = groupById(s.groupId), a = att.filter(x => x.studentId === s.id), pr = a.filter(x => x.status === 'present').length;
+      const pct = a.length ? Math.round((pr/a.length)*100) : 0;
       const tot = pay.filter(x => x.studentId === s.id).reduce((sm,x) => sm + x.amount, 0);
-      const exm = ex.filter(x => x.studentId === s.id);
-      const avg = exm.length ? (exm.reduce((sm,x) => sm + x.score, 0)/exm.length).toFixed(1) : 0;
+      const exm = ex.filter(x => x.studentId === s.id), avg = exm.length ? (exm.reduce((sm,x)=>sm+x.score,0)/exm.length).toFixed(1) : 0;
       h += `<tr><td>${s.name}</td><td>${g?g.name:'—'}</td><td>${pct}%</td><td>${tot} ج.م</td><td>${avg}</td></tr>`;
     });
     h += '</tbody></table>';
 
-    // Groups Summary
-    h += `<h3 style="margin-top:22px;">👥 ملخص المجموعات</h3>
-      <table><thead><tr><th>المجموعة</th><th>الطلاب</th><th>متوسط الحضور</th></tr></thead><tbody>`;
+    h += `<h3 style="margin-top:22px;">👥 ملخص المجموعات</h3><table><thead><tr><th>المجموعة</th><th>الطلاب</th><th>متوسط الحضور</th></tr></thead><tbody>`;
     gr.forEach(g => {
       const gs = st.filter(s => s.groupId === g.id);
       if (!gs.length) return;
