@@ -7,91 +7,45 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; min-height: 100vh; }
-
-    .login-screen {
-      display: flex; justify-content: center; align-items: center; min-height: 100vh;
-      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); padding: 20px;
-    }
-    .login-box {
-      background: white; border-radius: 20px; padding: 40px 30px; max-width: 400px; width: 100%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;
-    }
-    .login-box .logo { font-size: 70px; margin-bottom: 10px; }
-    .login-box h2 { color: #2c3e50; margin-bottom: 5px; font-size: 24px; }
-    .login-box .subtitle { color: #7f8c8d; margin-bottom: 25px; font-size: 14px; }
-    .login-box input {
-      width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #e0e0e0;
-      border-radius: 10px; font-size: 18px; text-align: center; letter-spacing: 8px;
-    }
-    .login-box input:focus { border-color: #667eea; outline: none; }
-    .login-box button {
-      width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold;
-      cursor: pointer; margin-top: 12px;
-    }
-    .login-box button:active { transform: scale(0.97); }
-    .login-box .error { color: #e74c3c; margin-top: 8px; font-size: 14px; display: none; }
-
     .app-container { display: flex; min-height: 100vh; }
-    .sidebar {
-      width: 250px; background: #2c3e50; color: white; padding: 20px; display: flex; flex-direction: column;
-    }
+    .sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; display: flex; flex-direction: column; }
     .sidebar h2 { font-size: 20px; border-bottom: 1px solid #4a627a; padding-bottom: 12px; margin-bottom: 20px; text-align: center; }
     .sidebar ul { list-style: none; flex: 1; }
-    .sidebar button {
-      display: block; width: 100%; background: none; border: none; color: white; padding: 12px 15px;
-      text-align: right; font-size: 16px; cursor: pointer; border-radius: 8px; margin-bottom: 4px;
-    }
-    .sidebar button:hover { background: rgba(255,255,255,0.1); }
+    .sidebar button { display: block; width: 100%; background: none; border: none; color: white; padding: 12px 15px; text-align: right; font-size: 16px; cursor: pointer; border-radius: 8px; margin-bottom: 4px; }
+    .sidebar button:hover { background: rgba(255,255,255,0.15); }
     .bottom-btns { margin-top: auto; padding-top: 15px; border-top: 1px solid #4a627a; display: flex; flex-direction: column; gap: 6px; }
-    .bottom-btns button { padding: 10px; font-size: 14px; }
-    .btn-export { background: #27ae60 !important; }
-    .btn-logout { background: #c0392b !important; }
+    .bottom-btns button { padding: 10px; font-size: 14px; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    .btn-export { background: #27ae60; }
+    .btn-import { background: #8e44ad; }
 
-    .content {
-      flex: 1; padding: 25px; background: white; margin: 15px; border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.08); overflow-y: auto;
-    }
+    .content { flex: 1; padding: 25px; background: white; margin: 15px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); overflow-y: auto; }
 
-    .welcome-banner {
-      background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px;
-      border-radius: 15px; margin-bottom: 25px;
-    }
+    .welcome-banner { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; }
     .welcome-banner h1 { font-size: 28px; margin-bottom: 5px; }
     .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
-    .stat-card {
-      background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-      text-align: center; border-left: 4px solid #667eea;
-    }
+    .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); text-align: center; border-left: 4px solid #667eea; }
     .stat-card .num { font-size: 32px; font-weight: bold; color: #2c3e50; }
     .stat-card .label { color: #7f8c8d; font-size: 13px; margin-top: 4px; }
     .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
-    .dash-card {
-      background: white; border-radius: 15px; padding: 25px 15px; text-align: center;
-      cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.2s;
-      border-top: 4px solid #667eea;
-    }
+    .dash-card { background: white; border-radius: 15px; padding: 25px 15px; text-align: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.2s; border-top: 4px solid #667eea; }
     .dash-card:hover { transform: translateY(-4px); }
     .dash-card .icon { font-size: 45px; margin-bottom: 10px; }
     .dash-card .title { font-weight: bold; color: #2c3e50; font-size: 16px; }
     .dash-card .num { color: #667eea; font-weight: bold; font-size: 14px; margin-top: 4px; }
 
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     .search-box input { padding: 10px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; width: 250px; }
-    form {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
-      background: #f8f9fa; padding: 15px; border-radius: 10px; align-items: flex-end;
-    }
+    form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 10px; align-items: flex-end; }
     form input, form select { padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
     form button { padding: 10px 18px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     th { background: #f8f9fa; padding: 12px; text-align: center; border-bottom: 2px solid #667eea; }
     td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
-    .action-btn { padding: 5px 10px; margin: 0 2px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
-    .btn-edit { background: #f39c12; color: white; }
-    .btn-delete { background: #e74c3c; color: white; }
-    .btn-view { background: #3498db; color: white; }
-    .btn-whatsapp { background: #25D366; color: white; }
+    .action-btn { padding: 5px 10px; margin: 0 2px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; color: white; }
+    .btn-edit { background: #f39c12; }
+    .btn-delete { background: #e74c3c; }
+    .btn-view { background: #3498db; }
+    .btn-whatsapp { background: #25D366; }
     .alert-box { background: #fff3cd; border: 1px solid #ffc107; padding: 12px; border-radius: 8px; margin: 15px 0; color: #856404; }
 
     @media (max-width: 768px) {
@@ -106,33 +60,7 @@
 </head>
 <body>
 
-  <!-- شاشة تسجيل الدخول -->
-  <div id="login-screen" class="login-screen">
-    <div class="login-box">
-      <div class="logo">📜</div>
-      <h2>Caeser of History</h2>
-      <p class="subtitle">إدارة المجموعات التعليمية</p>
-
-      <!-- إنشاء الباسورد (أول مرة) -->
-      <div id="setup-div" style="display:none;">
-        <p style="color:#2c3e50;font-weight:bold;margin-bottom:15px;">🔐 أول مرة - أنشئ الرقم السري</p>
-        <input type="password" id="new-pin" maxlength="6" placeholder="الرقم السري (6 أرقام)">
-        <input type="password" id="new-pin2" maxlength="6" placeholder="تأكيد الرقم السري">
-        <p id="setup-error" class="error"></p>
-        <button onclick="createPin()">✅ حفظ الرقم السري</button>
-      </div>
-
-      <!-- تسجيل الدخول -->
-      <div id="login-div">
-        <input type="password" id="login-pin" maxlength="6" placeholder="أدخل الرقم السري">
-        <p id="login-error" class="error">الرقم السري غير صحيح</p>
-        <button onclick="doLogin()">🔓 دخول</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- التطبيق الرئيسي -->
-  <div id="app-screen" class="app-container" style="display:none;">
+  <div class="app-container">
     <nav class="sidebar">
       <h2>📜 Caeser</h2>
       <ul>
@@ -146,232 +74,130 @@
       </ul>
       <div class="bottom-btns">
         <button class="btn-export" onclick="exportAllData()">📤 تصدير البيانات</button>
-        <button class="btn-logout" onclick="doLogout()">🚪 تسجيل خروج</button>
+        <button class="btn-import" onclick="document.getElementById('import-file').click()">📥 استيراد البيانات</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importAllData(event)">
       </div>
     </nav>
     <main id="main-content" class="content"></main>
   </div>
 
   <script>
-    // ==================== نظام الدخول البسيط ====================
-    const PIN_STORAGE = 'my_app_pin_123';
-
-    // عند فتح الصفحة - نقرر نعرض إيه
-    window.addEventListener('DOMContentLoaded', function() {
-      const savedPin = localStorage.getItem(PIN_STORAGE);
-      if (!savedPin) {
-        // أول مرة - اعرض شاشة إنشاء الباسورد
-        document.getElementById('login-div').style.display = 'none';
-        document.getElementById('setup-div').style.display = 'block';
-      }
-      // لو فيه باسورد محفوظ، سيتم عرض شاشة الدخول العادية (login-div ظاهر افتراضياً)
-    });
-
-    // إنشاء باسورد جديد
-    function createPin() {
-      const pin1 = document.getElementById('new-pin').value.trim();
-      const pin2 = document.getElementById('new-pin2').value.trim();
-      const errorEl = document.getElementById('setup-error');
-
-      // التحقق
-      if (pin1.length !== 6 || !/^\d+$/.test(pin1)) {
-        errorEl.textContent = 'الرقم السري يجب أن يكون 6 أرقام';
-        errorEl.style.display = 'block';
-        return;
-      }
-      if (pin1 !== pin2) {
-        errorEl.textContent = 'الرقمان غير متطابقين';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      // حفظ الباسورد
-      localStorage.setItem(PIN_STORAGE, pin1);
-      // دخول للتطبيق مباشرة
-      showMainApp();
-    }
-
-    // تسجيل الدخول
-    function doLogin() {
-      const entered = document.getElementById('login-pin').value.trim();
-      const saved = localStorage.getItem(PIN_STORAGE);
-      const errorEl = document.getElementById('login-error');
-
-      if (entered === saved && saved) {
-        errorEl.style.display = 'none';
-        showMainApp();
-      } else {
-        errorEl.style.display = 'block';
-        document.getElementById('login-pin').value = '';
-      }
-    }
-
-    // إظهار التطبيق بعد الدخول
-    function showMainApp() {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app-screen').style.display = 'flex';
-      // تحميل الداشبورد
-      loadDashboard();
-    }
-
-    // تسجيل الخروج
-    function doLogout() {
-      if (confirm('هل تريد تسجيل الخروج؟')) {
-        document.getElementById('app-screen').style.display = 'none';
-        document.getElementById('login-screen').style.display = 'flex';
-        document.getElementById('login-pin').value = '';
-        document.getElementById('login-error').style.display = 'none';
-        document.getElementById('login-div').style.display = 'block';
-        document.getElementById('setup-div').style.display = 'none';
-      }
-    }
-
-    // ==================== دوال البيانات ====================
-    function generateId() {
-      return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-    }
-
-    function getData(key) {
-      const data = localStorage.getItem('caeser_' + key);
-      return data ? JSON.parse(data) : [];
-    }
-
-    function saveData(key, data) {
-      localStorage.setItem('caeser_' + key, JSON.stringify(data));
-    }
-
+    // ==================== DATA ====================
+    function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
+    function getData(key) { const d = localStorage.getItem('caeser_' + key); return d ? JSON.parse(d) : []; }
+    function saveData(key, data) { localStorage.setItem('caeser_' + key, JSON.stringify(data)); }
     function getStudents() { return getData('students'); }
     function saveStudents(s) { saveData('students', s); }
     function getStudentById(id) { return getStudents().find(s => s.id === id); }
-
     function getGroups() { return getData('groups'); }
     function saveGroups(g) { saveData('groups', g); }
     function getGroupById(id) { return getGroups().find(g => g.id === id); }
-
     function getAttendance() { return getData('attendance'); }
     function saveAttendance(a) { saveData('attendance', a); }
-
     function getPayments() { return getData('payments'); }
     function savePayments(p) { saveData('payments', p); }
-
     function getExams() { return getData('exams'); }
     function saveExams(e) { saveData('exams', e); }
 
-    // ==================== تصدير ====================
     function exportAllData() {
-      const allData = {
-        students: getStudents(),
-        groups: getGroups(),
-        attendance: getAttendance(),
-        payments: getPayments(),
-        exams: getExams()
-      };
-      const blob = new Blob([JSON.stringify(allData)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'caeser_backup.json';
-      a.click();
+      const d = { students: getStudents(), groups: getGroups(), attendance: getAttendance(), payments: getPayments(), exams: getExams() };
+      const b = new Blob([JSON.stringify(d)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'caeser_backup.json'; a.click();
       alert('✅ تم التصدير');
     }
-
-    // ==================== التنقل ====================
-    function navigateTo(page) {
-      const fn = window['load' + page.charAt(0).toUpperCase() + page.slice(1)];
-      if (fn) fn();
+    function importAllData(e) {
+      const f = e.target.files[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = function(ev) {
+        try {
+          const d = JSON.parse(ev.target.result);
+          if (d.students) saveStudents(d.students);
+          if (d.groups) saveGroups(d.groups);
+          if (d.attendance) saveAttendance(d.attendance);
+          if (d.payments) savePayments(d.payments);
+          if (d.exams) saveExams(d.exams);
+          alert('✅ تم الاستيراد'); navigateTo('dashboard');
+        } catch(er) { alert('❌ فشل'); }
+      };
+      r.readAsText(f);
     }
+
+    function navigateTo(p) { const fn = window['load' + p.charAt(0).toUpperCase() + p.slice(1)]; if (fn) fn(); }
+    
+    // ==================== فتح التطبيق مباشرة ====================
+    window.addEventListener('DOMContentLoaded', function() {
+      navigateTo('dashboard');
+    });
 
     // ==================== داشبورد ====================
     function loadDashboard() {
       const m = document.getElementById('main-content');
-      const students = getStudents(), groups = getGroups();
-      const attendance = getAttendance(), payments = getPayments(), exams = getExams();
+      const st = getStudents(), gr = getGroups(), att = getAttendance(), pay = getPayments(), ex = getExams();
       const today = new Date().toISOString().slice(0,10);
-      const presentToday = attendance.filter(a => a.date === today && a.status === 'present').length;
-      const totalPaid = payments.reduce((s,p) => s + p.amount, 0);
-      const overdue = students.filter(s => payments.filter(p => p.studentId === s.id).length === 0);
-
-      let html = `
-        <div class="welcome-banner"><h1>👋 أهلاً بك</h1><p>Caeser of History - إدارة المجموعات</p></div>
+      const present = att.filter(a => a.date === today && a.status === 'present').length;
+      const total = pay.reduce((s,p) => s + p.amount, 0);
+      const over = st.filter(s => pay.filter(p => p.studentId === s.id).length === 0);
+      let h = `<div class="welcome-banner"><h1>👋 أهلاً بك</h1><p>Caeser of History</p></div>
         <div class="stats-row">
-          <div class="stat-card"><div class="num">${students.length}</div><div class="label">طالب</div></div>
-          <div class="stat-card"><div class="num">${groups.length}</div><div class="label">مجموعة</div></div>
-          <div class="stat-card"><div class="num">${presentToday}</div><div class="label">حضور اليوم</div></div>
-          <div class="stat-card"><div class="num">${totalPaid} ج.م</div><div class="label">المدفوعات</div></div>
+          <div class="stat-card"><div class="num">${st.length}</div><div class="label">طالب</div></div>
+          <div class="stat-card"><div class="num">${gr.length}</div><div class="label">مجموعة</div></div>
+          <div class="stat-card"><div class="num">${present}</div><div class="label">حضور اليوم</div></div>
+          <div class="stat-card"><div class="num">${total} ج.م</div><div class="label">المدفوعات</div></div>
         </div>`;
-      if (overdue.length > 0) {
-        html += `<div class="alert-box">⚠️ لم يسددوا: ${overdue.map(s=>s.name).join('، ')}</div>`;
-      }
-      html += `<div class="dashboard-grid">
-        <div class="dash-card" onclick="navigateTo('students')"><div class="icon">👨‍🎓</div><div class="title">الطلاب</div><div class="num">${students.length}</div></div>
-        <div class="dash-card" onclick="navigateTo('groups')"><div class="icon">👥</div><div class="title">المجموعات</div><div class="num">${groups.length}</div></div>
-        <div class="dash-card" onclick="navigateTo('attendance')"><div class="icon">📋</div><div class="title">الحضور</div><div class="num">${presentToday}</div></div>
-        <div class="dash-card" onclick="navigateTo('payments')"><div class="icon">💰</div><div class="title">المدفوعات</div><div class="num">${totalPaid} ج.م</div></div>
-        <div class="dash-card" onclick="navigateTo('exams')"><div class="icon">📝</div><div class="title">الامتحانات</div><div class="num">${exams.length}</div></div>
+      if (over.length) h += `<div class="alert-box">⚠️ لم يسددوا: ${over.map(s=>s.name).join('، ')}</div>`;
+      h += `<div class="dashboard-grid">
+        <div class="dash-card" onclick="navigateTo('students')"><div class="icon">👨‍🎓</div><div class="title">الطلاب</div><div class="num">${st.length}</div></div>
+        <div class="dash-card" onclick="navigateTo('groups')"><div class="icon">👥</div><div class="title">المجموعات</div><div class="num">${gr.length}</div></div>
+        <div class="dash-card" onclick="navigateTo('attendance')"><div class="icon">📋</div><div class="title">الحضور</div><div class="num">${present}</div></div>
+        <div class="dash-card" onclick="navigateTo('payments')"><div class="icon">💰</div><div class="title">المدفوعات</div><div class="num">${total} ج.م</div></div>
+        <div class="dash-card" onclick="navigateTo('exams')"><div class="icon">📝</div><div class="title">الامتحانات</div><div class="num">${ex.length}</div></div>
         <div class="dash-card" onclick="navigateTo('reports')"><div class="icon">📊</div><div class="title">التقارير</div></div>
       </div>`;
-      m.innerHTML = html;
+      m.innerHTML = h;
     }
 
-    // ==================== الطلاب ====================
+    // ==================== طلاب ====================
     function loadStudents() {
       const m = document.getElementById('main-content');
-      const groups = getGroups();
-      let html = `
-        <div class="page-header"><h2>👨‍🎓 الطلاب</h2><div class="search-box"><input type="text" id="student-search" placeholder="🔍 بحث..." oninput="filterStudents()"></div></div>
-        <form id="sf">
-          <input type="text" id="sn" placeholder="اسم الطالب" required>
-          <input type="tel" id="sp" placeholder="رقم الهاتف" required>
-          <input type="tel" id="sg" placeholder="ولي الأمر">
-          <select id="sgr"><option value="">-- المجموعة --</option>${groups.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select>
-          <button type="submit">➕ إضافة</button>
-        </form>
-        <table id="st"><thead><tr><th>الاسم</th><th>الهاتف</th><th>ولي الأمر</th><th>المجموعة</th><th>إجراءات</th></tr></thead><tbody></tbody></table>`;
-      m.innerHTML = html;
+      const gr = getGroups();
+      let h = `<div class="page-header"><h2>👨‍🎓 الطلاب</h2><div class="search-box"><input type="text" id="ss" placeholder="🔍 بحث..." oninput="filterStudents()"></div></div>
+        <form id="sf"><input type="text" id="sn" placeholder="اسم الطالب" required><input type="tel" id="sp" placeholder="رقم الهاتف" required><input type="tel" id="sg" placeholder="ولي الأمر"><select id="sgr"><option value="">-- المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><button type="submit">➕ إضافة</button></form>
+        <table id="stb"><thead><tr><th>الاسم</th><th>الهاتف</th><th>ولي الأمر</th><th>المجموعة</th><th>إجراءات</th></tr></thead><tbody></tbody></table>`;
+      m.innerHTML = h;
       renderStudentsTable(getStudents());
-      document.getElementById('sf').onsubmit = (e) => {
+      document.getElementById('sf').onsubmit = function(e) {
         e.preventDefault();
-        const name = document.getElementById('sn').value.trim();
-        const phone = document.getElementById('sp').value.trim();
-        const guardian = document.getElementById('sg').value.trim();
-        const gid = document.getElementById('sgr').value;
-        if (!name || !phone) return alert('الاسم والهاتف مطلوبان');
-        saveStudents([...getStudents(), { id: generateId(), name, phone, guardianPhone: guardian || null, groupId: gid || null }]);
+        const n = document.getElementById('sn').value.trim(), p = document.getElementById('sp').value.trim();
+        const g = document.getElementById('sg').value.trim(), gid = document.getElementById('sgr').value;
+        if (!n || !p) return alert('الاسم والهاتف مطلوبان');
+        saveStudents([...getStudents(), { id: generateId(), name: n, phone: p, guardianPhone: g || null, groupId: gid || null }]);
         loadStudents();
       };
     }
-
     function renderStudentsTable(list) {
-      const groups = getGroups();
-      document.querySelector('#st tbody').innerHTML = list.map(s => {
-        const g = groups.find(gr => gr.id === s.groupId);
+      const gr = getGroups();
+      document.querySelector('#stb tbody').innerHTML = list.map(s => {
+        const g = gr.find(x => x.id === s.groupId);
         return `<tr><td>${s.name}</td><td><a href="tel:${s.phone}">${s.phone}</a></td><td>${s.guardianPhone||'—'}</td><td>${g?g.name:'—'}</td>
-        <td><button class="action-btn btn-view" onclick="viewStudent('${s.id}')">👁️</button>
-        <button class="action-btn btn-edit" onclick="editStudent('${s.id}')">✏️</button>
-        <button class="action-btn btn-delete" onclick="deleteStudentFull('${s.id}')">🗑️</button></td></tr>`;
+        <td><button class="action-btn btn-view" onclick="viewStudent('${s.id}')">👁️</button><button class="action-btn btn-edit" onclick="editStudent('${s.id}')">✏️</button><button class="action-btn btn-delete" onclick="deleteStudentFull('${s.id}')">🗑️</button></td></tr>`;
       }).join('');
     }
-
     function filterStudents() {
-      const q = document.getElementById('student-search').value.toLowerCase();
+      const q = document.getElementById('ss').value.toLowerCase();
       renderStudentsTable(getStudents().filter(s => s.name.toLowerCase().includes(q) || s.phone.includes(q)));
     }
-
     function editStudent(id) {
       const s = getStudentById(id); if (!s) return;
-      const name = prompt('الاسم:', s.name); if (name === null) return;
-      const phone = prompt('الهاتف:', s.phone); if (phone === null) return;
-      const guardian = prompt('ولي الأمر:', s.guardianPhone || '');
-      const groups = getGroups();
-      const choice = prompt('رقم المجموعة:\n' + groups.map((g,i) => (i+1)+'-'+g.name).join('\n') + '\n(0=بدون)', s.groupId ? groups.findIndex(g=>g.id===s.groupId)+1 : '0');
+      const n = prompt('الاسم:', s.name); if (n === null) return;
+      const p = prompt('الهاتف:', s.phone); if (p === null) return;
+      const g = prompt('ولي الأمر:', s.guardianPhone || '');
+      const gr = getGroups();
+      const c = prompt('رقم المجموعة:\n' + gr.map((x,i) => (i+1)+'-'+x.name).join('\n') + '\n(0=بدون)', s.groupId ? gr.findIndex(x=>x.id===s.groupId)+1 : '0');
       let gid = null;
-      if (choice && parseInt(choice) > 0 && groups[parseInt(choice)-1]) gid = groups[parseInt(choice)-1].id;
-      const all = getStudents();
-      all[all.findIndex(x=>x.id===id)] = { ...s, name, phone, guardianPhone: guardian||null, groupId: gid };
-      saveStudents(all);
-      loadStudents();
+      if (c && parseInt(c) > 0 && gr[parseInt(c)-1]) gid = gr[parseInt(c)-1].id;
+      const all = getStudents(); all[all.findIndex(x=>x.id===id)] = { ...s, name: n, phone: p, guardianPhone: g||null, groupId: gid };
+      saveStudents(all); loadStudents();
     }
-
     function deleteStudentFull(id) {
       if (!confirm('حذف الطالب وكل بياناته؟')) return;
       saveStudents(getStudents().filter(s => s.id !== id));
@@ -380,175 +206,165 @@
       saveExams(getExams().filter(e => e.studentId !== id));
       loadStudents();
     }
-
     function viewStudent(id) {
       const s = getStudentById(id); if (!s) return;
       const g = getGroupById(s.groupId);
       const att = getAttendance().filter(a => a.studentId === s.id);
-      const pays = getPayments().filter(p => p.studentId === s.id);
+      const pay = getPayments().filter(p => p.studentId === s.id);
       const ex = getExams().filter(e => e.studentId === s.id);
-      const totalPaid = pays.reduce((sum,p) => sum + p.amount, 0);
+      const total = pay.reduce((sum,p) => sum + p.amount, 0);
       const pres = att.filter(a => a.status === 'present').length;
       const pct = att.length ? Math.round((pres/att.length)*100) : 0;
-
       document.getElementById('main-content').innerHTML = `
         <button onclick="loadStudents()" style="margin-bottom:15px;padding:8px 15px;cursor:pointer;">⬅️ رجوع</button>
         <h2>📋 ${s.name}</h2>
-        <table>
-          <tr><td><strong>الهاتف:</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td></tr>
-          <tr><td><strong>ولي الأمر:</strong></td><td>${s.guardianPhone||'—'}</td></tr>
-          <tr><td><strong>المجموعة:</strong></td><td>${g?g.name:'—'}</td></tr>
-          <tr><td><strong>نسبة الحضور:</strong></td><td>${pct}% (${pres}/${att.length})</td></tr>
-          <tr><td><strong>المدفوعات:</strong></td><td>${totalPaid} ج.م</td></tr>
-          <tr><td><strong>متوسط الدرجات:</strong></td><td>${ex.length ? (ex.reduce((sum,e)=>sum+e.score,0)/ex.length).toFixed(1) : '—'}</td></tr>
-        </table>
+        <table><tr><td><strong>الهاتف:</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td></tr>
+        <tr><td><strong>ولي الأمر:</strong></td><td>${s.guardianPhone||'—'}</td></tr>
+        <tr><td><strong>المجموعة:</strong></td><td>${g?g.name:'—'}</td></tr>
+        <tr><td><strong>نسبة الحضور:</strong></td><td>${pct}% (${pres}/${att.length})</td></tr>
+        <tr><td><strong>المدفوعات:</strong></td><td>${total} ج.م</td></tr>
+        <tr><td><strong>متوسط الدرجات:</strong></td><td>${ex.length ? (ex.reduce((sum,e)=>sum+e.score,0)/ex.length).toFixed(1) : '—'}</td></tr></table>
         <h3 style="margin-top:20px;">📝 الامتحانات</h3>
-        <table><thead><tr><th>الامتحان</th><th>الدرجة</th><th>التاريخ</th></tr></thead>
-        <tbody>${ex.map(e=>`<tr><td>${e.examName}</td><td>${e.score}</td><td>${e.date}</td></tr>`).join('')||'<tr><td colspan="3">لا توجد</td></tr>'}</tbody></table>`;
+        <table><thead><tr><th>الامتحان</th><th>الدرجة</th><th>التاريخ</th></tr></thead><tbody>${ex.map(e=>`<tr><td>${e.examName}</td><td>${e.score}</td><td>${e.date}</td></tr>`).join('')||'<tr><td colspan="3">لا توجد</td></tr>'}</tbody></table>`;
     }
 
-    // ==================== المجموعات ====================
+    // ==================== مجموعات ====================
     function loadGroups() {
       const m = document.getElementById('main-content');
-      const groups = getGroups();
-      const students = getStudents();
-      let html = `
-        <h2>👥 المجموعات</h2>
-        <form id="gf">
-          <input type="text" id="gn" placeholder="اسم المجموعة" required>
-          <input type="text" id="gs" placeholder="المواعيد">
-          <button type="submit">➕ إضافة</button>
-        </form>
+      const gr = getGroups(), st = getStudents();
+      let h = `<h2>👥 المجموعات</h2><form id="gf"><input type="text" id="gn" placeholder="اسم المجموعة" required><input type="text" id="gs" placeholder="المواعيد"><button type="submit">➕ إضافة</button></form>
         <table><thead><tr><th>المجموعة</th><th>المواعيد</th><th>الطلاب</th><th>واتساب</th><th>إجراءات</th></tr></thead><tbody>`;
-      groups.forEach(g => {
-        const count = students.filter(s => s.groupId === g.id).length;
-        html += `<tr><td>${g.name}</td><td>${g.schedule||'—'}</td><td>${count}</td>
+      gr.forEach(g => {
+        const c = st.filter(s => s.groupId === g.id).length;
+        h += `<tr><td>${g.name}</td><td>${g.schedule||'—'}</td><td>${c}</td>
         <td><button class="action-btn btn-whatsapp" onclick="sendWhatsapp('${g.id}')">📱</button></td>
-        <td><button class="action-btn btn-edit" onclick="editGroup('${g.id}')">✏️</button>
-        <button class="action-btn btn-delete" onclick="deleteGroup('${g.id}')">🗑️</button></td></tr>`;
+        <td><button class="action-btn btn-edit" onclick="editGroup('${g.id}')">✏️</button><button class="action-btn btn-delete" onclick="deleteGroup('${g.id}')">🗑️</button></td></tr>`;
       });
-      html += '</tbody></table>';
-      m.innerHTML = html;
-      document.getElementById('gf').onsubmit = (e) => {
+      h += '</tbody></table>'; m.innerHTML = h;
+      document.getElementById('gf').onsubmit = function(e) {
         e.preventDefault();
-        const name = document.getElementById('gn').value.trim();
-        if (!name) return;
-        saveGroups([...getGroups(), { id: generateId(), name, schedule: document.getElementById('gs').value.trim() }]);
+        const n = document.getElementById('gn').value.trim();
+        if (!n) return;
+        saveGroups([...getGroups(), { id: generateId(), name: n, schedule: document.getElementById('gs').value.trim() }]);
         loadGroups();
       };
     }
-
     function editGroup(id) {
       const g = getGroupById(id); if (!g) return;
-      const name = prompt('الاسم:', g.name); if (name === null) return;
-      const schedule = prompt('المواعيد:', g.schedule || '');
-      const all = getGroups();
-      all[all.findIndex(x=>x.id===id)] = { ...g, name, schedule };
-      saveGroups(all);
-      loadGroups();
+      const n = prompt('الاسم:', g.name); if (n === null) return;
+      const s = prompt('المواعيد:', g.schedule || '');
+      const all = getGroups(); all[all.findIndex(x=>x.id===id)] = { ...g, name: n, schedule: s };
+      saveGroups(all); loadGroups();
     }
-
     function deleteGroup(id) {
       if (!confirm('حذف؟')) return;
       saveGroups(getGroups().filter(g => g.id !== id));
       saveStudents(getStudents().map(s => s.groupId === id ? {...s, groupId: null} : s));
       loadGroups();
     }
-
-    function sendWhatsapp(groupId) {
-      const students = getStudents().filter(s => s.groupId === groupId);
-      if (students.length === 0) return alert('لا يوجد طلاب');
-      const msg = prompt('الرسالة:');
-      if (!msg) return;
-      students.forEach(s => {
-        const phone = s.phone.replace(/[^0-9]/g, '');
-        if (phone) window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-      });
+    function sendWhatsapp(gid) {
+      const st = getStudents().filter(s => s.groupId === gid);
+      if (!st.length) return alert('لا يوجد طلاب');
+      const msg = prompt('الرسالة:'); if (!msg) return;
+      st.forEach(s => { const p = s.phone.replace(/[^0-9]/g, ''); if (p) window.open('https://wa.me/' + p + '?text=' + encodeURIComponent(msg), '_blank'); });
     }
 
-    // ==================== الحضور ====================
+    // ==================== حضور ====================
     function loadAttendance() {
       const m = document.getElementById('main-content');
-      const groups = getGroups();
-      let html = `
-        <h2>📋 الحضور</h2>
-        <div style="display:flex;gap:10px;margin-bottom:20px;">
-          <select id="ag"><option value="">-- المجموعة --</option>${groups.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select>
-          <input type="date" id="ad">
-          <button onclick="showAttendance()">📅 عرض</button>
-        </div>
-        <div id="att-form"></div>
-        <h3 style="margin-top:30px;">السجل</h3>
-        <div id="att-history"></div>`;
-      m.innerHTML = html;
-      renderAttendanceHistory();
+      const gr = getGroups();
+      let h = `<h2>📋 الحضور</h2><div style="display:flex;gap:10px;margin-bottom:20px;"><select id="ag"><option value="">-- المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><input type="date" id="ad"><button onclick="showAttendance()">📅 عرض</button></div><div id="att-form"></div><h3 style="margin-top:30px;">السجل</h3><div id="att-hist"></div>`;
+      m.innerHTML = h; renderAttHistory();
     }
-
     function showAttendance() {
-      const groupId = document.getElementById('ag').value;
-      const date = document.getElementById('ad').value;
-      if (!groupId || !date) return alert('اختر المجموعة والتاريخ');
-      const students = getStudents().filter(s => s.groupId === groupId);
-      if (students.length === 0) return document.getElementById('att-form').innerHTML = '<p>لا يوجد طلاب</p>';
-      const existing = getAttendance().filter(a => a.groupId === groupId && a.date === date);
-      const map = {}; existing.forEach(a => map[a.studentId] = a.status);
-      let f = '<form id="sf"><table><thead><tr><th>الطالب</th><th>حاضر</th><th>غائب</th></tr></thead><tbody>';
-      students.forEach(s => {
-        f += `<tr><td>${s.name}</td>
-        <td><input type="radio" name="a-${s.id}" value="present" ${map[s.id]!=='absent'?'checked':''}></td>
-        <td><input type="radio" name="a-${s.id}" value="absent" ${map[s.id]==='absent'?'checked':''}></td></tr>`;
-      });
+      const gid = document.getElementById('ag').value, date = document.getElementById('ad').value;
+      if (!gid || !date) return alert('اختر المجموعة والتاريخ');
+      const st = getStudents().filter(s => s.groupId === gid);
+      if (!st.length) return document.getElementById('att-form').innerHTML = '<p>لا يوجد طلاب</p>';
+      const ex = getAttendance().filter(a => a.groupId === gid && a.date === date);
+      const map = {}; ex.forEach(a => map[a.studentId] = a.status);
+      let f = '<form id="saf"><table><thead><tr><th>الطالب</th><th>حاضر</th><th>غائب</th></tr></thead><tbody>';
+      st.forEach(s => f += `<tr><td>${s.name}</td><td><input type="radio" name="a-${s.id}" value="present" ${map[s.id]!=='absent'?'checked':''}></td><td><input type="radio" name="a-${s.id}" value="absent" ${map[s.id]==='absent'?'checked':''}></td></tr>`);
       f += '</tbody></table><button type="submit" style="margin-top:10px;">💾 حفظ</button></form>';
       document.getElementById('att-form').innerHTML = f;
-      document.getElementById('sf').onsubmit = function(e) {
+      document.getElementById('saf').onsubmit = function(e) {
         e.preventDefault();
-        let all = getAttendance().filter(a => !(a.groupId === groupId && a.date === date));
-        students.forEach(s => {
-          const r = document.querySelector(`input[name="a-${s.id}"]:checked`);
-          if (r) all.push({ id: generateId(), studentId: s.id, groupId, date, status: r.value });
-        });
-        saveAttendance(all);
-        alert('✅ تم الحفظ');
-        loadAttendance();
+        let all = getAttendance().filter(a => !(a.groupId === gid && a.date === date));
+        st.forEach(s => { const r = document.querySelector('input[name="a-' + s.id + '"]:checked'); if (r) all.push({ id: generateId(), studentId: s.id, groupId: gid, date, status: r.value }); });
+        saveAttendance(all); alert('✅ تم الحفظ'); loadAttendance();
       };
     }
-
-    function renderAttendanceHistory() {
+    function renderAttHistory() {
       const all = getAttendance();
-      if (all.length === 0) return document.getElementById('att-history').innerHTML = '<p>لا سجل</p>';
+      if (!all.length) return document.getElementById('att-hist').innerHTML = '<p>لا سجل</p>';
       const grouped = {};
-      all.forEach(a => {
-        const k = a.date + a.groupId;
-        if (!grouped[k]) grouped[k] = { date: a.date, groupId: a.groupId, present: 0, absent: 0 };
-        a.status === 'present' ? grouped[k].present++ : grouped[k].absent++;
-      });
+      all.forEach(a => { const k = a.date + a.groupId; if (!grouped[k]) grouped[k] = { date: a.date, groupId: a.groupId, present: 0, absent: 0 }; a.status === 'present' ? grouped[k].present++ : grouped[k].absent++; });
       let t = '<table><thead><tr><th>التاريخ</th><th>المجموعة</th><th>حضور</th><th>غياب</th></tr></thead><tbody>';
-      Object.values(grouped).forEach(r => {
-        const g = getGroupById(r.groupId);
-        t += `<tr><td>${r.date}</td><td>${g?g.name:'—'}</td><td>${r.present}</td><td>${r.absent}</td></tr>`;
-      });
-      t += '</tbody></table>';
-      document.getElementById('att-history').innerHTML = t;
+      Object.values(grouped).forEach(r => { const g = getGroupById(r.groupId); t += `<tr><td>${r.date}</td><td>${g?g.name:'—'}</td><td>${r.present}</td><td>${r.absent}</td></tr>`; });
+      t += '</tbody></table>'; document.getElementById('att-hist').innerHTML = t;
     }
 
-    // ==================== المدفوعات ====================
+    // ==================== مدفوعات ====================
     function loadPayments() {
       const m = document.getElementById('main-content');
-      const students = getStudents();
-      const payments = getPayments();
-      let html = `
-        <h2>💰 المدفوعات</h2>
-        <form id="pf">
-          <select id="ps" required><option value="">-- الطالب --</option>${students.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select>
-          <input type="number" id="pa" placeholder="المبلغ" required>
-          <input type="date" id="pd" required>
-          <input type="text" id="pn" placeholder="ملاحظات">
-          <button type="submit">➕ إضافة</button>
-        </form>
-        <table><thead><tr><th>الطالب</th><th>المبلغ</th><th>التاريخ</th><th>ملاحظات</th><th>حذف</th></tr></thead><tbody>`;
-      payments.forEach(p => {
-        const s = students.find(st => st.id === p.studentId);
-        html += `<tr><td>${s?s.name:'—'}</td><td>${p.amount} ج.م</td><td>${p.date}</td><td>${p.notes||''}</td>
-        <td><button class="action-btn btn-delete" onclick="deletePayment('${p.id}')">🗑️</button></td></tr>`;
+      const st = getStudents(), pay = getPayments();
+      let h = `<h2>💰 المدفوعات</h2><form id="pf"><select id="ps" required><option value="">-- الطالب --</option>${st.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><input type="number" id="pa" placeholder="المبلغ" required><input type="date" id="pd" required><input type="text" id="pn" placeholder="ملاحظات"><button type="submit">➕ إضافة</button></form><table><thead><tr><th>الطالب</th><th>المبلغ</th><th>التاريخ</th><th>ملاحظات</th><th>حذف</th></tr></thead><tbody>`;
+      pay.forEach(p => { const s = st.find(x => x.id === p.studentId); h += `<tr><td>${s?s.name:'—'}</td><td>${p.amount} ج.م</td><td>${p.date}</td><td>${p.notes||''}</td><td><button class="action-btn btn-delete" onclick="deletePayment('${p.id}')">🗑️</button></td></tr>`; });
+      h += '</tbody></table>'; m.innerHTML = h;
+      document.getElementById('pf').onsubmit = function(e) {
+        e.preventDefault();
+        const sid = document.getElementById('ps').value, amt = parseFloat(document.getElementById('pa').value);
+        const date = document.getElementById('pd').value, notes = document.getElementById('pn').value.trim();
+        if (!sid || isNaN(amt) || !date) return alert('بيانات ناقصة');
+        savePayments([...getPayments(), { id: generateId(), studentId: sid, amount: amt, date, notes }]);
+        loadPayments();
+      };
+    }
+    function deletePayment(id) { if (!confirm('حذف؟')) return; savePayments(getPayments().filter(p => p.id !== id)); loadPayments(); }
+
+    // ==================== امتحانات ====================
+    function loadExams() {
+      const m = document.getElementById('main-content');
+      const st = getStudents(), ex = getExams();
+      let h = `<h2>📝 الامتحانات</h2><form id="ef"><select id="es" required><option value="">-- الطالب --</option>${st.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><input type="text" id="en" placeholder="اسم الامتحان" required><input type="number" id="esc" placeholder="الدرجة" required><input type="date" id="ed" required><button type="submit">➕ إضافة</button></form><table><thead><tr><th>الطالب</th><th>الامتحان</th><th>الدرجة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody>`;
+      ex.forEach(e => { const s = st.find(x => x.id === e.studentId); h += `<tr><td>${s?s.name:'—'}</td><td>${e.examName}</td><td>${e.score}</td><td>${e.date}</td><td><button class="action-btn btn-delete" onclick="deleteExam('${e.id}')">🗑️</button></td></tr>`; });
+      h += '</tbody></table>'; m.innerHTML = h;
+      document.getElementById('ef').onsubmit = function(e) {
+        e.preventDefault();
+        const sid = document.getElementById('es').value, en = document.getElementById('en').value.trim();
+        const sc = parseInt(document.getElementById('esc').value), date = document.getElementById('ed').value;
+        if (!sid || !en || isNaN(sc) || !date) return;
+        saveExams([...getExams(), { id: generateId(), studentId: sid, examName: en, score: sc, date }]);
+        loadExams();
+      };
+    }
+    function deleteExam(id) { if (!confirm('حذف؟')) return; saveExams(getExams().filter(e => e.id !== id)); loadExams(); }
+
+    // ==================== تقارير ====================
+    function loadReports() {
+      const m = document.getElementById('main-content');
+      const st = getStudents(), att = getAttendance(), pay = getPayments(), ex = getExams(), gr = getGroups();
+      let h = `<h2>📊 التقارير</h2><div class="report-card"><h3>📋 ملخص الطلاب</h3><table><thead><tr><th>الطالب</th><th>المجموعة</th><th>حضور%</th><th>مدفوعات</th><th>متوسط</th></tr></thead><tbody>`;
+      st.forEach(s => {
+        const g = getGroupById(s.groupId);
+        const a = att.filter(x => x.studentId === s.id);
+        const pr = a.filter(x => x.status === 'present').length;
+        const pct = a.length ? Math.round((pr/a.length)*100) : 0;
+        const tot = pay.filter(x => x.studentId === s.id).reduce((sm,x) => sm + x.amount, 0);
+        const exm = ex.filter(x => x.studentId === s.id);
+        const avg = exm.length ? (exm.reduce((sm,x) => sm + x.score, 0)/exm.length).toFixed(1) : 0;
+        h += `<tr><td>${s.name}</td><td>${g?g.name:'—'}</td><td>${pct}%</td><td>${tot} ج.م</td><td>${avg}</td></tr>`;
       });
-      html
+      h += `</tbody></table></div><div class="report-card"><h3>👥 ملخص المجموعات</h3><table><thead><tr><th>المجموعة</th><th>الطلاب</th><th>متوسط الحضور</th></tr></thead><tbody>`;
+      gr.forEach(g => {
+        const gs = st.filter(s => s.groupId === g.id);
+        if (!gs.length) return;
+        let tp = 0;
+        gs.forEach(s => { const a = att.filter(x => x.studentId === s.id); tp += a.length ? (a.filter(x=>x.status==='present').length/a.length)*100 : 0; });
+        h += `<tr><td>${g.name}</td><td>${gs.length}</td><td>${(tp/gs.length).toFixed(1)}%</td></tr>`;
+      });
+      h += `</tbody></table></div>`; m.innerHTML = h;
+    }
+  </script>
+</body>
+</html>
