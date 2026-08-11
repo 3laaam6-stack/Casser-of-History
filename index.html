@@ -3,86 +3,343 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Caeser of History</title>
+  <title>Caeser of History - إدارة المجموعات</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+</script>
   <style>
+    :root {
+      --primary: #4f46e5; --primary-dark: #3730a3; --secondary: #10b981;
+      --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
+      --bg: #f1f5f9; --card: #ffffff; --text: #1e293b;
+      --text-light: #64748b; --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      --shadow-lg: 0 20px 40px -5px rgba(0,0,0,0.15);
+    }
+
+    .dark-mode {
+      --bg: #0f172a; --card: #1e293b; --text: #f1f5f9;
+      --text-light: #94a3b8; --border: #334155;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; min-height: 100vh; }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg); min-height: 100vh; color: var(--text);
+    }
+
     .app-container { display: flex; min-height: 100vh; }
-    .sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; display: flex; flex-direction: column; }
-    .sidebar h2 { font-size: 20px; border-bottom: 1px solid #4a627a; padding-bottom: 12px; margin-bottom: 20px; text-align: center; }
-    .sidebar ul { list-style: none; flex: 1; }
-    .sidebar button { display: block; width: 100%; background: none; border: none; color: white; padding: 12px 15px; text-align: right; font-size: 16px; cursor: pointer; border-radius: 8px; margin-bottom: 4px; }
-    .sidebar button:hover { background: rgba(255,255,255,0.15); }
-    .bottom-btns { margin-top: auto; padding-top: 15px; border-top: 1px solid #4a627a; display: flex; flex-direction: column; gap: 6px; }
-    .bottom-btns button { padding: 10px; font-size: 14px; color: white; border: none; border-radius: 6px; cursor: pointer; }
-    .btn-export { background: #27ae60; }
-    .btn-import { background: #8e44ad; }
 
-    .content { flex: 1; padding: 25px; background: white; margin: 15px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); overflow-y: auto; }
+    /* ========== الشريط الجانبي ========== */
+    .sidebar {
+      width: 280px; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      color: white; padding: 20px 12px; display: flex; flex-direction: column;
+      position: fixed; right: 0; top: 0; bottom: 0; z-index: 100;
+      box-shadow: 4px 0 30px rgba(0,0,0,0.3); overflow-y: auto;
+    }
+    .sidebar .logo { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid rgba(255,255,255,0.1); }
+    .sidebar .logo .icon { font-size: 50px; display: block; margin-bottom: 8px; }
+    .sidebar .logo h2 { font-size: 22px; background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
+    .sidebar .logo p { font-size: 11px; color: #94a3b8; margin-top: 3px; }
 
-    .welcome-banner { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; }
-    .welcome-banner h1 { font-size: 28px; margin-bottom: 5px; }
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
-    .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); text-align: center; border-left: 4px solid #667eea; }
-    .stat-card .num { font-size: 32px; font-weight: bold; color: #2c3e50; }
-    .stat-card .label { color: #7f8c8d; font-size: 13px; margin-top: 4px; }
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
-    .dash-card { background: white; border-radius: 15px; padding: 25px 15px; text-align: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.2s; border-top: 4px solid #667eea; }
-    .dash-card:hover { transform: translateY(-4px); }
-    .dash-card .icon { font-size: 45px; margin-bottom: 10px; }
-    .dash-card .title { font-weight: bold; color: #2c3e50; font-size: 16px; }
-    .dash-card .num { color: #667eea; font-weight: bold; font-size: 14px; margin-top: 4px; }
+    .sidebar .nav-btn {
+      display: flex; align-items: center; gap: 12px; width: 100%;
+      background: none; border: none; color: #cbd5e1; padding: 14px 15px;
+      text-align: right; font-size: 16px; cursor: pointer; border-radius: 12px;
+      margin-bottom: 4px; transition: all 0.3s; font-weight: 500;
+    }
+    .sidebar .nav-btn:hover { background: rgba(255,255,255,0.08); color: white; transform: translateX(-5px); }
+    .sidebar .nav-btn.active { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; box-shadow: 0 4px 15px rgba(79,70,229,0.4); }
+    .sidebar .nav-btn .nav-icon { font-size: 24px; width: 40px; text-align: center; }
 
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-    .search-box input { padding: 10px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; width: 250px; }
-    form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 10px; align-items: flex-end; }
-    form input, form select { padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
-    form button { padding: 10px 18px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th { background: #f8f9fa; padding: 12px; text-align: center; border-bottom: 2px solid #667eea; }
-    td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
-    .action-btn { padding: 5px 10px; margin: 0 2px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; color: white; }
-    .btn-edit { background: #f39c12; }
-    .btn-delete { background: #e74c3c; }
-    .btn-view { background: #3498db; }
-    .btn-whatsapp { background: #25D366; }
-    .alert-box { background: #fff3cd; border: 1px solid #ffc107; padding: 12px; border-radius: 8px; margin: 15px 0; color: #856404; }
+    .sidebar .bottom-actions { margin-top: auto; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 8px; }
+    .sidebar .bottom-actions button {
+      width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer;
+      font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+      justify-content: center; transition: all 0.3s; color: white;
+    }
+    .btn-gdrive { background: #4285f4; }
+    .btn-export { background: #10b981; }
+    .btn-import { background: #8b5cf6; }
+    .btn-theme { background: #64748b; }
+
+    /* ========== المحتوى الرئيسي ========== */
+    .content { flex: 1; margin-right: 280px; padding: 25px; min-height: 100vh; }
+
+    /* ========== داشبورد ========== */
+    .dashboard-header {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white; padding: 35px 30px; border-radius: 20px;
+      margin-bottom: 25px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden;
+    }
+    .dashboard-header h1 { font-size: 30px; margin-bottom: 6px; position: relative; z-index: 1; }
+    .dashboard-header p { font-size: 15px; opacity: 0.9; position: relative; z-index: 1; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 25px; }
+    .stat-card {
+      background: var(--card); padding: 22px; border-radius: 16px;
+      box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; transition: transform 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-3px); }
+    .stat-card .stat-icon {
+      width: 55px; height: 55px; border-radius: 14px; display: flex;
+      align-items: center; justify-content: center; font-size: 28px;
+    }
+    .stat-icon.blue { background: #dbeafe; } .stat-icon.green { background: #d1fae5; }
+    .stat-icon.orange { background: #fef3c7; } .stat-icon.purple { background: #ede9fe; }
+    .stat-value { font-size: 28px; font-weight: 800; }
+    .stat-label { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+    .dash-card {
+      background: var(--card); border-radius: 18px; padding: 28px 18px;
+      text-align: center; cursor: pointer; box-shadow: var(--shadow);
+      transition: all 0.3s; border: 2px solid transparent;
+    }
+    .dash-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+    .dash-card .card-icon { font-size: 50px; margin-bottom: 12px; display: block; }
+    .dash-card .card-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .dash-card .card-subtitle { font-size: 12px; color: var(--text-light); }
+
+    /* ========== صفحات ========== */
+    .page-container { background: var(--card); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .page-header h2 { font-size: 24px; display: flex; align-items: center; gap: 10px; }
+    .search-box input { padding: 10px 15px; border: 2px solid var(--border); border-radius: 10px; font-size: 14px; width: 260px; background: var(--card); color: var(--text); }
+
+    form {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+      background: var(--bg); padding: 18px; border-radius: 14px; align-items: flex-end;
+    }
+    form input, form select {
+      padding: 11px 14px; border: 2px solid var(--border); border-radius: 10px;
+      font-size: 14px; background: var(--card); color: var(--text);
+    }
+    form button {
+      padding: 11px 20px; background: var(--primary); color: white;
+      border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 15px;
+      transition: all 0.3s; display: flex; align-items: center; gap: 6px;
+    }
+    form button:hover { background: var(--primary-dark); transform: scale(1.03); }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 12px; overflow: hidden; }
+    th { background: var(--bg); padding: 14px; text-align: center; font-weight: 700; font-size: 14px; }
+    td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border); font-size: 14px; }
+    tr:hover td { background: var(--bg); }
+
+    .btn-sm {
+      padding: 7px 13px; margin: 0 3px; border: none; border-radius: 8px;
+      cursor: pointer; font-size: 13px; font-weight: 600; color: white; transition: all 0.2s;
+    }
+    .btn-sm:hover { transform: scale(1.08); }
+    .btn-edit { background: #f59e0b; } .btn-delete { background: #ef4444; }
+    .btn-view { background: #3b82f6; } .btn-whatsapp { background: #25D366; }
+    .btn-save { background: #10b981; } .btn-back { background: #64748b; }
+    .btn-print { background: #8b5cf6; }
+
+    .alert-box { background: #fef3c7; border: 1px solid #f59e0b; padding: 14px; border-radius: 12px; margin: 15px 0; color: #92400e; font-weight: 600; }
+
+    .action-bar { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+    .chart-container { max-width: 100%; margin: 25px 0; background: var(--card); padding: 20px; border-radius: 16px; box-shadow: var(--shadow); }
+    canvas { max-width: 100%; }
 
     @media (max-width: 768px) {
       .app-container { flex-direction: column; }
-      .sidebar { width: 100%; padding: 12px; }
-      .sidebar ul { display: flex; flex-wrap: wrap; gap: 4px; }
-      .sidebar button { width: auto; padding: 8px 12px; font-size: 13px; }
-      .content { margin: 10px; padding: 15px; }
+      .sidebar { position: relative; width: 100%; padding: 15px; }
+      .content { margin-right: 0; padding: 15px; }
       .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
 
   <div class="app-container">
-    <nav class="sidebar">
-      <h2>📜 Caeser</h2>
-      <ul>
-        <li><button onclick="navigateTo('dashboard')">🏠 الرئيسية</button></li>
-        <li><button onclick="navigateTo('students')">👨‍🎓 الطلاب</button></li>
-        <li><button onclick="navigateTo('groups')">👥 المجموعات</button></li>
-        <li><button onclick="navigateTo('attendance')">📋 الحضور</button></li>
-        <li><button onclick="navigateTo('payments')">💰 المدفوعات</button></li>
-        <li><button onclick="navigateTo('exams')">📝 الامتحانات</button></li>
-        <li><button onclick="navigateTo('reports')">📊 التقارير</button></li>
-      </ul>
-      <div class="bottom-btns">
-        <button class="btn-export" onclick="exportAllData()">📤 تصدير البيانات</button>
-        <button class="btn-import" onclick="document.getElementById('import-file').click()">📥 استيراد البيانات</button>
+    <!-- ========== الشريط الجانبي ========== -->
+    <nav class="sidebar" id="sidebar">
+      <div class="logo">
+        <span class="icon">📜</span>
+        <h2>Caeser of History</h2>
+        <p>إدارة المجموعات التعليمية</p>
+      </div>
+
+      <div style="flex:1;">
+        <button class="nav-btn active" onclick="navigateTo('dashboard')"><span class="nav-icon">🏠</span> الرئيسية</button>
+        <button class="nav-btn" onclick="navigateTo('students')"><span class="nav-icon">👨‍🎓</span> الطلاب</button>
+        <button class="nav-btn" onclick="navigateTo('groups')"><span class="nav-icon">👥</span> المجموعات</button>
+        <button class="nav-btn" onclick="navigateTo('attendance')"><span class="nav-icon">📋</span> الحضور</button>
+        <button class="nav-btn" onclick="navigateTo('payments')"><span class="nav-icon">💰</span> المدفوعات</button>
+        <button class="nav-btn" onclick="navigateTo('exams')"><span class="nav-icon">📝</span> الامتحانات</button>
+        <button class="nav-btn" onclick="navigateTo('reports')"><span class="nav-icon">📊</span> التقارير</button>
+      </div>
+
+      <div class="bottom-actions">
+        <button class="btn-gdrive" onclick="saveToGoogleDrive()">📤 حفظ في Google Drive</button>
+        <button class="btn-gdrive" onclick="loadFromGoogleDrive()" style="background:#34a853;">📥 تحميل من Google Drive</button>
+        <button class="btn-export" onclick="exportAllData()">💾 تصدير JSON</button>
+        <button class="btn-import" onclick="document.getElementById('import-file').click()">📂 استيراد JSON</button>
         <input type="file" id="import-file" accept=".json" style="display:none" onchange="importAllData(event)">
+        <button class="btn-theme" onclick="toggleTheme()">🌓 تبديل المظهر</button>
       </div>
     </nav>
+
+    <!-- ========== المحتوى ========== -->
     <main id="main-content" class="content"></main>
   </div>
 
   <script>
-    // ==================== DATA ====================
+    // ==================== GOOGLE DRIVE API ====================
+    const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // هتحتاج تسجل تطبيق في Google Cloud
+    const API_KEY = 'YOUR_API_KEY';
+    const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+    const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+
+    let gapiLoaded = false;
+    let gisLoaded = false;
+
+    // تحميل Google API
+    function loadGoogleAPI() {
+      const script1 = document.createElement('script');
+      script1.src = 'https://apis.google.com/js/api.js';
+      script1.onload = () => { gapiLoaded = true; gapi.load('client', initializeGapiClient); };
+      document.body.appendChild(script1);
+
+      const script2 = document.createElement('script');
+      script2.src = 'https://accounts.google.com/gsi/client';
+      script2.onload = () => { gisLoaded = true; };
+      document.body.appendChild(script2);
+    }
+
+    async function initializeGapiClient() {
+      await gapi.client.init({
+        apiKey: API_KEY,
+        discoveryDocs: DISCOVERY_DOCS,
+      });
+    }
+
+    // حفظ الملف في Google Drive
+    async function saveToGoogleDrive() {
+      if (!gapiLoaded || !gisLoaded) {
+        alert('⏳ جاري تحميل Google API... حاول مرة أخرى.');
+        loadGoogleAPI();
+        return;
+      }
+
+      const token = await getGoogleToken();
+      if (!token) return;
+
+      const allData = {
+        students: getStudents(),
+        groups: getGroups(),
+        attendance: getAttendance(),
+        payments: getPayments(),
+        exams: getExams()
+      };
+
+      const jsonStr = JSON.stringify(allData, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+
+      const metadata = {
+        name: 'caeser_backup_' + new Date().toISOString().slice(0,10) + '.json',
+        mimeType: 'application/json'
+      };
+
+      const form = new FormData();
+      form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+      form.append('file', blob);
+
+      try {
+        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          body: form
+        });
+        const result = await response.json();
+        if (result.id) {
+          alert('✅ تم الحفظ في Google Drive بنجاح!\nرابط الملف: https://drive.google.com/file/d/' + result.id + '/view');
+        } else {
+          alert('❌ فشل الحفظ: ' + JSON.stringify(result));
+        }
+      } catch (err) {
+        alert('❌ خطأ: ' + err.message);
+      }
+    }
+
+    // تحميل من Google Drive
+    async function loadFromGoogleDrive() {
+      if (!gapiLoaded || !gisLoaded) {
+        alert('⏳ جاري تحميل Google API... حاول مرة أخرى.');
+        loadGoogleAPI();
+        return;
+      }
+
+      const token = await getGoogleToken();
+      if (!token) return;
+
+      try {
+        // جلب قائمة الملفات
+        const response = await fetch('https://www.googleapis.com/drive/v3/files?q=name+contains+%22caeser_backup%22&orderBy=createdTime+desc&pageSize=5&fields=files(id,name,createdTime)', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json();
+
+        if (!data.files || data.files.length === 0) {
+          alert('❌ لا توجد ملفات نسخ احتياطي في Google Drive.');
+          return;
+        }
+
+        // عرض الملفات للاختيار
+        let fileList = 'اختر ملف:\n\n';
+        data.files.forEach((f, i) => {
+          fileList += (i+1) + '- ' + f.name + ' (' + new Date(f.createdTime).toLocaleDateString('ar-EG') + ')\n';
+        });
+        const choice = prompt(fileList);
+        if (!choice) return;
+
+        const fileIndex = parseInt(choice) - 1;
+        if (fileIndex < 0 || fileIndex >= data.files.length) return;
+
+        const fileId = data.files[fileIndex].id;
+
+        // تحميل محتوى الملف
+        const contentResponse = await fetch('https://www.googleapis.com/drive/v3/files/' + fileId + '?alt=media', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const jsonData = await contentResponse.json();
+
+        if (jsonData.students) saveStudents(jsonData.students);
+        if (jsonData.groups) saveGroups(jsonData.groups);
+        if (jsonData.attendance) saveAttendance(jsonData.attendance);
+        if (jsonData.payments) savePayments(jsonData.payments);
+        if (jsonData.exams) saveExams(jsonData.exams);
+
+        alert('✅ تم تحميل البيانات من Google Drive بنجاح!');
+        navigateTo('dashboard');
+      } catch (err) {
+        alert('❌ خطأ: ' + err.message);
+      }
+    }
+
+    async function getGoogleToken() {
+      return new Promise((resolve) => {
+        const tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          callback: (response) => {
+            if (response.error) {
+              alert('❌ فشل المصادقة: ' + response.error);
+              resolve(null);
+            } else {
+              resolve(response.access_token);
+            }
+          },
+        });
+        tokenClient.requestAccessToken();
+      });
+    }
+
+    // ==================== DATA LAYER ====================
     function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
     function getData(key) { const d = localStorage.getItem('caeser_' + key); return d ? JSON.parse(d) : []; }
     function saveData(key, data) { localStorage.setItem('caeser_' + key, JSON.stringify(data)); }
@@ -99,10 +356,11 @@
     function getExams() { return getData('exams'); }
     function saveExams(e) { saveData('exams', e); }
 
+    // ==================== تصدير/استيراد JSON ====================
     function exportAllData() {
       const d = { students: getStudents(), groups: getGroups(), attendance: getAttendance(), payments: getPayments(), exams: getExams() };
-      const b = new Blob([JSON.stringify(d)], { type: 'application/json' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'caeser_backup.json'; a.click();
+      const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'caeser_backup_' + new Date().toISOString().slice(0,10) + '.json'; a.click();
       alert('✅ تم التصدير');
     }
     function importAllData(e) {
@@ -122,10 +380,39 @@
       r.readAsText(f);
     }
 
-    function navigateTo(p) { const fn = window['load' + p.charAt(0).toUpperCase() + p.slice(1)]; if (fn) fn(); }
-    
-    // ==================== فتح التطبيق مباشرة ====================
-    window.addEventListener('DOMContentLoaded', function() {
+    function fileToBase64(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ==================== المظهر ====================
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('caeser_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+    if (localStorage.getItem('caeser_theme') === 'dark') document.body.classList.add('dark-mode');
+
+    // ==================== التنقل ====================
+    function navigateTo(page) {
+      const fn = window['load' + page.charAt(0).toUpperCase() + page.slice(1)];
+      if (fn) fn();
+      // تحديث الـ active
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      const buttons = document.querySelectorAll('.nav-btn');
+      buttons.forEach(b => {
+        if (b.textContent.includes(getPageTitle(page))) b.classList.add('active');
+      });
+    }
+    function getPageTitle(page) {
+      const titles = { dashboard: 'الرئيسية', students: 'الطلاب', groups: 'المجموعات', attendance: 'الحضور', payments: 'المدفوعات', exams: 'الامتحانات', reports: 'التقارير' };
+      return titles[page] || '';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadGoogleAPI();
       navigateTo('dashboard');
     });
 
@@ -137,32 +424,40 @@
       const present = att.filter(a => a.date === today && a.status === 'present').length;
       const total = pay.reduce((s,p) => s + p.amount, 0);
       const over = st.filter(s => pay.filter(p => p.studentId === s.id).length === 0);
-      let h = `<div class="welcome-banner"><h1>👋 أهلاً بك</h1><p>Caeser of History</p></div>
-        <div class="stats-row">
-          <div class="stat-card"><div class="num">${st.length}</div><div class="label">طالب</div></div>
-          <div class="stat-card"><div class="num">${gr.length}</div><div class="label">مجموعة</div></div>
-          <div class="stat-card"><div class="num">${present}</div><div class="label">حضور اليوم</div></div>
-          <div class="stat-card"><div class="num">${total} ج.م</div><div class="label">المدفوعات</div></div>
+
+      let h = `
+        <div class="dashboard-header">
+          <h1>👋 أهلاً بك في Caeser of History</h1>
+          <p>لوحة تحكم إدارة المجموعات - كل شيء في مكان واحد</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon blue">👨‍🎓</div><div class="stat-info"><div class="stat-value">${st.length}</div><div class="stat-label">إجمالي الطلاب</div></div></div>
+          <div class="stat-card"><div class="stat-icon green">👥</div><div class="stat-info"><div class="stat-value">${gr.length}</div><div class="stat-label">المجموعات</div></div></div>
+          <div class="stat-card"><div class="stat-icon orange">📋</div><div class="stat-info"><div class="stat-value">${present}</div><div class="stat-label">حضور اليوم</div></div></div>
+          <div class="stat-card"><div class="stat-icon purple">💰</div><div class="stat-info"><div class="stat-value">${total} ج.م</div><div class="stat-label">إجمالي المدفوعات</div></div></div>
         </div>`;
-      if (over.length) h += `<div class="alert-box">⚠️ لم يسددوا: ${over.map(s=>s.name).join('، ')}</div>`;
+      if (over.length) h += `<div class="alert-box">⚠️ تنبيه: ${over.length} طلاب لم يسددوا بعد - ${over.map(s=>s.name).join('، ')}</div>`;
       h += `<div class="dashboard-grid">
-        <div class="dash-card" onclick="navigateTo('students')"><div class="icon">👨‍🎓</div><div class="title">الطلاب</div><div class="num">${st.length}</div></div>
-        <div class="dash-card" onclick="navigateTo('groups')"><div class="icon">👥</div><div class="title">المجموعات</div><div class="num">${gr.length}</div></div>
-        <div class="dash-card" onclick="navigateTo('attendance')"><div class="icon">📋</div><div class="title">الحضور</div><div class="num">${present}</div></div>
-        <div class="dash-card" onclick="navigateTo('payments')"><div class="icon">💰</div><div class="title">المدفوعات</div><div class="num">${total} ج.م</div></div>
-        <div class="dash-card" onclick="navigateTo('exams')"><div class="icon">📝</div><div class="title">الامتحانات</div><div class="num">${ex.length}</div></div>
-        <div class="dash-card" onclick="navigateTo('reports')"><div class="icon">📊</div><div class="title">التقارير</div></div>
+        <div class="dash-card" onclick="navigateTo('students')"><span class="card-icon">👨‍🎓</span><div class="card-title">الطلاب</div><div class="card-subtitle">${st.length} طالب مسجل</div></div>
+        <div class="dash-card" onclick="navigateTo('groups')"><span class="card-icon">👥</span><div class="card-title">المجموعات</div><div class="card-subtitle">${gr.length} مجموعة</div></div>
+        <div class="dash-card" onclick="navigateTo('attendance')"><span class="card-icon">📋</span><div class="card-title">الحضور والغياب</div><div class="card-subtitle">${present} حاضر اليوم</div></div>
+        <div class="dash-card" onclick="navigateTo('payments')"><span class="card-icon">💰</span><div class="card-title">المدفوعات</div><div class="card-subtitle">${total} جنيه</div></div>
+        <div class="dash-card" onclick="navigateTo('exams')"><span class="card-icon">📝</span><div class="card-title">الامتحانات</div><div class="card-subtitle">${ex.length} امتحان</div></div>
+        <div class="dash-card" onclick="navigateTo('reports')"><span class="card-icon">📊</span><div class="card-title">التقارير</div><div class="card-subtitle">إحصائيات شاملة</div></div>
       </div>`;
       m.innerHTML = h;
     }
 
-    // ==================== طلاب ====================
+    // ==================== الطلاب ====================
     function loadStudents() {
       const m = document.getElementById('main-content');
       const gr = getGroups();
-      let h = `<div class="page-header"><h2>👨‍🎓 الطلاب</h2><div class="search-box"><input type="text" id="ss" placeholder="🔍 بحث..." oninput="filterStudents()"></div></div>
-        <form id="sf"><input type="text" id="sn" placeholder="اسم الطالب" required><input type="tel" id="sp" placeholder="رقم الهاتف" required><input type="tel" id="sg" placeholder="ولي الأمر"><select id="sgr"><option value="">-- المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><button type="submit">➕ إضافة</button></form>
-        <table id="stb"><thead><tr><th>الاسم</th><th>الهاتف</th><th>ولي الأمر</th><th>المجموعة</th><th>إجراءات</th></tr></thead><tbody></tbody></table>`;
+      let h = `
+        <div class="page-container">
+          <div class="page-header"><h2>👨‍🎓 إدارة الطلاب</h2><div class="search-box"><input type="text" id="ss" placeholder="🔍 بحث عن طالب..." oninput="filterStudents()"></div></div>
+          <form id="sf"><input type="text" id="sn" placeholder="اسم الطالب كاملاً" required><input type="tel" id="sp" placeholder="رقم الهاتف" required><input type="tel" id="sg" placeholder="هاتف ولي الأمر"><select id="sgr"><option value="">-- اختر مجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><button type="submit">➕ إضافة طالب</button></form>
+          <table><thead><tr><th>الاسم</th><th>الهاتف</th><th>ولي الأمر</th><th>المجموعة</th><th>الإجراءات</th></tr></thead><tbody id="stb"></tbody></table>
+        </div>`;
       m.innerHTML = h;
       renderStudentsTable(getStudents());
       document.getElementById('sf').onsubmit = function(e) {
@@ -171,15 +466,16 @@
         const g = document.getElementById('sg').value.trim(), gid = document.getElementById('sgr').value;
         if (!n || !p) return alert('الاسم والهاتف مطلوبان');
         saveStudents([...getStudents(), { id: generateId(), name: n, phone: p, guardianPhone: g || null, groupId: gid || null }]);
+        alert('✅ تم إضافة الطالب بنجاح');
         loadStudents();
       };
     }
     function renderStudentsTable(list) {
       const gr = getGroups();
-      document.querySelector('#stb tbody').innerHTML = list.map(s => {
+      document.getElementById('stb').innerHTML = list.map(s => {
         const g = gr.find(x => x.id === s.groupId);
-        return `<tr><td>${s.name}</td><td><a href="tel:${s.phone}">${s.phone}</a></td><td>${s.guardianPhone||'—'}</td><td>${g?g.name:'—'}</td>
-        <td><button class="action-btn btn-view" onclick="viewStudent('${s.id}')">👁️</button><button class="action-btn btn-edit" onclick="editStudent('${s.id}')">✏️</button><button class="action-btn btn-delete" onclick="deleteStudentFull('${s.id}')">🗑️</button></td></tr>`;
+        return `<tr><td><strong>${s.name}</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td><td>${s.guardianPhone||'—'}</td><td>${g?g.name:'—'}</td>
+        <td><button class="btn-sm btn-view" onclick="viewStudent('${s.id}')">👁️ عرض</button><button class="btn-sm btn-edit" onclick="editStudent('${s.id}')">✏️ تعديل</button><button class="btn-sm btn-delete" onclick="deleteStudentFull('${s.id}')">🗑️ حذف</button></td></tr>`;
       }).join('');
     }
     function filterStudents() {
@@ -188,22 +484,25 @@
     }
     function editStudent(id) {
       const s = getStudentById(id); if (!s) return;
-      const n = prompt('الاسم:', s.name); if (n === null) return;
-      const p = prompt('الهاتف:', s.phone); if (p === null) return;
-      const g = prompt('ولي الأمر:', s.guardianPhone || '');
+      const n = prompt('الاسم الجديد:', s.name); if (n === null) return;
+      const p = prompt('الهاتف الجديد:', s.phone); if (p === null) return;
+      const g = prompt('هاتف ولي الأمر:', s.guardianPhone || '');
       const gr = getGroups();
       const c = prompt('رقم المجموعة:\n' + gr.map((x,i) => (i+1)+'-'+x.name).join('\n') + '\n(0=بدون)', s.groupId ? gr.findIndex(x=>x.id===s.groupId)+1 : '0');
       let gid = null;
       if (c && parseInt(c) > 0 && gr[parseInt(c)-1]) gid = gr[parseInt(c)-1].id;
       const all = getStudents(); all[all.findIndex(x=>x.id===id)] = { ...s, name: n, phone: p, guardianPhone: g||null, groupId: gid };
-      saveStudents(all); loadStudents();
+      saveStudents(all);
+      alert('✅ تم تعديل الطالب');
+      loadStudents();
     }
     function deleteStudentFull(id) {
-      if (!confirm('حذف الطالب وكل بياناته؟')) return;
+      if (!confirm('⚠️ سيتم حذف الطالب وجميع بياناته (حضور، مدفوعات، امتحانات). هل أنت متأكد؟')) return;
       saveStudents(getStudents().filter(s => s.id !== id));
       saveAttendance(getAttendance().filter(a => a.studentId !== id));
       savePayments(getPayments().filter(p => p.studentId !== id));
       saveExams(getExams().filter(e => e.studentId !== id));
+      alert('🗑️ تم حذف الطالب بالكامل');
       loadStudents();
     }
     function viewStudent(id) {
@@ -215,156 +514,14 @@
       const total = pay.reduce((sum,p) => sum + p.amount, 0);
       const pres = att.filter(a => a.status === 'present').length;
       const pct = att.length ? Math.round((pres/att.length)*100) : 0;
+
       document.getElementById('main-content').innerHTML = `
-        <button onclick="loadStudents()" style="margin-bottom:15px;padding:8px 15px;cursor:pointer;">⬅️ رجوع</button>
-        <h2>📋 ${s.name}</h2>
-        <table><tr><td><strong>الهاتف:</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td></tr>
-        <tr><td><strong>ولي الأمر:</strong></td><td>${s.guardianPhone||'—'}</td></tr>
-        <tr><td><strong>المجموعة:</strong></td><td>${g?g.name:'—'}</td></tr>
-        <tr><td><strong>نسبة الحضور:</strong></td><td>${pct}% (${pres}/${att.length})</td></tr>
-        <tr><td><strong>المدفوعات:</strong></td><td>${total} ج.م</td></tr>
-        <tr><td><strong>متوسط الدرجات:</strong></td><td>${ex.length ? (ex.reduce((sum,e)=>sum+e.score,0)/ex.length).toFixed(1) : '—'}</td></tr></table>
-        <h3 style="margin-top:20px;">📝 الامتحانات</h3>
-        <table><thead><tr><th>الامتحان</th><th>الدرجة</th><th>التاريخ</th></tr></thead><tbody>${ex.map(e=>`<tr><td>${e.examName}</td><td>${e.score}</td><td>${e.date}</td></tr>`).join('')||'<tr><td colspan="3">لا توجد</td></tr>'}</tbody></table>`;
-    }
-
-    // ==================== مجموعات ====================
-    function loadGroups() {
-      const m = document.getElementById('main-content');
-      const gr = getGroups(), st = getStudents();
-      let h = `<h2>👥 المجموعات</h2><form id="gf"><input type="text" id="gn" placeholder="اسم المجموعة" required><input type="text" id="gs" placeholder="المواعيد"><button type="submit">➕ إضافة</button></form>
-        <table><thead><tr><th>المجموعة</th><th>المواعيد</th><th>الطلاب</th><th>واتساب</th><th>إجراءات</th></tr></thead><tbody>`;
-      gr.forEach(g => {
-        const c = st.filter(s => s.groupId === g.id).length;
-        h += `<tr><td>${g.name}</td><td>${g.schedule||'—'}</td><td>${c}</td>
-        <td><button class="action-btn btn-whatsapp" onclick="sendWhatsapp('${g.id}')">📱</button></td>
-        <td><button class="action-btn btn-edit" onclick="editGroup('${g.id}')">✏️</button><button class="action-btn btn-delete" onclick="deleteGroup('${g.id}')">🗑️</button></td></tr>`;
-      });
-      h += '</tbody></table>'; m.innerHTML = h;
-      document.getElementById('gf').onsubmit = function(e) {
-        e.preventDefault();
-        const n = document.getElementById('gn').value.trim();
-        if (!n) return;
-        saveGroups([...getGroups(), { id: generateId(), name: n, schedule: document.getElementById('gs').value.trim() }]);
-        loadGroups();
-      };
-    }
-    function editGroup(id) {
-      const g = getGroupById(id); if (!g) return;
-      const n = prompt('الاسم:', g.name); if (n === null) return;
-      const s = prompt('المواعيد:', g.schedule || '');
-      const all = getGroups(); all[all.findIndex(x=>x.id===id)] = { ...g, name: n, schedule: s };
-      saveGroups(all); loadGroups();
-    }
-    function deleteGroup(id) {
-      if (!confirm('حذف؟')) return;
-      saveGroups(getGroups().filter(g => g.id !== id));
-      saveStudents(getStudents().map(s => s.groupId === id ? {...s, groupId: null} : s));
-      loadGroups();
-    }
-    function sendWhatsapp(gid) {
-      const st = getStudents().filter(s => s.groupId === gid);
-      if (!st.length) return alert('لا يوجد طلاب');
-      const msg = prompt('الرسالة:'); if (!msg) return;
-      st.forEach(s => { const p = s.phone.replace(/[^0-9]/g, ''); if (p) window.open('https://wa.me/' + p + '?text=' + encodeURIComponent(msg), '_blank'); });
-    }
-
-    // ==================== حضور ====================
-    function loadAttendance() {
-      const m = document.getElementById('main-content');
-      const gr = getGroups();
-      let h = `<h2>📋 الحضور</h2><div style="display:flex;gap:10px;margin-bottom:20px;"><select id="ag"><option value="">-- المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><input type="date" id="ad"><button onclick="showAttendance()">📅 عرض</button></div><div id="att-form"></div><h3 style="margin-top:30px;">السجل</h3><div id="att-hist"></div>`;
-      m.innerHTML = h; renderAttHistory();
-    }
-    function showAttendance() {
-      const gid = document.getElementById('ag').value, date = document.getElementById('ad').value;
-      if (!gid || !date) return alert('اختر المجموعة والتاريخ');
-      const st = getStudents().filter(s => s.groupId === gid);
-      if (!st.length) return document.getElementById('att-form').innerHTML = '<p>لا يوجد طلاب</p>';
-      const ex = getAttendance().filter(a => a.groupId === gid && a.date === date);
-      const map = {}; ex.forEach(a => map[a.studentId] = a.status);
-      let f = '<form id="saf"><table><thead><tr><th>الطالب</th><th>حاضر</th><th>غائب</th></tr></thead><tbody>';
-      st.forEach(s => f += `<tr><td>${s.name}</td><td><input type="radio" name="a-${s.id}" value="present" ${map[s.id]!=='absent'?'checked':''}></td><td><input type="radio" name="a-${s.id}" value="absent" ${map[s.id]==='absent'?'checked':''}></td></tr>`);
-      f += '</tbody></table><button type="submit" style="margin-top:10px;">💾 حفظ</button></form>';
-      document.getElementById('att-form').innerHTML = f;
-      document.getElementById('saf').onsubmit = function(e) {
-        e.preventDefault();
-        let all = getAttendance().filter(a => !(a.groupId === gid && a.date === date));
-        st.forEach(s => { const r = document.querySelector('input[name="a-' + s.id + '"]:checked'); if (r) all.push({ id: generateId(), studentId: s.id, groupId: gid, date, status: r.value }); });
-        saveAttendance(all); alert('✅ تم الحفظ'); loadAttendance();
-      };
-    }
-    function renderAttHistory() {
-      const all = getAttendance();
-      if (!all.length) return document.getElementById('att-hist').innerHTML = '<p>لا سجل</p>';
-      const grouped = {};
-      all.forEach(a => { const k = a.date + a.groupId; if (!grouped[k]) grouped[k] = { date: a.date, groupId: a.groupId, present: 0, absent: 0 }; a.status === 'present' ? grouped[k].present++ : grouped[k].absent++; });
-      let t = '<table><thead><tr><th>التاريخ</th><th>المجموعة</th><th>حضور</th><th>غياب</th></tr></thead><tbody>';
-      Object.values(grouped).forEach(r => { const g = getGroupById(r.groupId); t += `<tr><td>${r.date}</td><td>${g?g.name:'—'}</td><td>${r.present}</td><td>${r.absent}</td></tr>`; });
-      t += '</tbody></table>'; document.getElementById('att-hist').innerHTML = t;
-    }
-
-    // ==================== مدفوعات ====================
-    function loadPayments() {
-      const m = document.getElementById('main-content');
-      const st = getStudents(), pay = getPayments();
-      let h = `<h2>💰 المدفوعات</h2><form id="pf"><select id="ps" required><option value="">-- الطالب --</option>${st.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><input type="number" id="pa" placeholder="المبلغ" required><input type="date" id="pd" required><input type="text" id="pn" placeholder="ملاحظات"><button type="submit">➕ إضافة</button></form><table><thead><tr><th>الطالب</th><th>المبلغ</th><th>التاريخ</th><th>ملاحظات</th><th>حذف</th></tr></thead><tbody>`;
-      pay.forEach(p => { const s = st.find(x => x.id === p.studentId); h += `<tr><td>${s?s.name:'—'}</td><td>${p.amount} ج.م</td><td>${p.date}</td><td>${p.notes||''}</td><td><button class="action-btn btn-delete" onclick="deletePayment('${p.id}')">🗑️</button></td></tr>`; });
-      h += '</tbody></table>'; m.innerHTML = h;
-      document.getElementById('pf').onsubmit = function(e) {
-        e.preventDefault();
-        const sid = document.getElementById('ps').value, amt = parseFloat(document.getElementById('pa').value);
-        const date = document.getElementById('pd').value, notes = document.getElementById('pn').value.trim();
-        if (!sid || isNaN(amt) || !date) return alert('بيانات ناقصة');
-        savePayments([...getPayments(), { id: generateId(), studentId: sid, amount: amt, date, notes }]);
-        loadPayments();
-      };
-    }
-    function deletePayment(id) { if (!confirm('حذف؟')) return; savePayments(getPayments().filter(p => p.id !== id)); loadPayments(); }
-
-    // ==================== امتحانات ====================
-    function loadExams() {
-      const m = document.getElementById('main-content');
-      const st = getStudents(), ex = getExams();
-      let h = `<h2>📝 الامتحانات</h2><form id="ef"><select id="es" required><option value="">-- الطالب --</option>${st.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><input type="text" id="en" placeholder="اسم الامتحان" required><input type="number" id="esc" placeholder="الدرجة" required><input type="date" id="ed" required><button type="submit">➕ إضافة</button></form><table><thead><tr><th>الطالب</th><th>الامتحان</th><th>الدرجة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody>`;
-      ex.forEach(e => { const s = st.find(x => x.id === e.studentId); h += `<tr><td>${s?s.name:'—'}</td><td>${e.examName}</td><td>${e.score}</td><td>${e.date}</td><td><button class="action-btn btn-delete" onclick="deleteExam('${e.id}')">🗑️</button></td></tr>`; });
-      h += '</tbody></table>'; m.innerHTML = h;
-      document.getElementById('ef').onsubmit = function(e) {
-        e.preventDefault();
-        const sid = document.getElementById('es').value, en = document.getElementById('en').value.trim();
-        const sc = parseInt(document.getElementById('esc').value), date = document.getElementById('ed').value;
-        if (!sid || !en || isNaN(sc) || !date) return;
-        saveExams([...getExams(), { id: generateId(), studentId: sid, examName: en, score: sc, date }]);
-        loadExams();
-      };
-    }
-    function deleteExam(id) { if (!confirm('حذف؟')) return; saveExams(getExams().filter(e => e.id !== id)); loadExams(); }
-
-    // ==================== تقارير ====================
-    function loadReports() {
-      const m = document.getElementById('main-content');
-      const st = getStudents(), att = getAttendance(), pay = getPayments(), ex = getExams(), gr = getGroups();
-      let h = `<h2>📊 التقارير</h2><div class="report-card"><h3>📋 ملخص الطلاب</h3><table><thead><tr><th>الطالب</th><th>المجموعة</th><th>حضور%</th><th>مدفوعات</th><th>متوسط</th></tr></thead><tbody>`;
-      st.forEach(s => {
-        const g = getGroupById(s.groupId);
-        const a = att.filter(x => x.studentId === s.id);
-        const pr = a.filter(x => x.status === 'present').length;
-        const pct = a.length ? Math.round((pr/a.length)*100) : 0;
-        const tot = pay.filter(x => x.studentId === s.id).reduce((sm,x) => sm + x.amount, 0);
-        const exm = ex.filter(x => x.studentId === s.id);
-        const avg = exm.length ? (exm.reduce((sm,x) => sm + x.score, 0)/exm.length).toFixed(1) : 0;
-        h += `<tr><td>${s.name}</td><td>${g?g.name:'—'}</td><td>${pct}%</td><td>${tot} ج.م</td><td>${avg}</td></tr>`;
-      });
-      h += `</tbody></table></div><div class="report-card"><h3>👥 ملخص المجموعات</h3><table><thead><tr><th>المجموعة</th><th>الطلاب</th><th>متوسط الحضور</th></tr></thead><tbody>`;
-      gr.forEach(g => {
-        const gs = st.filter(s => s.groupId === g.id);
-        if (!gs.length) return;
-        let tp = 0;
-        gs.forEach(s => { const a = att.filter(x => x.studentId === s.id); tp += a.length ? (a.filter(x=>x.status==='present').length/a.length)*100 : 0; });
-        h += `<tr><td>${g.name}</td><td>${gs.length}</td><td>${(tp/gs.length).toFixed(1)}%</td></tr>`;
-      });
-      h += `</tbody></table></div>`; m.innerHTML = h;
-    }
-  </script>
-</body>
-</html>
+        <div class="page-container">
+          <h2>📋 الملف التعريفي: ${s.name}</h2>
+          <table style="margin-top:20px;">
+            <tr><td><strong>📞 الهاتف:</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td></tr>
+            <tr><td><strong>👨‍👩‍👦 ولي الأمر:</strong></td><td>${s.guardianPhone||'غير مسجل'}</td></tr>
+            <tr><td><strong>👥 المجموعة:</strong></td><td>${g?g.name:'بدون مجموعة'}</td></tr>
+            <tr><td><strong>📊 نسبة الحضور:</strong></td><td>${pct}% (${pres}/${att.length})</td></tr>
+            <tr><td><strong>💰 إجمالي المدفوعات:</strong></td><td>${total} ج.م</td></tr>
+            <tr><td><strong>📝 متوسط الدرجات:</strong></td><td>${ex.length ? (ex.reduce((sum,e)=>sum+e.score,0)/ex.length
