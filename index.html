@@ -532,14 +532,18 @@
       main.innerHTML = reportHtml;
     }
 
-  <script>
+<script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
+  window.addEventListener("load", function () {
     navigator.serviceWorker.register("sw.js")
-      .then(() => console.log("Service Worker registered"))
-      .catch(err => console.log("Service Worker error:", err));
+      .then(function () {
+        console.log("Service Worker registered");
+      })
+      .catch(function (err) {
+        console.log("Service Worker error:", err);
+      });
   });
 }
-</script></script>
+</script>
 </body>
-  </html>
+</html>
