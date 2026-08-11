@@ -6,175 +6,69 @@
   <title>Caeser of History</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: #f0f2f5;
-      min-height: 100vh;
-    }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; min-height: 100vh; }
 
-    /* شاشة تسجيل الدخول */
     .login-screen {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-      padding: 20px;
+      display: flex; justify-content: center; align-items: center; min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); padding: 20px;
     }
     .login-box {
-      background: white;
-      border-radius: 20px;
-      padding: 40px 30px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      text-align: center;
+      background: white; border-radius: 20px; padding: 40px 30px; max-width: 400px; width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;
     }
-    .login-box .logo {
-      font-size: 70px;
-      margin-bottom: 10px;
-    }
-    .login-box h2 {
-      color: #2c3e50;
-      margin-bottom: 5px;
-      font-size: 24px;
-    }
-    .login-box .subtitle {
-      color: #7f8c8d;
-      margin-bottom: 25px;
-      font-size: 14px;
-    }
+    .login-box .logo { font-size: 70px; margin-bottom: 10px; }
+    .login-box h2 { color: #2c3e50; margin-bottom: 5px; font-size: 24px; }
+    .login-box .subtitle { color: #7f8c8d; margin-bottom: 25px; font-size: 14px; }
     .login-box input {
-      width: 100%;
-      padding: 14px;
-      margin: 8px 0;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 18px;
-      text-align: center;
-      letter-spacing: 8px;
+      width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #e0e0e0;
+      border-radius: 10px; font-size: 18px; text-align: center; letter-spacing: 8px;
     }
-    .login-box input:focus {
-      border-color: #667eea;
-      outline: none;
-    }
+    .login-box input:focus { border-color: #667eea; outline: none; }
     .login-box button {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 12px;
+      width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold;
+      cursor: pointer; margin-top: 12px;
     }
     .login-box button:active { transform: scale(0.97); }
-    .login-box .error {
-      color: #e74c3c;
-      margin-top: 8px;
-      font-size: 14px;
-      display: none;
-    }
-    .login-box .success {
-      color: #27ae60;
-      margin-top: 8px;
-      font-size: 14px;
-    }
+    .login-box .error { color: #e74c3c; margin-top: 8px; font-size: 14px; display: none; }
 
-    /* التطبيق */
     .app-container { display: flex; min-height: 100vh; }
     .sidebar {
-      width: 250px;
-      background: #2c3e50;
-      color: white;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
+      width: 250px; background: #2c3e50; color: white; padding: 20px; display: flex; flex-direction: column;
     }
-    .sidebar h2 {
-      font-size: 20px;
-      border-bottom: 1px solid #4a627a;
-      padding-bottom: 12px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
+    .sidebar h2 { font-size: 20px; border-bottom: 1px solid #4a627a; padding-bottom: 12px; margin-bottom: 20px; text-align: center; }
     .sidebar ul { list-style: none; flex: 1; }
     .sidebar button {
-      display: block;
-      width: 100%;
-      background: none;
-      border: none;
-      color: white;
-      padding: 12px 15px;
-      text-align: right;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 8px;
-      margin-bottom: 4px;
+      display: block; width: 100%; background: none; border: none; color: white; padding: 12px 15px;
+      text-align: right; font-size: 16px; cursor: pointer; border-radius: 8px; margin-bottom: 4px;
     }
     .sidebar button:hover { background: rgba(255,255,255,0.1); }
-    .bottom-btns {
-      margin-top: auto;
-      padding-top: 15px;
-      border-top: 1px solid #4a627a;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .bottom-btns { margin-top: auto; padding-top: 15px; border-top: 1px solid #4a627a; display: flex; flex-direction: column; gap: 6px; }
     .bottom-btns button { padding: 10px; font-size: 14px; }
     .btn-export { background: #27ae60 !important; }
     .btn-logout { background: #c0392b !important; }
 
     .content {
-      flex: 1;
-      padding: 25px;
-      background: white;
-      margin: 15px;
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-      overflow-y: auto;
+      flex: 1; padding: 25px; background: white; margin: 15px; border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08); overflow-y: auto;
     }
 
-    /* داشبورد */
     .welcome-banner {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      padding: 25px;
-      border-radius: 15px;
-      margin-bottom: 25px;
+      background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px;
+      border-radius: 15px; margin-bottom: 25px;
     }
     .welcome-banner h1 { font-size: 28px; margin-bottom: 5px; }
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-      margin-bottom: 25px;
-    }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
     .stat-card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-      text-align: center;
-      border-left: 4px solid #667eea;
+      background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      text-align: center; border-left: 4px solid #667eea;
     }
     .stat-card .num { font-size: 32px; font-weight: bold; color: #2c3e50; }
     .stat-card .label { color: #7f8c8d; font-size: 13px; margin-top: 4px; }
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 15px;
-    }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
     .dash-card {
-      background: white;
-      border-radius: 15px;
-      padding: 25px 15px;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transition: transform 0.2s;
+      background: white; border-radius: 15px; padding: 25px 15px; text-align: center;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.2s;
       border-top: 4px solid #667eea;
     }
     .dash-card:hover { transform: translateY(-4px); }
@@ -182,8 +76,7 @@
     .dash-card .title { font-weight: bold; color: #2c3e50; font-size: 16px; }
     .dash-card .num { color: #667eea; font-weight: bold; font-size: 14px; margin-top: 4px; }
 
-    /* جداول ونماذج */
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
     .search-box input { padding: 10px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; width: 250px; }
     form {
       display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
@@ -191,7 +84,6 @@
     }
     form input, form select { padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
     form button { padding: 10px 18px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    form button:hover { background: #5a6fd6; }
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     th { background: #f8f9fa; padding: 12px; text-align: center; border-bottom: 2px solid #667eea; }
     td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
@@ -220,26 +112,26 @@
       <div class="logo">📜</div>
       <h2>Caeser of History</h2>
       <p class="subtitle">إدارة المجموعات التعليمية</p>
-      
-      <!-- أول مرة: إنشاء الرقم السري -->
-      <div id="setup-form" style="display:none;">
-        <p style="color:#2c3e50;font-weight:bold;margin-bottom:10px;">🔐 أول مرة - أنشئ رقمك السري (6 أرقام)</p>
-        <input type="password" id="setup-pin" maxlength="6" placeholder="الرقم السري">
-        <input type="password" id="setup-pin2" maxlength="6" placeholder="تأكيد الرقم السري">
+
+      <!-- إنشاء الباسورد (أول مرة) -->
+      <div id="setup-div" style="display:none;">
+        <p style="color:#2c3e50;font-weight:bold;margin-bottom:15px;">🔐 أول مرة - أنشئ الرقم السري</p>
+        <input type="password" id="new-pin" maxlength="6" placeholder="الرقم السري (6 أرقام)">
+        <input type="password" id="new-pin2" maxlength="6" placeholder="تأكيد الرقم السري">
         <p id="setup-error" class="error"></p>
-        <button onclick="setupPin()">✅ حفظ الرقم السري</button>
+        <button onclick="createPin()">✅ حفظ الرقم السري</button>
       </div>
 
-      <!-- الدخول العادي -->
-      <div id="login-form">
+      <!-- تسجيل الدخول -->
+      <div id="login-div">
         <input type="password" id="login-pin" maxlength="6" placeholder="أدخل الرقم السري">
         <p id="login-error" class="error">الرقم السري غير صحيح</p>
-        <button onclick="login()">🔓 دخول</button>
+        <button onclick="doLogin()">🔓 دخول</button>
       </div>
     </div>
   </div>
 
-  <!-- التطبيق -->
+  <!-- التطبيق الرئيسي -->
   <div id="app-screen" class="app-container" style="display:none;">
     <nav class="sidebar">
       <h2>📜 Caeser</h2>
@@ -254,87 +146,87 @@
       </ul>
       <div class="bottom-btns">
         <button class="btn-export" onclick="exportAllData()">📤 تصدير البيانات</button>
-        <button class="btn-logout" onclick="logout()">🚪 تسجيل خروج</button>
+        <button class="btn-logout" onclick="doLogout()">🚪 تسجيل خروج</button>
       </div>
     </nav>
     <main id="main-content" class="content"></main>
   </div>
 
   <script>
-    // ========== نظام الدخول ==========
-    const PIN_KEY = 'my_app_pin';
+    // ==================== نظام الدخول البسيط ====================
+    const PIN_STORAGE = 'my_app_pin_123';
 
-    function getSavedPin() {
-      return localStorage.getItem(PIN_KEY);
-    }
-
-    // عند تحميل الصفحة - تحقق من وجود رقم سري
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedPin = getSavedPin();
+    // عند فتح الصفحة - نقرر نعرض إيه
+    window.addEventListener('DOMContentLoaded', function() {
+      const savedPin = localStorage.getItem(PIN_STORAGE);
       if (!savedPin) {
-        // أول مرة - اعرض شاشة الإنشاء
-        document.getElementById('login-form').style.display = 'none';
-        document.getElementById('setup-form').style.display = 'block';
+        // أول مرة - اعرض شاشة إنشاء الباسورد
+        document.getElementById('login-div').style.display = 'none';
+        document.getElementById('setup-div').style.display = 'block';
       }
+      // لو فيه باسورد محفوظ، سيتم عرض شاشة الدخول العادية (login-div ظاهر افتراضياً)
     });
 
-    function setupPin() {
-      const pin1 = document.getElementById('setup-pin').value.trim();
-      const pin2 = document.getElementById('setup-pin2').value.trim();
-      const error = document.getElementById('setup-error');
+    // إنشاء باسورد جديد
+    function createPin() {
+      const pin1 = document.getElementById('new-pin').value.trim();
+      const pin2 = document.getElementById('new-pin2').value.trim();
+      const errorEl = document.getElementById('setup-error');
 
+      // التحقق
       if (pin1.length !== 6 || !/^\d+$/.test(pin1)) {
-        error.textContent = 'يجب أن يكون 6 أرقام';
-        error.style.display = 'block';
+        errorEl.textContent = 'الرقم السري يجب أن يكون 6 أرقام';
+        errorEl.style.display = 'block';
         return;
       }
       if (pin1 !== pin2) {
-        error.textContent = 'الرقمان غير متطابقين';
-        error.style.display = 'block';
+        errorEl.textContent = 'الرقمان غير متطابقين';
+        errorEl.style.display = 'block';
         return;
       }
 
-      // حفظ الرقم السري
-      localStorage.setItem(PIN_KEY, pin1);
-      error.style.display = 'none';
-      document.getElementById('setup-error').style.display = 'none';
-      
-      // دخول التطبيق
-      showApp();
+      // حفظ الباسورد
+      localStorage.setItem(PIN_STORAGE, pin1);
+      // دخول للتطبيق مباشرة
+      showMainApp();
     }
 
-    function login() {
+    // تسجيل الدخول
+    function doLogin() {
       const entered = document.getElementById('login-pin').value.trim();
-      const saved = getSavedPin();
-      const error = document.getElementById('login-error');
+      const saved = localStorage.getItem(PIN_STORAGE);
+      const errorEl = document.getElementById('login-error');
 
-      if (entered === saved) {
-        error.style.display = 'none';
-        showApp();
+      if (entered === saved && saved) {
+        errorEl.style.display = 'none';
+        showMainApp();
       } else {
-        error.style.display = 'block';
+        errorEl.style.display = 'block';
         document.getElementById('login-pin').value = '';
       }
     }
 
-    function showApp() {
+    // إظهار التطبيق بعد الدخول
+    function showMainApp() {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app-screen').style.display = 'flex';
-      navigateTo('dashboard');
+      // تحميل الداشبورد
+      loadDashboard();
     }
 
-    function logout() {
-      if (confirm('تسجيل الخروج؟')) {
+    // تسجيل الخروج
+    function doLogout() {
+      if (confirm('هل تريد تسجيل الخروج؟')) {
         document.getElementById('app-screen').style.display = 'none';
         document.getElementById('login-screen').style.display = 'flex';
         document.getElementById('login-pin').value = '';
         document.getElementById('login-error').style.display = 'none';
-        document.getElementById('login-form').style.display = 'block';
-        document.getElementById('setup-form').style.display = 'none';
+        document.getElementById('login-div').style.display = 'block';
+        document.getElementById('setup-div').style.display = 'none';
       }
     }
 
-    // ========== دوال البيانات ==========
+    // ==================== دوال البيانات ====================
     function generateId() {
       return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
     }
@@ -365,7 +257,7 @@
     function getExams() { return getData('exams'); }
     function saveExams(e) { saveData('exams', e); }
 
-    // ========== تصدير ==========
+    // ==================== تصدير ====================
     function exportAllData() {
       const allData = {
         students: getStudents(),
@@ -383,13 +275,13 @@
       alert('✅ تم التصدير');
     }
 
-    // ========== التنقل ==========
-    function navigateTo(pageName) {
-      const fn = window['load' + pageName.charAt(0).toUpperCase() + pageName.slice(1)];
+    // ==================== التنقل ====================
+    function navigateTo(page) {
+      const fn = window['load' + page.charAt(0).toUpperCase() + page.slice(1)];
       if (fn) fn();
     }
 
-    // ========== داشبورد ==========
+    // ==================== داشبورد ====================
     function loadDashboard() {
       const m = document.getElementById('main-content');
       const students = getStudents(), groups = getGroups();
@@ -421,7 +313,7 @@
       m.innerHTML = html;
     }
 
-    // ========== الطلاب ==========
+    // ==================== الطلاب ====================
     function loadStudents() {
       const m = document.getElementById('main-content');
       const groups = getGroups();
@@ -515,7 +407,7 @@
         <tbody>${ex.map(e=>`<tr><td>${e.examName}</td><td>${e.score}</td><td>${e.date}</td></tr>`).join('')||'<tr><td colspan="3">لا توجد</td></tr>'}</tbody></table>`;
     }
 
-    // ========== المجموعات ==========
+    // ==================== المجموعات ====================
     function loadGroups() {
       const m = document.getElementById('main-content');
       const groups = getGroups();
@@ -574,7 +466,7 @@
       });
     }
 
-    // ========== الحضور ==========
+    // ==================== الحضور ====================
     function loadAttendance() {
       const m = document.getElementById('main-content');
       const groups = getGroups();
@@ -639,7 +531,7 @@
       document.getElementById('att-history').innerHTML = t;
     }
 
-    // ========== المدفوعات ==========
+    // ==================== المدفوعات ====================
     function loadPayments() {
       const m = document.getElementById('main-content');
       const students = getStudents();
@@ -653,4 +545,10 @@
           <input type="text" id="pn" placeholder="ملاحظات">
           <button type="submit">➕ إضافة</button>
         </form>
-        <table><thead><tr><th>الطالب</th><th>المبلغ</th><th>التاريخ</th><th>ملاحظات</th><th>حذف</
+        <table><thead><tr><th>الطالب</th><th>المبلغ</th><th>التاريخ</th><th>ملاحظات</th><th>حذف</th></tr></thead><tbody>`;
+      payments.forEach(p => {
+        const s = students.find(st => st.id === p.studentId);
+        html += `<tr><td>${s?s.name:'—'}</td><td>${p.amount} ج.م</td><td>${p.date}</td><td>${p.notes||''}</td>
+        <td><button class="action-btn btn-delete" onclick="deletePayment('${p.id}')">🗑️</button></td></tr>`;
+      });
+      html
