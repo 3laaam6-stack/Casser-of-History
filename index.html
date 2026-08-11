@@ -7,521 +7,391 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
 </script>
   <style>
-    :root {
-      --primary: #4f46e5; --primary-dark: #3730a3; --secondary: #10b981;
-      --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
-      --bg: #f1f5f9; --card: #ffffff; --text: #1e293b;
-      --text-light: #64748b; --border: #e2e8f0;
-      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-      --shadow-lg: 0 20px 40px -5px rgba(0,0,0,0.15);
-    }
-
-    .dark-mode {
-      --bg: #0f172a; --card: #1e293b; --text: #f1f5f9;
-      --text-light: #94a3b8; --border: #334155;
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: var(--bg); min-height: 100vh; color: var(--text);
-    }
-
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f1f5f9; min-height: 100vh; color: #1e293b; }
     .app-container { display: flex; min-height: 100vh; }
 
-    /* ========== الشريط الجانبي ========== */
     .sidebar {
-      width: 280px; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-      color: white; padding: 20px 12px; display: flex; flex-direction: column;
-      position: fixed; right: 0; top: 0; bottom: 0; z-index: 100;
-      box-shadow: 4px 0 30px rgba(0,0,0,0.3); overflow-y: auto;
+      width: 270px; background: linear-gradient(180deg, #1e293b, #0f172a); color: white;
+      padding: 20px 12px; display: flex; flex-direction: column; position: fixed; right: 0;
+      top: 0; bottom: 0; z-index: 100; box-shadow: 4px 0 20px rgba(0,0,0,0.2); overflow-y: auto;
     }
-    .sidebar .logo { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid rgba(255,255,255,0.1); }
-    .sidebar .logo .icon { font-size: 50px; display: block; margin-bottom: 8px; }
-    .sidebar .logo h2 { font-size: 22px; background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
-    .sidebar .logo p { font-size: 11px; color: #94a3b8; margin-top: 3px; }
-
-    .sidebar .nav-btn {
-      display: flex; align-items: center; gap: 12px; width: 100%;
-      background: none; border: none; color: #cbd5e1; padding: 14px 15px;
-      text-align: right; font-size: 16px; cursor: pointer; border-radius: 12px;
-      margin-bottom: 4px; transition: all 0.3s; font-weight: 500;
+    .sidebar .logo { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #334155; }
+    .sidebar .logo span { font-size: 45px; display: block; }
+    .sidebar .logo h2 { font-size: 20px; color: #818cf8; margin: 5px 0; }
+    .sidebar .logo p { font-size: 11px; color: #94a3b8; }
+    .sidebar button {
+      display: flex; align-items: center; gap: 10px; width: 100%; background: none;
+      border: none; color: #cbd5e1; padding: 13px 14px; text-align: right; font-size: 16px;
+      cursor: pointer; border-radius: 10px; margin-bottom: 3px; transition: 0.2s;
     }
-    .sidebar .nav-btn:hover { background: rgba(255,255,255,0.08); color: white; transform: translateX(-5px); }
-    .sidebar .nav-btn.active { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; box-shadow: 0 4px 15px rgba(79,70,229,0.4); }
-    .sidebar .nav-btn .nav-icon { font-size: 24px; width: 40px; text-align: center; }
+    .sidebar button:hover { background: rgba(255,255,255,0.1); color: white; }
+    .sidebar button.active { background: #4f46e5; color: white; font-weight: bold; }
+    .sidebar .btns { margin-top: auto; padding-top: 15px; border-top: 1px solid #334155; display: flex; flex-direction: column; gap: 6px; }
+    .sidebar .btns button { justify-content: center; padding: 10px; font-size: 14px; }
+    .btn-green { background: #10b981 !important; color: white !important; }
+    .btn-purple { background: #8b5cf6 !important; color: white !important; }
 
-    .sidebar .bottom-actions { margin-top: auto; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 8px; }
-    .sidebar .bottom-actions button {
-      width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer;
-      font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-      justify-content: center; transition: all 0.3s; color: white;
+    .content { flex: 1; margin-right: 270px; padding: 25px; }
+
+    .welcome { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; padding: 30px; border-radius: 18px; margin-bottom: 25px; }
+    .welcome h1 { font-size: 28px; margin-bottom: 5px; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .stat { background: white; padding: 20px; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 15px; }
+    .stat .icon { font-size: 35px; }
+    .stat .val { font-size: 26px; font-weight: 800; }
+    .stat .lbl { font-size: 13px; color: #64748b; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; }
+    .card {
+      background: white; border-radius: 16px; padding: 25px 15px; text-align: center;
+      cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: 0.2s; border-top: 4px solid #4f46e5;
     }
-    .btn-gdrive { background: #4285f4; }
-    .btn-export { background: #10b981; }
-    .btn-import { background: #8b5cf6; }
-    .btn-theme { background: #64748b; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.12); }
+    .card .ico { font-size: 45px; display: block; margin-bottom: 10px; }
+    .card .ttl { font-weight: 700; font-size: 16px; margin-bottom: 3px; }
+    .card .sub { font-size: 12px; color: #64748b; }
 
-    /* ========== المحتوى الرئيسي ========== */
-    .content { flex: 1; margin-right: 280px; padding: 25px; min-height: 100vh; }
-
-    /* ========== داشبورد ========== */
-    .dashboard-header {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      color: white; padding: 35px 30px; border-radius: 20px;
-      margin-bottom: 25px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden;
-    }
-    .dashboard-header h1 { font-size: 30px; margin-bottom: 6px; position: relative; z-index: 1; }
-    .dashboard-header p { font-size: 15px; opacity: 0.9; position: relative; z-index: 1; }
-
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 25px; }
-    .stat-card {
-      background: var(--card); padding: 22px; border-radius: 16px;
-      box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; transition: transform 0.3s;
-    }
-    .stat-card:hover { transform: translateY(-3px); }
-    .stat-card .stat-icon {
-      width: 55px; height: 55px; border-radius: 14px; display: flex;
-      align-items: center; justify-content: center; font-size: 28px;
-    }
-    .stat-icon.blue { background: #dbeafe; } .stat-icon.green { background: #d1fae5; }
-    .stat-icon.orange { background: #fef3c7; } .stat-icon.purple { background: #ede9fe; }
-    .stat-value { font-size: 28px; font-weight: 800; }
-    .stat-label { font-size: 13px; color: var(--text-light); margin-top: 2px; }
-
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
-    .dash-card {
-      background: var(--card); border-radius: 18px; padding: 28px 18px;
-      text-align: center; cursor: pointer; box-shadow: var(--shadow);
-      transition: all 0.3s; border: 2px solid transparent;
-    }
-    .dash-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
-    .dash-card .card-icon { font-size: 50px; margin-bottom: 12px; display: block; }
-    .dash-card .card-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-    .dash-card .card-subtitle { font-size: 12px; color: var(--text-light); }
-
-    /* ========== صفحات ========== */
-    .page-container { background: var(--card); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); }
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-    .page-header h2 { font-size: 24px; display: flex; align-items: center; gap: 10px; }
-    .search-box input { padding: 10px 15px; border: 2px solid var(--border); border-radius: 10px; font-size: 14px; width: 260px; background: var(--card); color: var(--text); }
-
+    .page { background: white; border-radius: 18px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .page h2 { margin-bottom: 20px; font-size: 24px; }
+    .search { margin-bottom: 15px; }
+    .search input { padding: 10px 15px; border: 2px solid #e2e8f0; border-radius: 10px; width: 260px; font-size: 14px; }
     form {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
-      background: var(--bg); padding: 18px; border-radius: 14px; align-items: flex-end;
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; background: #f8fafc;
+      padding: 15px; border-radius: 12px; align-items: flex-end;
     }
-    form input, form select {
-      padding: 11px 14px; border: 2px solid var(--border); border-radius: 10px;
-      font-size: 14px; background: var(--card); color: var(--text);
-    }
-    form button {
-      padding: 11px 20px; background: var(--primary); color: white;
-      border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 15px;
-      transition: all 0.3s; display: flex; align-items: center; gap: 6px;
-    }
-    form button:hover { background: var(--primary-dark); transform: scale(1.03); }
-
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 12px; overflow: hidden; }
-    th { background: var(--bg); padding: 14px; text-align: center; font-weight: 700; font-size: 14px; }
-    td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border); font-size: 14px; }
-    tr:hover td { background: var(--bg); }
-
-    .btn-sm {
-      padding: 7px 13px; margin: 0 3px; border: none; border-radius: 8px;
-      cursor: pointer; font-size: 13px; font-weight: 600; color: white; transition: all 0.2s;
-    }
-    .btn-sm:hover { transform: scale(1.08); }
-    .btn-edit { background: #f59e0b; } .btn-delete { background: #ef4444; }
-    .btn-view { background: #3b82f6; } .btn-whatsapp { background: #25D366; }
-    .btn-save { background: #10b981; } .btn-back { background: #64748b; }
-    .btn-print { background: #8b5cf6; }
-
-    .alert-box { background: #fef3c7; border: 1px solid #f59e0b; padding: 14px; border-radius: 12px; margin: 15px 0; color: #92400e; font-weight: 600; }
-
-    .action-bar { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-    .chart-container { max-width: 100%; margin: 25px 0; background: var(--card); padding: 20px; border-radius: 16px; box-shadow: var(--shadow); }
+    form input, form select { padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; }
+    form button { padding: 10px 18px; background: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; }
+    form button:hover { background: #3730a3; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th { background: #f1f5f9; padding: 12px; font-weight: 700; border-bottom: 2px solid #4f46e5; }
+    td { padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: center; }
+    .act { padding: 5px 10px; margin: 2px; border: none; border-radius: 6px; cursor: pointer; color: white; font-size: 12px; font-weight: 600; }
+    .act-edit { background: #f59e0b; } .act-del { background: #ef4444; } .act-view { background: #3b82f6; } .act-wa { background: #25D366; }
+    .act-save { background: #10b981; } .act-back { background: #64748b; }
+    .alert { background: #fef3c7; padding: 12px; border-radius: 10px; margin: 15px 0; color: #92400e; font-weight: 600; }
+    .chart-box { background: white; padding: 20px; border-radius: 14px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     canvas { max-width: 100%; }
+    .action-bar { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
 
     @media (max-width: 768px) {
       .app-container { flex-direction: column; }
       .sidebar { position: relative; width: 100%; padding: 15px; }
       .content { margin-right: 0; padding: 15px; }
-      .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
 
-  <div class="app-container">
-    <!-- ========== الشريط الجانبي ========== -->
-    <nav class="sidebar" id="sidebar">
-      <div class="logo">
-        <span class="icon">📜</span>
-        <h2>Caeser of History</h2>
-        <p>إدارة المجموعات التعليمية</p>
+<div class="app-container">
+  <nav class="sidebar" id="sidebar">
+    <div class="logo"><span>📜</span><h2>Caeser of History</h2><p>إدارة المجموعات</p></div>
+    <div style="flex:1;">
+      <button class="active" onclick="navigateTo('dashboard')">🏠 الرئيسية</button>
+      <button onclick="navigateTo('students')">👨‍🎓 الطلاب</button>
+      <button onclick="navigateTo('groups')">👥 المجموعات</button>
+      <button onclick="navigateTo('attendance')">📋 الحضور</button>
+      <button onclick="navigateTo('payments')">💰 المدفوعات</button>
+      <button onclick="navigateTo('exams')">📝 الامتحانات</button>
+      <button onclick="navigateTo('reports')">📊 التقارير</button>
+    </div>
+    <div class="btns">
+      <button class="btn-green" onclick="exportAllData()">💾 تصدير البيانات</button>
+      <button class="btn-purple" onclick="document.getElementById('ifile').click()">📂 استيراد البيانات</button>
+      <input type="file" id="ifile" accept=".json" style="display:none" onchange="importAllData(event)">
+    </div>
+  </nav>
+
+  <main id="main-content" class="content"></main>
+</div>
+
+<script>
+// ========== DATA ==========
+function gid() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
+function gd(k) { const d = localStorage.getItem('caeser_' + k); return d ? JSON.parse(d) : []; }
+function sd(k, d) { localStorage.setItem('caeser_' + k, JSON.stringify(d)); }
+function gs() { return gd('students'); } function ss(s) { sd('students', s); } function gsi(id) { return gs().find(x => x.id === id); }
+function gg() { return gd('groups'); } function sg(g) { sd('groups', g); } function ggi(id) { return gg().find(x => x.id === id); }
+function ga() { return gd('attendance'); } function sa(a) { sd('attendance', a); }
+function gp() { return gd('payments'); } function sp(p) { sd('payments', p); }
+function ge() { return gd('exams'); } function se(e) { sd('exams', e); }
+
+// ========== EXPORT/IMPORT ==========
+function exportAllData() {
+  const d = { students: gs(), groups: gg(), attendance: ga(), payments: gp(), exams: ge() };
+  const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b);
+  a.download = 'caeser_backup_' + new Date().toISOString().slice(0,10) + '.json'; a.click();
+  alert('✅ تم تصدير البيانات بنجاح');
+}
+function importAllData(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = function(ev) {
+    try {
+      const d = JSON.parse(ev.target.result);
+      if (d.students) ss(d.students); if (d.groups) sg(d.groups);
+      if (d.attendance) sa(d.attendance); if (d.payments) sp(d.payments); if (d.exams) se(d.exams);
+      alert('✅ تم استيراد البيانات بنجاح'); navigateTo('dashboard');
+    } catch(er) { alert('❌ فشل الاستيراد'); }
+  };
+  r.readAsText(f);
+}
+
+// ========== NAVIGATION ==========
+function navigateTo(p) {
+  const fn = window['load' + p.charAt(0).toUpperCase() + p.slice(1)];
+  if (fn) fn();
+  document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
+  const btns = document.querySelectorAll('.sidebar button');
+  const titles = { dashboard: 'الرئيسية', students: 'الطلاب', groups: 'المجموعات', attendance: 'الحضور', payments: 'المدفوعات', exams: 'الامتحانات', reports: 'التقارير' };
+  btns.forEach(b => { if (b.textContent.includes(titles[p] || '')) b.classList.add('active'); });
+}
+
+window.addEventListener('DOMContentLoaded', () => navigateTo('dashboard'));
+
+// ========== DASHBOARD ==========
+function loadDashboard() {
+  const m = document.getElementById('main-content');
+  const st = gs(), gr = gg(), att = ga(), pay = gp(), ex = ge();
+  const today = new Date().toISOString().slice(0,10);
+  const pres = att.filter(a => a.date === today && a.status === 'present').length;
+  const tot = pay.reduce((s,p) => s + p.amount, 0);
+  const ov = st.filter(s => pay.filter(p => p.studentId === s.id).length === 0);
+
+  let h = `<div class="welcome"><h1>👋 أهلاً بك في Caeser of History</h1><p>لوحة تحكم متكاملة لإدارة مجموعاتك التعليمية</p></div>
+    <div class="stats">
+      <div class="stat"><div class="icon">👨‍🎓</div><div><div class="val">${st.length}</div><div class="lbl">إجمالي الطلاب</div></div></div>
+      <div class="stat"><div class="icon">👥</div><div><div class="val">${gr.length}</div><div class="lbl">المجموعات</div></div></div>
+      <div class="stat"><div class="icon">📋</div><div><div class="val">${pres}</div><div class="lbl">حضور اليوم</div></div></div>
+      <div class="stat"><div class="icon">💰</div><div><div class="val">${tot} ج.م</div><div class="lbl">المدفوعات</div></div></div>
+    </div>`;
+  if (ov.length) h += `<div class="alert">⚠️ ${ov.length} طلاب لم يسددوا بعد: ${ov.map(s=>s.name).join('، ')}</div>`;
+  h += `<div class="grid">
+    <div class="card" onclick="navigateTo('students')"><span class="ico">👨‍🎓</span><div class="ttl">الطلاب</div><div class="sub">${st.length} طالب</div></div>
+    <div class="card" onclick="navigateTo('groups')"><span class="ico">👥</span><div class="ttl">المجموعات</div><div class="sub">${gr.length} مجموعة</div></div>
+    <div class="card" onclick="navigateTo('attendance')"><span class="ico">📋</span><div class="ttl">الحضور</div><div class="sub">${pres} حاضر اليوم</div></div>
+    <div class="card" onclick="navigateTo('payments')"><span class="ico">💰</span><div class="ttl">المدفوعات</div><div class="sub">${tot} ج.م</div></div>
+    <div class="card" onclick="navigateTo('exams')"><span class="ico">📝</span><div class="ttl">الامتحانات</div><div class="sub">${ex.length} امتحان</div></div>
+    <div class="card" onclick="navigateTo('reports')"><span class="ico">📊</span><div class="ttl">التقارير</div><div class="sub">عرض الإحصائيات</div></div>
+  </div>`;
+  m.innerHTML = h;
+}
+
+// ========== STUDENTS ==========
+function loadStudents() {
+  const m = document.getElementById('main-content');
+  const gr = gg();
+  let h = `<div class="page"><h2>👨‍🎓 إدارة الطلاب</h2><div class="search"><input type="text" id="ss" placeholder="🔍 بحث عن طالب..." oninput="filterStudents()"></div>
+    <form id="sf"><input type="text" id="sn" placeholder="اسم الطالب" required><input type="tel" id="sp" placeholder="رقم الهاتف" required><input type="tel" id="sguard" placeholder="ولي الأمر"><select id="sgr"><option value="">-- المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><button type="submit">➕ إضافة</button></form>
+    <table><thead><tr><th>الاسم</th><th>الهاتف</th><th>ولي الأمر</th><th>المجموعة</th><th>إجراءات</th></tr></thead><tbody id="stb"></tbody></table></div>`;
+  m.innerHTML = h;
+  renderStudentTable(gs());
+  document.getElementById('sf').onsubmit = function(e) {
+    e.preventDefault();
+    const n = document.getElementById('sn').value.trim(), p = document.getElementById('sp').value.trim();
+    const g = document.getElementById('sguard').value.trim(), gid = document.getElementById('sgr').value;
+    if (!n || !p) return alert('الاسم والهاتف مطلوبان');
+    ss([...gs(), { id: gid(), name: n, phone: p, guardianPhone: g || null, groupId: gid || null }]);
+    alert('✅ تمت الإضافة'); loadStudents();
+  };
+}
+function renderStudentTable(list) {
+  const gr = gg();
+  document.getElementById('stb').innerHTML = list.map(s => {
+    const g = gr.find(x => x.id === s.groupId);
+    return `<tr><td><strong>${s.name}</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td><td>${s.guardianPhone||'—'}</td><td>${g?g.name:'—'}</td>
+    <td><button class="act act-view" onclick="viewStudent('${s.id}')">👁️</button><button class="act act-edit" onclick="editStudent('${s.id}')">✏️</button><button class="act act-del" onclick="deleteStudentFull('${s.id}')">🗑️</button></td></tr>`;
+  }).join('');
+}
+function filterStudents() {
+  const q = document.getElementById('ss').value.toLowerCase();
+  renderStudentTable(gs().filter(s => s.name.toLowerCase().includes(q) || s.phone.includes(q)));
+}
+function editStudent(id) {
+  const s = gsi(id); if (!s) return;
+  const n = prompt('الاسم:', s.name); if (n === null) return;
+  const p = prompt('الهاتف:', s.phone); if (p === null) return;
+  const g = prompt('ولي الأمر:', s.guardianPhone || '');
+  const gr = gg();
+  const c = prompt('رقم المجموعة:\n' + gr.map((x,i) => (i+1)+'-'+x.name).join('\n') + '\n(0=بدون)', s.groupId ? gr.findIndex(x=>x.id===s.groupId)+1 : '0');
+  let gid = null;
+  if (c && parseInt(c) > 0 && gr[parseInt(c)-1]) gid = gr[parseInt(c)-1].id;
+  const all = gs(); all[all.findIndex(x=>x.id===id)] = { ...s, name: n, phone: p, guardianPhone: g||null, groupId: gid };
+  ss(all); alert('✅ تم التعديل'); loadStudents();
+}
+function deleteStudentFull(id) {
+  if (!confirm('⚠️ حذف الطالب وكل بياناته؟')) return;
+  ss(gs().filter(s => s.id !== id)); sa(ga().filter(a => a.studentId !== id));
+  sp(gp().filter(p => p.studentId !== id)); se(ge().filter(e => e.studentId !== id));
+  alert('🗑️ تم الحذف'); loadStudents();
+}
+function viewStudent(id) {
+  const s = gsi(id); if (!s) return;
+  const g = ggi(s.groupId);
+  const att = ga().filter(a => a.studentId === s.id);
+  const pay = gp().filter(p => p.studentId === s.id);
+  const ex = ge().filter(e => e.studentId === s.id);
+  const tot = pay.reduce((sum,p) => sum + p.amount, 0);
+  const pres = att.filter(a => a.status === 'present').length;
+  const pct = att.length ? Math.round((pres/att.length)*100) : 0;
+
+  document.getElementById('main-content').innerHTML = `
+    <div class="page">
+      <h2>📋 ${s.name}</h2>
+      <table>
+        <tr><td><strong>📞 الهاتف:</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td></tr>
+        <tr><td><strong>👨‍👩‍👦 ولي الأمر:</strong></td><td>${s.guardianPhone||'—'}</td></tr>
+        <tr><td><strong>👥 المجموعة:</strong></td><td>${g?g.name:'—'}</td></tr>
+        <tr><td><strong>📊 نسبة الحضور:</strong></td><td>${pct}% (${pres}/${att.length})</td></tr>
+        <tr><td><strong>💰 المدفوعات:</strong></td><td>${tot} ج.م</td></tr>
+        <tr><td><strong>📝 متوسط الدرجات:</strong></td><td>${ex.length ? (ex.reduce((s,e)=>s+e.score,0)/ex.length).toFixed(1) : '—'}</td></tr>
+      </table>
+      <div class="action-bar">
+        <button class="act act-back" onclick="loadStudents()">⬅️ رجوع للطلاب</button>
       </div>
+    </div>`;
+}
 
-      <div style="flex:1;">
-        <button class="nav-btn active" onclick="navigateTo('dashboard')"><span class="nav-icon">🏠</span> الرئيسية</button>
-        <button class="nav-btn" onclick="navigateTo('students')"><span class="nav-icon">👨‍🎓</span> الطلاب</button>
-        <button class="nav-btn" onclick="navigateTo('groups')"><span class="nav-icon">👥</span> المجموعات</button>
-        <button class="nav-btn" onclick="navigateTo('attendance')"><span class="nav-icon">📋</span> الحضور</button>
-        <button class="nav-btn" onclick="navigateTo('payments')"><span class="nav-icon">💰</span> المدفوعات</button>
-        <button class="nav-btn" onclick="navigateTo('exams')"><span class="nav-icon">📝</span> الامتحانات</button>
-        <button class="nav-btn" onclick="navigateTo('reports')"><span class="nav-icon">📊</span> التقارير</button>
-      </div>
+// ========== GROUPS ==========
+function loadGroups() {
+  const m = document.getElementById('main-content');
+  const gr = gg(), st = gs();
+  let h = `<div class="page"><h2>👥 المجموعات</h2>
+    <form id="gf"><input type="text" id="gn" placeholder="اسم المجموعة" required><input type="text" id="gsc" placeholder="المواعيد"><button type="submit">➕ إضافة</button></form>
+    <table><thead><tr><th>المجموعة</th><th>المواعيد</th><th>الطلاب</th><th>واتساب</th><th>إجراءات</th></tr></thead><tbody>`;
+  gr.forEach(g => {
+    const cnt = st.filter(s => s.groupId === g.id).length;
+    h += `<tr><td><strong>${g.name}</strong></td><td>${g.schedule||'—'}</td><td>${cnt}</td>
+    <td><button class="act act-wa" onclick="sendWhatsapp('${g.id}')">📱</button></td>
+    <td><button class="act act-edit" onclick="editGroup('${g.id}')">✏️</button><button class="act act-del" onclick="deleteGroup('${g.id}')">🗑️</button></td></tr>`;
+  });
+  h += '</tbody></table></div>'; m.innerHTML = h;
+  document.getElementById('gf').onsubmit = function(e) {
+    e.preventDefault();
+    const n = document.getElementById('gn').value.trim(); if (!n) return;
+    sg([...gg(), { id: gid(), name: n, schedule: document.getElementById('gsc').value.trim() }]);
+    alert('✅ تمت الإضافة'); loadGroups();
+  };
+}
+function editGroup(id) {
+  const g = ggi(id); if (!g) return;
+  const n = prompt('الاسم:', g.name); if (n === null) return;
+  const s = prompt('المواعيد:', g.schedule || '');
+  const all = gg(); all[all.findIndex(x=>x.id===id)] = { ...g, name: n, schedule: s };
+  sg(all); alert('✅ تم التعديل'); loadGroups();
+}
+function deleteGroup(id) {
+  if (!confirm('حذف المجموعة؟')) return;
+  sg(gg().filter(g => g.id !== id));
+  ss(gs().map(s => s.groupId === id ? {...s, groupId: null} : s));
+  alert('🗑️ تم الحذف'); loadGroups();
+}
+function sendWhatsapp(gid) {
+  const st = gs().filter(s => s.groupId === gid);
+  if (!st.length) return alert('لا يوجد طلاب');
+  const msg = prompt('اكتب الرسالة:'); if (!msg) return;
+  st.forEach(s => { const p = s.phone.replace(/[^0-9]/g, ''); if (p) window.open('https://wa.me/' + p + '?text=' + encodeURIComponent(msg), '_blank'); });
+  alert('✅ تم فتح واتساب للطلاب');
+}
 
-      <div class="bottom-actions">
-        <button class="btn-gdrive" onclick="saveToGoogleDrive()">📤 حفظ في Google Drive</button>
-        <button class="btn-gdrive" onclick="loadFromGoogleDrive()" style="background:#34a853;">📥 تحميل من Google Drive</button>
-        <button class="btn-export" onclick="exportAllData()">💾 تصدير JSON</button>
-        <button class="btn-import" onclick="document.getElementById('import-file').click()">📂 استيراد JSON</button>
-        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importAllData(event)">
-        <button class="btn-theme" onclick="toggleTheme()">🌓 تبديل المظهر</button>
-      </div>
-    </nav>
+// ========== ATTENDANCE ==========
+function loadAttendance() {
+  const m = document.getElementById('main-content');
+  const gr = gg();
+  let h = `<div class="page"><h2>📋 الحضور والغياب</h2>
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+      <select id="ag"><option value="">-- المجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select>
+      <input type="date" id="ad"><button class="act act-view" onclick="showAttendance()">📅 عرض</button>
+    </div>
+    <div id="att-form"></div>
+    <h3 style="margin-top:25px;">📅 سجل الحضور السابق</h3><div id="att-hist"></div></div>`;
+  m.innerHTML = h; renderAttHistory();
+}
+function showAttendance() {
+  const gid = document.getElementById('ag').value, date = document.getElementById('ad').value;
+  if (!gid || !date) return alert('اختر المجموعة والتاريخ');
+  const st = gs().filter(s => s.groupId === gid);
+  if (!st.length) return document.getElementById('att-form').innerHTML = '<p>لا يوجد طلاب</p>';
+  const ex = ga().filter(a => a.groupId === gid && a.date === date);
+  const map = {}; ex.forEach(a => map[a.studentId] = a.status);
+  let f = '<form id="saf"><table><thead><tr><th>الطالب</th><th>حاضر</th><th>غائب</th></tr></thead><tbody>';
+  st.forEach(s => f += `<tr><td>${s.name}</td><td><input type="radio" name="a-${s.id}" value="present" ${map[s.id]!=='absent'?'checked':''}></td><td><input type="radio" name="a-${s.id}" value="absent" ${map[s.id]==='absent'?'checked':''}></td></tr>`);
+  f += '</tbody></table><div class="action-bar"><button type="submit" class="act act-save">💾 حفظ الحضور</button></div></form>';
+  document.getElementById('att-form').innerHTML = f;
+  document.getElementById('saf').onsubmit = function(e) {
+    e.preventDefault();
+    let all = ga().filter(a => !(a.groupId === gid && a.date === date));
+    st.forEach(s => { const r = document.querySelector('input[name="a-' + s.id + '"]:checked'); if (r) all.push({ id: gid(), studentId: s.id, groupId: gid, date, status: r.value }); });
+    sa(all); alert('✅ تم الحفظ'); loadAttendance();
+  };
+}
+function renderAttHistory() {
+  const all = ga();
+  if (!all.length) return document.getElementById('att-hist').innerHTML = '<p>لا يوجد سجل حضور</p>';
+  const grouped = {};
+  all.forEach(a => { const k = a.date + a.groupId; if (!grouped[k]) grouped[k] = { date: a.date, groupId: a.groupId, present: 0, absent: 0 }; a.status === 'present' ? grouped[k].present++ : grouped[k].absent++; });
+  let t = '<table><thead><tr><th>التاريخ</th><th>المجموعة</th><th>حضور</th><th>غياب</th></tr></thead><tbody>';
+  Object.values(grouped).forEach(r => { const g = ggi(r.groupId); t += `<tr><td>${r.date}</td><td>${g?g.name:'—'}</td><td>${r.present}</td><td>${r.absent}</td></tr>`; });
+  t += '</tbody></table>'; document.getElementById('att-hist').innerHTML = t;
+}
 
-    <!-- ========== المحتوى ========== -->
-    <main id="main-content" class="content"></main>
-  </div>
+// ========== PAYMENTS ==========
+function loadPayments() {
+  const m = document.getElementById('main-content');
+  const st = gs(), pay = gp();
+  let h = `<div class="page"><h2>💰 المدفوعات</h2>
+    <form id="pf"><select id="ps" required><option value="">-- الطالب --</option>${st.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><input type="number" id="pa" placeholder="المبلغ" required><input type="date" id="pd" required><input type="text" id="pn" placeholder="ملاحظات"><button type="submit">➕ إضافة</button></form>
+    <table><thead><tr><th>الطالب</th><th>المبلغ</th><th>التاريخ</th><th>ملاحظات</th><th>حذف</th></tr></thead><tbody>`;
+  pay.forEach(p => { const s = st.find(x => x.id === p.studentId); h += `<tr><td>${s?s.name:'—'}</td><td>${p.amount} ج.م</td><td>${p.date}</td><td>${p.notes||''}</td><td><button class="act act-del" onclick="deletePayment('${p.id}')">🗑️</button></td></tr>`; });
+  h += '</tbody></table></div>'; m.innerHTML = h;
+  document.getElementById('pf').onsubmit = function(e) {
+    e.preventDefault();
+    const sid = document.getElementById('ps').value, amt = parseFloat(document.getElementById('pa').value);
+    const date = document.getElementById('pd').value, notes = document.getElementById('pn').value.trim();
+    if (!sid || isNaN(amt) || !date) return alert('بيانات ناقصة');
+    sp([...gp(), { id: gid(), studentId: sid, amount: amt, date, notes }]);
+    alert('✅ تمت الإضافة'); loadPayments();
+  };
+}
+function deletePayment(id) { if (!confirm('حذف؟')) return; sp(gp().filter(p => p.id !== id)); loadPayments(); }
 
-  <script>
-    // ==================== GOOGLE DRIVE API ====================
-    const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // هتحتاج تسجل تطبيق في Google Cloud
-    const API_KEY = 'YOUR_API_KEY';
-    const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
-    const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+// ========== EXAMS ==========
+function loadExams() {
+  const m = document.getElementById('main-content');
+  const st = gs(), ex = ge();
+  let h = `<div class="page"><h2>📝 الامتحانات</h2>
+    <form id="ef"><select id="es" required><option value="">-- الطالب --</option>${st.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><input type="text" id="en" placeholder="اسم الامتحان" required><input type="number" id="esc" placeholder="الدرجة" required><input type="date" id="ed" required><button type="submit">➕ إضافة</button></form>
+    <table><thead><tr><th>الطالب</th><th>الامتحان</th><th>الدرجة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody>`;
+  ex.forEach(e => { const s = st.find(x => x.id === e.studentId); h += `<tr><td>${s?s.name:'—'}</td><td>${e.examName}</td><td>${e.score}</td><td>${e.date}</td><td><button class="act act-del" onclick="deleteExam('${e.id}')">🗑️</button></td></tr>`; });
+  h += '</tbody></table></div>'; m.innerHTML = h;
+  document.getElementById('ef').onsubmit = function(e) {
+    e.preventDefault();
+    const sid = document.getElementById('es').value, en = document.getElementById('en').value.trim();
+    const sc = parseInt(document.getElementById('esc').value), date = document.getElementById('ed').value;
+    if (!sid || !en || isNaN(sc) || !date) return alert('بيانات ناقصة');
+    se([...ge(), { id: gid(), studentId: sid, examName: en, score: sc, date }]);
+    alert('✅ تمت الإضافة'); loadExams();
+  };
+}
+function deleteExam(id) { if (!confirm('حذف؟')) return; se(ge().filter(e => e.id !== id)); loadExams(); }
 
-    let gapiLoaded = false;
-    let gisLoaded = false;
+// ========== REPORTS ==========
+function loadReports() {
+  const m = document.getElementById('main-content');
+  const st = gs(), att = ga(), pay = gp(), ex = ge(), gr = gg();
 
-    // تحميل Google API
-    function loadGoogleAPI() {
-      const script1 = document.createElement('script');
-      script1.src = 'https://apis.google.com/js/api.js';
-      script1.onload = () => { gapiLoaded = true; gapi.load('client', initializeGapiClient); };
-      document.body.appendChild(script1);
+  // بيانات الرسم البياني
+  const groupNames = gr.map(g => g.name);
+  const groupCounts = gr.map(g => st.filter(s => s.groupId === g.id).length);
 
-      const script2 = document.createElement('script');
-      script2.src = 'https://accounts.google.com/gsi/client';
-      script2.onload = () => { gisLoaded = true; };
-      document.body.appendChild(script2);
-    }
+  let h = `<div class="page"><h2>📊 التقارير والإحصائيات</h2>`;
 
-    async function initializeGapiClient() {
-      await gapi.client.init({
-        apiKey: API_KEY,
-        discoveryDocs: DISCOVERY_DOCS,
-      });
-    }
+  // رسم بياني
+  if (gr.length > 0) {
+    h += `<div class="chart-box"><h3>👥 توزيع الطلاب على المجموعات</h3><canvas id="groupChart" height="100"></canvas></div>`;
+  }
 
-    // حفظ الملف في Google Drive
-    async function saveToGoogleDrive() {
-      if (!gapiLoaded || !gisLoaded) {
-        alert('⏳ جاري تحميل Google API... حاول مرة أخرى.');
-        loadGoogleAPI();
-        return;
-      }
-
-      const token = await getGoogleToken();
-      if (!token) return;
-
-      const allData = {
-        students: getStudents(),
-        groups: getGroups(),
-        attendance: getAttendance(),
-        payments: getPayments(),
-        exams: getExams()
-      };
-
-      const jsonStr = JSON.stringify(allData, null, 2);
-      const blob = new Blob([jsonStr], { type: 'application/json' });
-
-      const metadata = {
-        name: 'caeser_backup_' + new Date().toISOString().slice(0,10) + '.json',
-        mimeType: 'application/json'
-      };
-
-      const form = new FormData();
-      form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-      form.append('file', blob);
-
-      try {
-        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + token
-          },
-          body: form
-        });
-        const result = await response.json();
-        if (result.id) {
-          alert('✅ تم الحفظ في Google Drive بنجاح!\nرابط الملف: https://drive.google.com/file/d/' + result.id + '/view');
-        } else {
-          alert('❌ فشل الحفظ: ' + JSON.stringify(result));
-        }
-      } catch (err) {
-        alert('❌ خطأ: ' + err.message);
-      }
-    }
-
-    // تحميل من Google Drive
-    async function loadFromGoogleDrive() {
-      if (!gapiLoaded || !gisLoaded) {
-        alert('⏳ جاري تحميل Google API... حاول مرة أخرى.');
-        loadGoogleAPI();
-        return;
-      }
-
-      const token = await getGoogleToken();
-      if (!token) return;
-
-      try {
-        // جلب قائمة الملفات
-        const response = await fetch('https://www.googleapis.com/drive/v3/files?q=name+contains+%22caeser_backup%22&orderBy=createdTime+desc&pageSize=5&fields=files(id,name,createdTime)', {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-        const data = await response.json();
-
-        if (!data.files || data.files.length === 0) {
-          alert('❌ لا توجد ملفات نسخ احتياطي في Google Drive.');
-          return;
-        }
-
-        // عرض الملفات للاختيار
-        let fileList = 'اختر ملف:\n\n';
-        data.files.forEach((f, i) => {
-          fileList += (i+1) + '- ' + f.name + ' (' + new Date(f.createdTime).toLocaleDateString('ar-EG') + ')\n';
-        });
-        const choice = prompt(fileList);
-        if (!choice) return;
-
-        const fileIndex = parseInt(choice) - 1;
-        if (fileIndex < 0 || fileIndex >= data.files.length) return;
-
-        const fileId = data.files[fileIndex].id;
-
-        // تحميل محتوى الملف
-        const contentResponse = await fetch('https://www.googleapis.com/drive/v3/files/' + fileId + '?alt=media', {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-        const jsonData = await contentResponse.json();
-
-        if (jsonData.students) saveStudents(jsonData.students);
-        if (jsonData.groups) saveGroups(jsonData.groups);
-        if (jsonData.attendance) saveAttendance(jsonData.attendance);
-        if (jsonData.payments) savePayments(jsonData.payments);
-        if (jsonData.exams) saveExams(jsonData.exams);
-
-        alert('✅ تم تحميل البيانات من Google Drive بنجاح!');
-        navigateTo('dashboard');
-      } catch (err) {
-        alert('❌ خطأ: ' + err.message);
-      }
-    }
-
-    async function getGoogleToken() {
-      return new Promise((resolve) => {
-        const tokenClient = google.accounts.oauth2.initTokenClient({
-          client_id: CLIENT_ID,
-          scope: SCOPES,
-          callback: (response) => {
-            if (response.error) {
-              alert('❌ فشل المصادقة: ' + response.error);
-              resolve(null);
-            } else {
-              resolve(response.access_token);
-            }
-          },
-        });
-        tokenClient.requestAccessToken();
-      });
-    }
-
-    // ==================== DATA LAYER ====================
-    function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
-    function getData(key) { const d = localStorage.getItem('caeser_' + key); return d ? JSON.parse(d) : []; }
-    function saveData(key, data) { localStorage.setItem('caeser_' + key, JSON.stringify(data)); }
-    function getStudents() { return getData('students'); }
-    function saveStudents(s) { saveData('students', s); }
-    function getStudentById(id) { return getStudents().find(s => s.id === id); }
-    function getGroups() { return getData('groups'); }
-    function saveGroups(g) { saveData('groups', g); }
-    function getGroupById(id) { return getGroups().find(g => g.id === id); }
-    function getAttendance() { return getData('attendance'); }
-    function saveAttendance(a) { saveData('attendance', a); }
-    function getPayments() { return getData('payments'); }
-    function savePayments(p) { saveData('payments', p); }
-    function getExams() { return getData('exams'); }
-    function saveExams(e) { saveData('exams', e); }
-
-    // ==================== تصدير/استيراد JSON ====================
-    function exportAllData() {
-      const d = { students: getStudents(), groups: getGroups(), attendance: getAttendance(), payments: getPayments(), exams: getExams() };
-      const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'caeser_backup_' + new Date().toISOString().slice(0,10) + '.json'; a.click();
-      alert('✅ تم التصدير');
-    }
-    function importAllData(e) {
-      const f = e.target.files[0]; if (!f) return;
-      const r = new FileReader();
-      r.onload = function(ev) {
-        try {
-          const d = JSON.parse(ev.target.result);
-          if (d.students) saveStudents(d.students);
-          if (d.groups) saveGroups(d.groups);
-          if (d.attendance) saveAttendance(d.attendance);
-          if (d.payments) savePayments(d.payments);
-          if (d.exams) saveExams(d.exams);
-          alert('✅ تم الاستيراد'); navigateTo('dashboard');
-        } catch(er) { alert('❌ فشل'); }
-      };
-      r.readAsText(f);
-    }
-
-    function fileToBase64(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // ==================== المظهر ====================
-    function toggleTheme() {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('caeser_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    }
-    if (localStorage.getItem('caeser_theme') === 'dark') document.body.classList.add('dark-mode');
-
-    // ==================== التنقل ====================
-    function navigateTo(page) {
-      const fn = window['load' + page.charAt(0).toUpperCase() + page.slice(1)];
-      if (fn) fn();
-      // تحديث الـ active
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      const buttons = document.querySelectorAll('.nav-btn');
-      buttons.forEach(b => {
-        if (b.textContent.includes(getPageTitle(page))) b.classList.add('active');
-      });
-    }
-    function getPageTitle(page) {
-      const titles = { dashboard: 'الرئيسية', students: 'الطلاب', groups: 'المجموعات', attendance: 'الحضور', payments: 'المدفوعات', exams: 'الامتحانات', reports: 'التقارير' };
-      return titles[page] || '';
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      loadGoogleAPI();
-      navigateTo('dashboard');
-    });
-
-    // ==================== داشبورد ====================
-    function loadDashboard() {
-      const m = document.getElementById('main-content');
-      const st = getStudents(), gr = getGroups(), att = getAttendance(), pay = getPayments(), ex = getExams();
-      const today = new Date().toISOString().slice(0,10);
-      const present = att.filter(a => a.date === today && a.status === 'present').length;
-      const total = pay.reduce((s,p) => s + p.amount, 0);
-      const over = st.filter(s => pay.filter(p => p.studentId === s.id).length === 0);
-
-      let h = `
-        <div class="dashboard-header">
-          <h1>👋 أهلاً بك في Caeser of History</h1>
-          <p>لوحة تحكم إدارة المجموعات - كل شيء في مكان واحد</p>
-        </div>
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-icon blue">👨‍🎓</div><div class="stat-info"><div class="stat-value">${st.length}</div><div class="stat-label">إجمالي الطلاب</div></div></div>
-          <div class="stat-card"><div class="stat-icon green">👥</div><div class="stat-info"><div class="stat-value">${gr.length}</div><div class="stat-label">المجموعات</div></div></div>
-          <div class="stat-card"><div class="stat-icon orange">📋</div><div class="stat-info"><div class="stat-value">${present}</div><div class="stat-label">حضور اليوم</div></div></div>
-          <div class="stat-card"><div class="stat-icon purple">💰</div><div class="stat-info"><div class="stat-value">${total} ج.م</div><div class="stat-label">إجمالي المدفوعات</div></div></div>
-        </div>`;
-      if (over.length) h += `<div class="alert-box">⚠️ تنبيه: ${over.length} طلاب لم يسددوا بعد - ${over.map(s=>s.name).join('، ')}</div>`;
-      h += `<div class="dashboard-grid">
-        <div class="dash-card" onclick="navigateTo('students')"><span class="card-icon">👨‍🎓</span><div class="card-title">الطلاب</div><div class="card-subtitle">${st.length} طالب مسجل</div></div>
-        <div class="dash-card" onclick="navigateTo('groups')"><span class="card-icon">👥</span><div class="card-title">المجموعات</div><div class="card-subtitle">${gr.length} مجموعة</div></div>
-        <div class="dash-card" onclick="navigateTo('attendance')"><span class="card-icon">📋</span><div class="card-title">الحضور والغياب</div><div class="card-subtitle">${present} حاضر اليوم</div></div>
-        <div class="dash-card" onclick="navigateTo('payments')"><span class="card-icon">💰</span><div class="card-title">المدفوعات</div><div class="card-subtitle">${total} جنيه</div></div>
-        <div class="dash-card" onclick="navigateTo('exams')"><span class="card-icon">📝</span><div class="card-title">الامتحانات</div><div class="card-subtitle">${ex.length} امتحان</div></div>
-        <div class="dash-card" onclick="navigateTo('reports')"><span class="card-icon">📊</span><div class="card-title">التقارير</div><div class="card-subtitle">إحصائيات شاملة</div></div>
-      </div>`;
-      m.innerHTML = h;
-    }
-
-    // ==================== الطلاب ====================
-    function loadStudents() {
-      const m = document.getElementById('main-content');
-      const gr = getGroups();
-      let h = `
-        <div class="page-container">
-          <div class="page-header"><h2>👨‍🎓 إدارة الطلاب</h2><div class="search-box"><input type="text" id="ss" placeholder="🔍 بحث عن طالب..." oninput="filterStudents()"></div></div>
-          <form id="sf"><input type="text" id="sn" placeholder="اسم الطالب كاملاً" required><input type="tel" id="sp" placeholder="رقم الهاتف" required><input type="tel" id="sg" placeholder="هاتف ولي الأمر"><select id="sgr"><option value="">-- اختر مجموعة --</option>${gr.map(g=>`<option value="${g.id}">${g.name}</option>`).join('')}</select><button type="submit">➕ إضافة طالب</button></form>
-          <table><thead><tr><th>الاسم</th><th>الهاتف</th><th>ولي الأمر</th><th>المجموعة</th><th>الإجراءات</th></tr></thead><tbody id="stb"></tbody></table>
-        </div>`;
-      m.innerHTML = h;
-      renderStudentsTable(getStudents());
-      document.getElementById('sf').onsubmit = function(e) {
-        e.preventDefault();
-        const n = document.getElementById('sn').value.trim(), p = document.getElementById('sp').value.trim();
-        const g = document.getElementById('sg').value.trim(), gid = document.getElementById('sgr').value;
-        if (!n || !p) return alert('الاسم والهاتف مطلوبان');
-        saveStudents([...getStudents(), { id: generateId(), name: n, phone: p, guardianPhone: g || null, groupId: gid || null }]);
-        alert('✅ تم إضافة الطالب بنجاح');
-        loadStudents();
-      };
-    }
-    function renderStudentsTable(list) {
-      const gr = getGroups();
-      document.getElementById('stb').innerHTML = list.map(s => {
-        const g = gr.find(x => x.id === s.groupId);
-        return `<tr><td><strong>${s.name}</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td><td>${s.guardianPhone||'—'}</td><td>${g?g.name:'—'}</td>
-        <td><button class="btn-sm btn-view" onclick="viewStudent('${s.id}')">👁️ عرض</button><button class="btn-sm btn-edit" onclick="editStudent('${s.id}')">✏️ تعديل</button><button class="btn-sm btn-delete" onclick="deleteStudentFull('${s.id}')">🗑️ حذف</button></td></tr>`;
-      }).join('');
-    }
-    function filterStudents() {
-      const q = document.getElementById('ss').value.toLowerCase();
-      renderStudentsTable(getStudents().filter(s => s.name.toLowerCase().includes(q) || s.phone.includes(q)));
-    }
-    function editStudent(id) {
-      const s = getStudentById(id); if (!s) return;
-      const n = prompt('الاسم الجديد:', s.name); if (n === null) return;
-      const p = prompt('الهاتف الجديد:', s.phone); if (p === null) return;
-      const g = prompt('هاتف ولي الأمر:', s.guardianPhone || '');
-      const gr = getGroups();
-      const c = prompt('رقم المجموعة:\n' + gr.map((x,i) => (i+1)+'-'+x.name).join('\n') + '\n(0=بدون)', s.groupId ? gr.findIndex(x=>x.id===s.groupId)+1 : '0');
-      let gid = null;
-      if (c && parseInt(c) > 0 && gr[parseInt(c)-1]) gid = gr[parseInt(c)-1].id;
-      const all = getStudents(); all[all.findIndex(x=>x.id===id)] = { ...s, name: n, phone: p, guardianPhone: g||null, groupId: gid };
-      saveStudents(all);
-      alert('✅ تم تعديل الطالب');
-      loadStudents();
-    }
-    function deleteStudentFull(id) {
-      if (!confirm('⚠️ سيتم حذف الطالب وجميع بياناته (حضور، مدفوعات، امتحانات). هل أنت متأكد؟')) return;
-      saveStudents(getStudents().filter(s => s.id !== id));
-      saveAttendance(getAttendance().filter(a => a.studentId !== id));
-      savePayments(getPayments().filter(p => p.studentId !== id));
-      saveExams(getExams().filter(e => e.studentId !== id));
-      alert('🗑️ تم حذف الطالب بالكامل');
-      loadStudents();
-    }
-    function viewStudent(id) {
-      const s = getStudentById(id); if (!s) return;
-      const g = getGroupById(s.groupId);
-      const att = getAttendance().filter(a => a.studentId === s.id);
-      const pay = getPayments().filter(p => p.studentId === s.id);
-      const ex = getExams().filter(e => e.studentId === s.id);
-      const total = pay.reduce((sum,p) => sum + p.amount, 0);
-      const pres = att.filter(a => a.status === 'present').length;
-      const pct = att.length ? Math.round((pres/att.length)*100) : 0;
-
-      document.getElementById('main-content').innerHTML = `
-        <div class="page-container">
-          <h2>📋 الملف التعريفي: ${s.name}</h2>
-          <table style="margin-top:20px;">
-            <tr><td><strong>📞 الهاتف:</strong></td><td><a href="tel:${s.phone}">${s.phone}</a></td></tr>
-            <tr><td><strong>👨‍👩‍👦 ولي الأمر:</strong></td><td>${s.guardianPhone||'غير مسجل'}</td></tr>
-            <tr><td><strong>👥 المجموعة:</strong></td><td>${g?g.name:'بدون مجموعة'}</td></tr>
-            <tr><td><strong>📊 نسبة الحضور:</strong></td><td>${pct}% (${pres}/${att.length})</td></tr>
-            <tr><td><strong>💰 إجمالي المدفوعات:</strong></td><td>${total} ج.م</td></tr>
-            <tr><td><strong>📝 متوسط الدرجات:</strong></td><td>${ex.length ? (ex.reduce((sum,e)=>sum+e.score,0)/ex.length
+  // جدول ملخص الطلاب
+  h += `<h3 style="margin-top:20px;">📋 ملخص الطلاب</h3>
+    <table><thead><tr><
