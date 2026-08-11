@@ -40,7 +40,85 @@
     .report-card {
       background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+.mobile-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #1F3A5F;
+  color: white;
+  padding: 22px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+}
+
+.app-logo {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.mobile-header h1 {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.mobile-header p {
+  font-size: 14px;
+  opacity: .85;
+}
+
+.dashboard-menu {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.dashboard-menu button {
+  border: none;
+  background: white;
+  border-radius: 18px;
+  padding: 22px 15px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,.08);
+}
+
+.dashboard-menu button:active {
+  transform: scale(.97);
+}
+
+.dashboard-menu span {
+  display: block;
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.dashboard-menu strong {
+  display: block;
+  font-size: 17px;
+  color: #1F3A5F;
+  margin-bottom: 5px;
+}
+
+.dashboard-menu small {
+  color: #777;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .dashboard-menu {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dashboard-menu button {
+    min-height: 145px;
+  }
+}    }
   </style>
 </head>
 <body>
