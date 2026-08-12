@@ -152,7 +152,7 @@
     .schedule-table td .schedule-item .si-delete:hover { opacity: 1; color: var(--danger); }
     .schedule-form-card { background: var(--card); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); margin-bottom: 22px; }
 
-    /*// ==================== STORE PAGE (FIXED 100%) ====================
+    ="// ==================== STORE PAGE (FINAL) ====================
 const STAGES = ['J4', 'J5', 'J6', 'M1', 'M2', 'M3', 'S1', 'S2', 'S3'];
 const STAGE_ICONS = {
   'J4': '🎒', 'J5': '📚', 'J6': '✏️',
@@ -165,12 +165,15 @@ const STAGE_COLORS = {
   'S1': '#6366f1', 'S2': '#14b8a6', 'S3': '#f97316'
 };
 
+// متغيرات لتخزين الـ input elements
+let storeInputs = {};
+
 function loadStore() {
   const m = document.getElementById('main-content');
   const files = storeFiles();
 
   let h = `<div class="page"><h2>🗄️ المخزن التعليمي</h2>
-    <p style="color:var(--text-light);margin-bottom:20px;">الملفات مرتبة حسب المراحل الدراسية - اضغط على ✏️ لتعديل اسم أي ملف</p>
+    <p style="color:var(--text-light);margin-bottom:20px;">الملفات مرتبة حسب المراحل الدراسية</p>
     <div class="store-grid">`;
 
   STAGES.forEach((stage, idx) => {
@@ -178,7 +181,7 @@ function loadStore() {
     const color = STAGE_COLORS[stage];
 
     h += `
-    <div class="store-stage-card animate-scaleIn" style="animation-delay:${idx * 0.06}s; border-top: 5px solid ${color};">
+    <div class="store-stage-card" style="animation-delay:${idx * 0.06}s; border-top: 5px solid ${color};">
       <div class="stage-header" style="border-bottom-color: ${color};">
         <div class="stage-title">
           <span>${STAGE_ICONS[stage]}</span>
@@ -196,14 +199,13 @@ function loadStore() {
         h += `
         <div class="store-file-item">
           <div class="file-info">
-            <span class="file-icon-small">${icon}</span>
-            <span class="file-name-text" title="${f.name}">${f.name}</span>
+            <span>${icon}</span>
+            <span style="font-weight:600;font-size:13px;">${f.name}</span>
           </div>
-          <div class="file-actions-mini">
-            <button class="btn btn-rename" onclick="renameFile('${f.id}')" title="تعديل الاسم">✏️</button>
-            <a href="${f.data}" download="${f.name}" class="btn btn-download" title="تحميل">📥</a>
-            <button class="btn btn-wa" onclick="shareFile('${f.id}')" title="واتساب">📱</button>
-            <button class="btn btn-del" onclick="deleteStoreFile('${f.id}')" title="حذف">🗑️</button>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-rename" onclick="renameFile('${f.id}')">✏️</button>
+            <a href="${f.data}" download="${f.name}" class="btn btn-download">📥</a>
+            <button class="btn btn-del" onclick="deleteStoreFile('${f.id}')">🗑️</button>
           </div>
         </div>`;
       });
@@ -211,10 +213,8 @@ function loadStore() {
 
     h += `</div>
       <div class="stage-upload">
-        <input type="file" id="file-input-${stage}" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.gif" multiple style="display:none;">
-        <button class="upload-btn" onclick="document.getElementById('file-input-${stage}').click()">
-          ⬆️ رفع ملفات ${stage}
-        </button>
+        <input type="file" id="store-input-${stage}" data-stage="${stage}" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.gif" multiple style="display:none;">
+        <button class="upload-btn" data-stage="${stage}">⬆️ رفع ملفات ${stage}</button>
       </div>
     </div>`;
   });
@@ -222,96 +222,100 @@ function loadStore() {
   h += `</div></div>`;
   m.innerHTML = h;
 
-  // ربط الـ event listeners بعد ما الـ HTML يتحمل
-  STAGES.forEach(stage => {
-    const input = document.getElementById('file-input-' + stage);
-    if (input) {
-      // إزالة أي listener قديم
-      input.replaceWith(input.cloneNode(true));
-      // جلب العنصر الجديد
-      const newInput = document.getElementById('file-input-' + stage);
-      if (newInput) {
-        newInput.addEventListener('change', function() {
-          handleStageUpload(stage, this);
-        });
-      }
-    }
-  });
+  // ربط الأزرار والـ inputs بعد تحميل HTML
+  setupStoreListeners();
 }
 
-// دالة الرفع
-async function handleStageUpload(stage, inputElement) {
-  if (!inputElement.files || !inputElement.files.length) return;
+function setupStoreListeners() {
+  // ربط أزرار الرفع
+  document.querySelectorAll('.upload-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const stage = this.getAttribute('data-stage');
+      const input = document.getElementById('store-input-' + stage);
+      if (input) {
+        input.value = ''; // تنظيف قبل الفتح
+        input.click();
+      }
+    });
+  });
 
-  const newFiles = [...storeFiles()];
-  let uploadedCount = 0;
+  // ربط الـ file inputs
+  document.querySelectorAll('input[type="file"][data-stage]').forEach(input => {
+    input.addEventListener('change', async function() {
+      const stage = this.getAttribute('data-stage');
+      const files = this.files;
+      
+      if (!files || !files.length) return;
+      
+      showToast('⏳ جاري رفع ' + files.length + ' ملفات...');
+      
+      const currentFiles = storeFiles();
+      let uploadedCount = 0;
 
-  for (let i = 0; i < inputElement.files.length; i++) {
-    const file = inputElement.files[i];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
 
-    if (file.size > 10 * 1024 * 1024) {
-      alert('الملف "' + file.name + '" كبير جداً (أكثر من 10 ميجا) - تم تخطيه');
-      continue;
-    }
+        if (file.size > 10 * 1024 * 1024) {
+          alert('⚠️ ' + file.name + ' كبير جداً (أكثر من 10 ميجا)');
+          continue;
+        }
 
-    try {
-      const ext = file.name.split('.').pop().toLowerCase();
-      let type = 'image';
-      if (ext === 'pdf') type = 'pdf';
-      else if (['doc', 'docx'].includes(ext)) type = 'doc';
-      else if (['ppt', 'pptx'].includes(ext)) type = 'ppt';
+        try {
+          const base64 = await fileToBase64(file);
+          const ext = file.name.split('.').pop().toLowerCase();
+          let type = 'image';
+          if (ext === 'pdf') type = 'pdf';
+          else if (['doc', 'docx'].includes(ext)) type = 'doc';
+          else if (['ppt', 'pptx'].includes(ext)) type = 'ppt';
 
-      const base64Data = await fileToBase64(file);
+          currentFiles.push({
+            id: gid(),
+            name: file.name,
+            type: type,
+            stage: stage,
+            date: new Date().toISOString().slice(0, 10),
+            data: base64
+          });
+          uploadedCount++;
+        } catch (err) {
+          console.error(err);
+        }
+      }
 
-      newFiles.push({
-        id: gid(),
-        name: file.name,
-        type: type,
-        stage: stage,
-        date: new Date().toISOString().slice(0, 10),
-        data: base64Data
-      });
-
-      uploadedCount++;
-    } catch (err) {
-      alert('فشل رفع: ' + file.name);
-    }
-  }
-
-  if (uploadedCount > 0) {
-    saveStore(newFiles);
-    showToast('✅ تم رفع ' + uploadedCount + ' ملفات لـ ' + stage);
-    addNotification('🗄️ ' + uploadedCount + ' ملفات جديدة في ' + stage);
-  }
-
-  // إعادة تحميل الصفحة
-  loadStore();
+      if (uploadedCount > 0) {
+        saveStore(currentFiles);
+        showToast('✅ تم رفع ' + uploadedCount + ' ملفات في ' + stage);
+        addNotification('🗄️ ' + uploadedCount + ' ملفات جديدة في ' + stage);
+        loadStore();
+      } else {
+        showToast('⚠️ لم يتم رفع أي ملف');
+      }
+      
+      this.value = '';
+    });
+  });
 }
 
 function renameFile(id) {
   const files = storeFiles();
   const file = files.find(f => f.id === id);
   if (!file) return;
-
-  const newName = prompt('الاسم الجديد للملف:', file.name);
-  if (!newName || newName.trim() === '') return;
-
+  const newName = prompt('الاسم الجديد:', file.name);
+  if (!newName) return;
   files[files.findIndex(f => f.id === id)].name = newName.trim();
   saveStore(files);
   showToast('✅ تم تغيير الاسم');
   loadStore();
 }
 
-function shareFile(id) {
-  const file = storeFiles().find(f => f.id === id);
-  if (file) shareText(`📁 ${file.name}\n📚 ${file.stage}\n📅 ${file.date}\n---\nCaeser of History`);
-}
-
 function deleteStoreFile(id) {
-  if (!confirm('حذف الملف من المخزن؟')) return;
+  if (!confirm('حذف الملف؟')) return;
   saveStore(storeFiles().filter(f => f.id !== id));
   showToast('🗑️ تم الحذف');
   loadStore();
+}
+
     }
 
     /* ========== HALL OF FAME ========== */
