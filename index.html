@@ -152,25 +152,167 @@
     .schedule-table td .schedule-item .si-delete:hover { opacity: 1; color: var(--danger); }
     .schedule-form-card { background: var(--card); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); margin-bottom: 22px; }
 
-    /* ========== STORE ========== */
-    .store-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
-    .store-stage-card { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: var(--shadow); border: 2px solid var(--border); transition: 0.35s; min-height: 320px; display: flex; flex-direction: column; }
-    .store-stage-card:hover { border-color: var(--primary); box-shadow: var(--shadow-lg); transform: translateY(-4px); }
-    .store-stage-card .stage-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 3px solid var(--primary); }
-    .store-stage-card .stage-header .stage-title { font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 8px; }
-    .store-stage-card .stage-header .stage-count { background: var(--bg); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; color: var(--text-light); }
-    .store-stage-card .stage-files { flex: 1; overflow-y: auto; max-height: 350px; margin-bottom: 12px; }
-    .store-stage-card .stage-files::-webkit-scrollbar { width: 4px; }
-    .store-stage-card .stage-files::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-    .store-file-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--bg); border-radius: 10px; margin-bottom: 8px; transition: 0.2s; gap: 8px; }
-    .store-file-item:hover { background: #e2e8f0; }
-    .store-file-item .file-info { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
-    .store-file-item .file-info .file-icon-small { font-size: 20px; flex-shrink: 0; }
-    .store-file-item .file-info .file-name-text { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .store-file-item .file-actions-mini { display: flex; gap: 4px; flex-shrink: 0; }
-    .store-file-item .file-actions-mini button { padding: 4px 8px; font-size: 11px; border-radius: 6px; }
-    .upload-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.3s; }
-    .upload-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(99,102,241,0.3); }
+    /*// ==================== STORE PAGE (FIXED 100%) ====================
+const STAGES = ['J4', 'J5', 'J6', 'M1', 'M2', 'M3', 'S1', 'S2', 'S3'];
+const STAGE_ICONS = {
+  'J4': '🎒', 'J5': '📚', 'J6': '✏️',
+  'M1': '🔬', 'M2': '📐', 'M3': '🧮',
+  'S1': '📖', 'S2': '📝', 'S3': '🎓'
+};
+const STAGE_COLORS = {
+  'J4': '#3b82f6', 'J5': '#10b981', 'J6': '#f59e0b',
+  'M1': '#ef4444', 'M2': '#8b5cf6', 'M3': '#ec4899',
+  'S1': '#6366f1', 'S2': '#14b8a6', 'S3': '#f97316'
+};
+
+function loadStore() {
+  const m = document.getElementById('main-content');
+  const files = storeFiles();
+
+  let h = `<div class="page"><h2>🗄️ المخزن التعليمي</h2>
+    <p style="color:var(--text-light);margin-bottom:20px;">الملفات مرتبة حسب المراحل الدراسية - اضغط على ✏️ لتعديل اسم أي ملف</p>
+    <div class="store-grid">`;
+
+  STAGES.forEach((stage, idx) => {
+    const stageFiles = files.filter(f => f.stage === stage);
+    const color = STAGE_COLORS[stage];
+
+    h += `
+    <div class="store-stage-card animate-scaleIn" style="animation-delay:${idx * 0.06}s; border-top: 5px solid ${color};">
+      <div class="stage-header" style="border-bottom-color: ${color};">
+        <div class="stage-title">
+          <span>${STAGE_ICONS[stage]}</span>
+          <span style="color:${color};">${stage}</span>
+        </div>
+        <div class="stage-count">${stageFiles.length} ملفات</div>
+      </div>
+      <div class="stage-files">`;
+
+    if (stageFiles.length === 0) {
+      h += `<div style="text-align:center;color:#94a3b8;padding:20px;">لا توجد ملفات</div>`;
+    } else {
+      stageFiles.forEach(f => {
+        const icon = f.type === 'pdf' ? '📄' : f.type === 'doc' ? '📝' : f.type === 'ppt' ? '📊' : '🖼️';
+        h += `
+        <div class="store-file-item">
+          <div class="file-info">
+            <span class="file-icon-small">${icon}</span>
+            <span class="file-name-text" title="${f.name}">${f.name}</span>
+          </div>
+          <div class="file-actions-mini">
+            <button class="btn btn-rename" onclick="renameFile('${f.id}')" title="تعديل الاسم">✏️</button>
+            <a href="${f.data}" download="${f.name}" class="btn btn-download" title="تحميل">📥</a>
+            <button class="btn btn-wa" onclick="shareFile('${f.id}')" title="واتساب">📱</button>
+            <button class="btn btn-del" onclick="deleteStoreFile('${f.id}')" title="حذف">🗑️</button>
+          </div>
+        </div>`;
+      });
+    }
+
+    h += `</div>
+      <div class="stage-upload">
+        <input type="file" id="file-input-${stage}" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.gif" multiple style="display:none;">
+        <button class="upload-btn" onclick="document.getElementById('file-input-${stage}').click()">
+          ⬆️ رفع ملفات ${stage}
+        </button>
+      </div>
+    </div>`;
+  });
+
+  h += `</div></div>`;
+  m.innerHTML = h;
+
+  // ربط الـ event listeners بعد ما الـ HTML يتحمل
+  STAGES.forEach(stage => {
+    const input = document.getElementById('file-input-' + stage);
+    if (input) {
+      // إزالة أي listener قديم
+      input.replaceWith(input.cloneNode(true));
+      // جلب العنصر الجديد
+      const newInput = document.getElementById('file-input-' + stage);
+      if (newInput) {
+        newInput.addEventListener('change', function() {
+          handleStageUpload(stage, this);
+        });
+      }
+    }
+  });
+}
+
+// دالة الرفع
+async function handleStageUpload(stage, inputElement) {
+  if (!inputElement.files || !inputElement.files.length) return;
+
+  const newFiles = [...storeFiles()];
+  let uploadedCount = 0;
+
+  for (let i = 0; i < inputElement.files.length; i++) {
+    const file = inputElement.files[i];
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert('الملف "' + file.name + '" كبير جداً (أكثر من 10 ميجا) - تم تخطيه');
+      continue;
+    }
+
+    try {
+      const ext = file.name.split('.').pop().toLowerCase();
+      let type = 'image';
+      if (ext === 'pdf') type = 'pdf';
+      else if (['doc', 'docx'].includes(ext)) type = 'doc';
+      else if (['ppt', 'pptx'].includes(ext)) type = 'ppt';
+
+      const base64Data = await fileToBase64(file);
+
+      newFiles.push({
+        id: gid(),
+        name: file.name,
+        type: type,
+        stage: stage,
+        date: new Date().toISOString().slice(0, 10),
+        data: base64Data
+      });
+
+      uploadedCount++;
+    } catch (err) {
+      alert('فشل رفع: ' + file.name);
+    }
+  }
+
+  if (uploadedCount > 0) {
+    saveStore(newFiles);
+    showToast('✅ تم رفع ' + uploadedCount + ' ملفات لـ ' + stage);
+    addNotification('🗄️ ' + uploadedCount + ' ملفات جديدة في ' + stage);
+  }
+
+  // إعادة تحميل الصفحة
+  loadStore();
+}
+
+function renameFile(id) {
+  const files = storeFiles();
+  const file = files.find(f => f.id === id);
+  if (!file) return;
+
+  const newName = prompt('الاسم الجديد للملف:', file.name);
+  if (!newName || newName.trim() === '') return;
+
+  files[files.findIndex(f => f.id === id)].name = newName.trim();
+  saveStore(files);
+  showToast('✅ تم تغيير الاسم');
+  loadStore();
+}
+
+function shareFile(id) {
+  const file = storeFiles().find(f => f.id === id);
+  if (file) shareText(`📁 ${file.name}\n📚 ${file.stage}\n📅 ${file.date}\n---\nCaeser of History`);
+}
+
+function deleteStoreFile(id) {
+  if (!confirm('حذف الملف من المخزن؟')) return;
+  saveStore(storeFiles().filter(f => f.id !== id));
+  showToast('🗑️ تم الحذف');
+  loadStore();
+    }
 
     /* ========== HALL OF FAME ========== */
     .hall-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
