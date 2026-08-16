@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>أستاذ محمد علام - تاريخ</title>
   <meta name="theme-color" content="#6366f1">
-  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogItij2K3Yp9ixINmF2LHZhdmK2Kkg2KfZhNi52YrYp9mK2KkiLAogICJzaG9ydF9uYW1lIjogItij2K3Yp9ixINmF2LHZhdmK2KkiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2YxZjVmOSIsCiAgInRoZW1lX2NvbG9yIjogIiM2MzY2ZjEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsPHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJz48dGV4dCB5PScuOWVtJyBmb250LXNpemU9JzkwJz7wn5OcPC90ZXh0Pjwvc3ZnPiIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text x='50' y='55' font-size='40' text-anchor='middle' fill='white' font-weight='bold'>MH</text></svg>">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -35,7 +35,6 @@
     .animate-bounceIn { animation: bounceIn 0.6s ease-out; }
     .stagger-1 { animation-delay: 0.05s; } .stagger-2 { animation-delay: 0.1s; } .stagger-3 { animation-delay: 0.15s; }
     .stagger-4 { animation-delay: 0.2s; } .stagger-5 { animation-delay: 0.25s; } .stagger-6 { animation-delay: 0.3s; }
-    .stagger-7 { animation-delay: 0.35s; } .stagger-8 { animation-delay: 0.4s; }
 
     .app-container { display: flex; min-height: 100vh; }
 
@@ -62,7 +61,6 @@
     .sidebar .bottom { margin-top: auto; padding-top: 12px; border-top: 2px solid rgba(255,255,255,0.15); display: flex; flex-direction: column; gap: 6px; }
     .sidebar .bottom button { width: 100%; padding: 11px; border: none; border-radius: 10px; cursor: pointer; font-weight: 800; font-size: 13px; color: #fff; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-ex { background: #059669; } .btn-im { background: #8b5cf6; } .btn-theme { background: #f59e0b; }
-    .btn-cloud-up { background: #0ea5e9; } .btn-cloud-down { background: #f97316; }
 
     .content { flex: 1; margin-right: var(--sidebar-w); padding: 16px; min-height: 100vh; display: flex; flex-direction: column; }
 
@@ -85,14 +83,19 @@
     .dash-card .ttl { font-weight: 900; font-size: 15px; }
     .dash-card .sub { font-size: 11px; color: var(--text-light); }
 
+    /* Schedule - أكبر وأجمل */
     .schedule-panel { background: var(--card); border-radius: 14px; padding: 14px; box-shadow: var(--shadow); max-height: calc(100vh - 100px); overflow-y: auto; position: sticky; top: 16px; }
     .schedule-panel h3 { font-size: 14px; margin-bottom: 10px; display: flex; gap: 5px; justify-content: space-between; flex-wrap: wrap; }
-    .schedule-table { width: 100%; border-collapse: collapse; }
-    .schedule-table th { background: var(--primary); color: #fff; padding: 8px 4px; font-size: 11px; }
-    .schedule-table td { padding: 4px; text-align: center; border: 1px solid var(--border); vertical-align: top; }
-    .schedule-item { background: #f0f0ff; padding: 3px 4px; border-radius: 4px; margin: 2px 0; font-size: 9px; text-align: right; border-right: 2px solid var(--primary); }
-    .schedule-item .si-del { cursor: pointer; font-size: 9px; opacity: 0.4; }
-    .empty-day { color: #94a3b8; font-size: 9px; padding: 4px; cursor: pointer; }
+    .schedule-table { width: 100%; border-collapse: separate; border-spacing: 3px; }
+    .schedule-table th { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; padding: 12px 6px; font-size: 13px; border-radius: 8px; }
+    .schedule-table td { padding: 8px; text-align: center; border: 2px solid #e2e8f0; border-radius: 8px; vertical-align: top; min-height: 80px; background: #fafafe; }
+    .schedule-table td:hover { border-color: #6366f1; background: #f5f3ff; }
+    .schedule-item { background: linear-gradient(135deg, #ffffff, #f5f3ff); padding: 8px; border-radius: 6px; margin: 3px 0; font-size: 11px; text-align: right; border-right: 3px solid #6366f1; box-shadow: 0 2px 5px rgba(99,102,241,0.1); position: relative; }
+    .schedule-item .si-time { font-weight: 800; color: #4f46e5; font-size: 12px; }
+    .schedule-item .si-group { color: #1e293b; font-size: 11px; }
+    .schedule-item .si-del { position: absolute; left: 4px; top: 4px; cursor: pointer; font-size: 10px; opacity: 0.4; }
+    .empty-day { color: #94a3b8; font-size: 10px; padding: 12px; cursor: pointer; border-radius: 6px; }
+    .empty-day:hover { background: #f5f3ff; color: #6366f1; }
 
     .page { background: var(--card); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); flex: 1; }
     .page h2 { margin-bottom: 16px; font-size: 22px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -111,7 +114,7 @@
     .btn-wa { background: #25D366; } .btn-save { background: #10b981; } .btn-back { background: #64748b; }
     .btn-share { background: #3b82f6; } .btn-excel { background: #059669; } .btn-pdf { background: #dc2626; }
     .btn-img { background: #f59e0b; } .btn-ai { background: #8b5cf6; } .btn-print { background: #f59e0b; }
-    .btn-ocr { background: #f97316; } .btn-word { background: #0ea5e9; } .btn-bulk { background: #059669; }
+    .btn-schedule-add { background: #6366f1; }
 
     .alert { background: #fef3c7; padding: 10px; border-radius: 8px; margin: 8px 0; color: #92400e; font-weight: 700; border-right: 3px solid #f59e0b; }
     .notification { background: #fee2e2; padding: 8px 10px; border-radius: 8px; margin: 4px 0; color: #991b1b; display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
@@ -134,15 +137,21 @@
     .hall-card .name { font-weight: 800; font-size: 15px; margin: 6px 0; }
     .rank-1 { color: #f59e0b; } .rank-2 { color: #94a3b8; } .rank-3 { color: #cd853f; }
 
-    @media (max-width: 1200px) { .grid, .store-grid, .hall-grid { grid-template-columns: repeat(2, 1fr); } .dash-layout { grid-template-columns: 1fr 280px; } }
+    .board-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .board-card { background: var(--card); border-radius: 12px; padding: 15px; box-shadow: var(--shadow); text-align: center; border: 2px solid var(--border); transition: 0.3s; }
+    .board-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+    .board-card .board-icon { font-size: 50px; margin-bottom: 10px; }
+    .board-card .board-name { font-weight: 700; margin-bottom: 10px; word-break: break-all; font-size: 13px; }
+
+    @media (max-width: 1200px) { .grid, .store-grid, .hall-grid, .board-grid { grid-template-columns: repeat(2, 1fr); } .dash-layout { grid-template-columns: 1fr 280px; } }
     @media (max-width: 800px) { :root { --sidebar-w: 280px; } .dash-layout { grid-template-columns: 1fr; } }
-    @media (max-width: 600px) { .app-container { flex-direction: column; } .sidebar { position: relative; width: 100%; min-width: 100%; } .content { margin-right: 0; } .grid, .stats-row, .store-grid, .hall-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .app-container { flex-direction: column; } .sidebar { position: relative; width: 100%; min-width: 100%; } .content { margin-right: 0; } .grid, .stats-row, .store-grid, .hall-grid, .board-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 <div class="app-container">
   <nav class="sidebar">
-    <div class="logo"><span class="sicon">📜</span><h2>أستاذ محمد علام</h2><p>مدرس تاريخ</p></div>
+    <div class="logo"><span class="sicon">🏛️</span><h2>أستاذ محمد علام</h2><p>مدرس تاريخ</p></div>
     <nav>
       <span class="nav-label">القائمة</span>
       <button class="active" onclick="navigateTo('dashboard')"><span class="nav-icon">🏠</span> الرئيسية</button>
@@ -153,9 +162,8 @@
       <button onclick="navigateTo('payments')"><span class="nav-icon">💰</span> المدفوعات</button>
       <button onclick="navigateTo('exams')"><span class="nav-icon">📝</span> الامتحانات</button>
       <button onclick="navigateTo('store')"><span class="nav-icon">🗄️</span> المخزن</button>
-      <button onclick="navigateTo('questionbank')"><span class="nav-icon">📚</span> بنك الأسئلة</button>
+      <button onclick="navigateTo('board')"><span class="nav-icon">🖼️</span> السبورة</button>
       <button onclick="navigateTo('homework')"><span class="nav-icon">📖</span> الواجبات</button>
-      <button onclick="navigateTo('tasks')"><span class="nav-icon">✅</span> المهام</button>
       <button onclick="navigateTo('halloffame')"><span class="nav-icon">🏆</span> لوحة الشرف</button>
       <button onclick="navigateTo('aireport')"><span class="nav-icon">🤖</span> تحليل AI</button>
       <button onclick="navigateTo('reports')"><span class="nav-icon">📊</span> التقارير</button>
@@ -164,8 +172,6 @@
       <button class="btn-ex" onclick="exportAllData()">💾 تصدير</button>
       <button class="btn-im" onclick="document.getElementById('ifile').click()">📂 استيراد</button>
       <input type="file" id="ifile" accept=".json" style="display:none" onchange="importAllData(event)">
-      <button class="btn-cloud-up" onclick="syncToCloud()">☁️ رفع للسحابة</button>
-      <button class="btn-cloud-down" onclick="syncFromCloud()">⬇️ تحميل من السحابة</button>
       <button class="btn-theme" onclick="toggleTheme()">🌓 وضع ليلي</button>
     </div>
   </nav>
@@ -174,7 +180,7 @@
 
 <script>
 // ==================== DATA LAYER ====================
-const PF = 'mohamed_allam_v3_';
+const PF = 'mohamed_allam_final_';
 function gid() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
 function get(k) { return JSON.parse(localStorage.getItem(PF + k) || '[]'); }
 function set(k, v) { localStorage.setItem(PF + k, JSON.stringify(v)); }
@@ -184,75 +190,13 @@ const attendance = () => get('attendance'), saveAttendance = (v) => set('attenda
 const payments = () => get('payments'), savePayments = (v) => set('payments', v);
 const exams = () => get('exams'), saveExams = (v) => set('exams', v);
 const schedule = () => get('schedule'), saveSchedule = (v) => set('schedule', v);
-const questionBank = () => get('questionbank'), saveQuestionBank = (v) => set('questionbank', v);
 const homework = () => get('homework'), saveHomework = (v) => set('homework', v);
-const tasks = () => get('tasks'), saveTasks = (v) => set('tasks', v);
 const favorites = () => get('favorites'), saveFavorites = (v) => set('favorites', v);
 const notifications = () => get('notifications'), saveNotifications = (v) => set('notifications', v);
+const boardItems = () => get('board'), saveBoard = (v) => set('board', v);
 
 const DAYS = ['الجمعة', 'السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
 if (!localStorage.getItem(PF + 'schedule')) { const init = {}; DAYS.forEach(d => init[d] = []); saveSchedule(init); }
-
-// ==================== CLOUD SYNC ====================
-const JSONBIN_API_KEY = '$2a$10$2wNPWeWkHtS4SvnV99JNC.cQhf6a7MlIYT01ER.hPqcWB6I4TqLw6';
-const JSONBIN_BIN_ID = '6a7f22e7da38895dfee4c76c';
-
-async function syncToCloud() {
-  const data = { students: students(), groups: groups(), attendance: attendance(), payments: payments(), exams: exams(), schedule: schedule(), questionBank: questionBank(), homework: homework(), tasks: tasks(), favorites: favorites(), lastSync: new Date().toISOString() };
-  showToast('⏳ جاري الرفع...');
-  try {
-    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_API_KEY },
-      body: JSON.stringify(data)
-    });
-    if (response.ok) { showToast('☁️ تم الرفع للسحابة'); return true; }
-    showToast('❌ فشل الرفع');
-  } catch(err) { showToast('❌ فشل - تأكد من الإنترنت'); }
-  return false;
-}
-
-async function syncFromCloud() {
-  showToast('⏳ جاري التحميل...');
-  try {
-    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-      headers: { 'X-Master-Key': JSONBIN_API_KEY }
-    });
-    if (response.ok) {
-      const result = await response.json();
-      const data = result.record;
-      if (data.students) saveStudents(data.students);
-      if (data.groups) saveGroups(data.groups);
-      if (data.attendance) saveAttendance(data.attendance);
-      if (data.payments) savePayments(data.payments);
-      if (data.exams) saveExams(data.exams);
-      if (data.schedule) saveSchedule(data.schedule);
-      if (data.questionBank) saveQuestionBank(data.questionBank);
-      if (data.homework) saveHomework(data.homework);
-      if (data.tasks) saveTasks(data.tasks);
-      if (data.favorites) saveFavorites(data.favorites);
-      showToast('☁️ تم التحميل من السحابة');
-      navigateTo('dashboard');
-      return true;
-    }
-    showToast('❌ فشل التحميل');
-  } catch(err) { showToast('❌ فشل - تأكد من الإنترنت'); }
-  return false;
-}
-
-window.addEventListener('DOMContentLoaded', async () => {
-  await syncFromCloud();
-  navigateTo('dashboard');
-});
-
-setInterval(() => { syncToCloud(); }, 300000);
-
-const originalSet = set;
-set = function(key, value) {
-  originalSet(key, value);
-  clearTimeout(window._syncTimeout);
-  window._syncTimeout = setTimeout(() => { syncToCloud(); }, 3000);
-};
 
 // ==================== INDEXEDDB ====================
 const DB_NAME = 'MohamedAllamStore', DB_VERSION = 1;
@@ -322,7 +266,7 @@ function sendTemplate(template, studentId) { const s = studentById(studentId); i
 
 async function exportAllData() {
   const storeData = await getStoreFiles();
-  const d = { students: students(), groups: groups(), attendance: attendance(), payments: payments(), exams: exams(), store: storeData, schedule: schedule(), questionBank: questionBank(), homework: homework(), tasks: tasks(), favorites: favorites() };
+  const d = { students: students(), groups: groups(), attendance: attendance(), payments: payments(), exams: exams(), store: storeData, schedule: schedule(), homework: homework(), favorites: favorites(), board: boardItems() };
   const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'mohamed_allam_backup.json'; a.click();
   showToast('✅ تم التصدير');
@@ -336,15 +280,15 @@ async function importAllData(e) {
       if (d.students) saveStudents(d.students); if (d.groups) saveGroups(d.groups);
       if (d.attendance) saveAttendance(d.attendance); if (d.payments) savePayments(d.payments);
       if (d.exams) saveExams(d.exams); if (d.store) await saveStoreFiles(d.store);
-      if (d.schedule) saveSchedule(d.schedule); if (d.questionBank) saveQuestionBank(d.questionBank);
-      if (d.homework) saveHomework(d.homework); if (d.tasks) saveTasks(d.tasks); if (d.favorites) saveFavorites(d.favorites);
+      if (d.schedule) saveSchedule(d.schedule); if (d.homework) saveHomework(d.homework); if (d.favorites) saveFavorites(d.favorites); if (d.board) saveBoard(d.board);
       showToast('✅ تم الاستيراد'); navigateTo('dashboard');
     } catch(er) { alert('❌ فشل'); }
   };
   r.readAsText(f);
 }
 
-function navigateTo(page) { const fn = window['load' + page.charAt(0).toUpperCase() + page.slice(1)]; if (fn) fn(); document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active')); const titles = { dashboard: 'الرئيسية', students: 'الطلاب', groups: 'المجموعات', attendance: 'الحضور', payments: 'المدفوعات', exams: 'الامتحانات', store: 'المخزن', schedule: 'الجدول', questionbank: 'بنك الأسئلة', homework: 'الواجبات', tasks: 'المهام', halloffame: 'لوحة الشرف', aireport: 'تحليل AI', reports: 'التقارير' }; document.querySelectorAll('.sidebar nav button').forEach(b => { if (b.textContent.includes(titles[page]||'')) b.classList.add('active'); }); }
+function navigateTo(page) { const fn = window['load' + page.charAt(0).toUpperCase() + page.slice(1)]; if (fn) fn(); document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active')); const titles = { dashboard: 'الرئيسية', students: 'الطلاب', groups: 'المجموعات', attendance: 'الحضور', payments: 'المدفوعات', exams: 'الامتحانات', store: 'المخزن', schedule: 'الجدول', board: 'السبورة', homework: 'الواجبات', halloffame: 'لوحة الشرف', aireport: 'تحليل AI', reports: 'التقارير' }; document.querySelectorAll('.sidebar nav button').forEach(b => { if (b.textContent.includes(titles[page]||'')) b.classList.add('active'); }); }
+window.addEventListener('DOMContentLoaded', () => navigateTo('dashboard'));
 
 // ==================== DASHBOARD ====================
 function loadDashboard() {
@@ -356,8 +300,9 @@ function loadDashboard() {
   const ov = st.filter(s => pay.filter(p => p.studentId === s.id).length === 0);
   const notifs = notifications().filter(n => !n.seen).slice(-3);
   const sch = schedule();
+  const hwCount = homework().filter(h => h.status !== 'done').length;
 
-  let h = `<div class="dash-header"><h1>📜 أهلاً بك أستاذ محمد علام</h1><p>لوحة تحكم مدرس التاريخ</p></div>
+  let h = `<div class="dash-header"><h1>🏛️ أهلاً بك أستاذ محمد علام</h1><p>لوحة تحكم مدرس التاريخ</p></div>
   <div class="dash-layout">
     <div>
       <div class="stats-row">
@@ -365,6 +310,8 @@ function loadDashboard() {
         <div class="stat-card"><div class="sicon" style="background:#d1fae5;">👥</div><div><div class="sval">${gr.length}</div><div class="slbl">مجموعة</div></div></div>
         <div class="stat-card"><div class="sicon" style="background:#fef3c7;">📋</div><div><div class="sval">${pres}</div><div class="slbl">حضور</div></div></div>
         <div class="stat-card"><div class="sicon" style="background:#ede9fe;">💰</div><div><div class="sval">${tot} ج.م</div><div class="slbl">مدفوعات</div></div></div>
+        <div class="stat-card"><div class="sicon" style="background:#fce7f3;">📖</div><div><div class="sval">${hwCount}</div><div class="slbl">واجبات</div></div></div>
+        <div class="stat-card"><div class="sicon" style="background:#fff7ed;">🖼️</div><div><div class="sval">${boardItems().length}</div><div class="slbl">سبورة</div></div></div>
       </div>`;
   if (ov.length) h += `<div class="alert">⚠️ ${ov.length} طلاب لم يسددوا: ${ov.map(s=>s.name).join('، ')}</div>`;
   if (notifs.length > 0) { h += `<div>`; notifs.forEach(n => h += `<div class="notification" onclick="dismissNotification('${n.id}', this)">🔔 ${n.msg}</div>`); h += `</div>`; }
@@ -374,7 +321,7 @@ function loadDashboard() {
     <div class="dash-card" onclick="navigateTo('attendance')"><span class="ico">📋</span><div class="ttl">الحضور</div><div class="sub">${pres} حاضر</div></div>
     <div class="dash-card" onclick="navigateTo('payments')"><span class="ico">💰</span><div class="ttl">المدفوعات</div><div class="sub">${tot} ج.م</div></div>
     <div class="dash-card" onclick="navigateTo('exams')"><span class="ico">📝</span><div class="ttl">الامتحانات</div><div class="sub">${ex.length} امتحان</div></div>
-    <div class="dash-card" onclick="navigateTo('store')"><span class="ico">🗄️</span><div class="ttl">المخزن</div><div class="sub">ملفات</div></div>
+    <div class="dash-card" onclick="navigateTo('board')"><span class="ico">🖼️</span><div class="ttl">السبورة</div><div class="sub">${boardItems().length} صورة</div></div>
     <div class="dash-card" onclick="navigateTo('halloffame')"><span class="ico">🏆</span><div class="ttl">لوحة الشرف</div><div class="sub">الأفضل</div></div>
     <div class="dash-card" onclick="navigateTo('aireport')"><span class="ico">🤖</span><div class="ttl">تحليل AI</div><div class="sub">توقعات</div></div>
     <div class="dash-card" onclick="navigateTo('reports')"><span class="ico">📊</span><div class="ttl">التقارير</div><div class="sub">Excel/PDF</div></div>
@@ -393,10 +340,10 @@ function loadDashboard() {
   DAYS.forEach(d => h += `<th>${d}</th>`);
   h += `</tr></thead><tbody><tr>`;
   DAYS.forEach(d => {
-    h += `<td><span onclick="navigateTo('schedule')">${d}</span>`;
+    h += `<td><span onclick="navigateTo('schedule')" style="cursor:pointer;">${d}</span>`;
     const items = sch[d] || [];
     if (items.length === 0) h += `<div class="empty-day" onclick="navigateTo('schedule')">—</div>`;
-    else items.forEach((item, i) => h += `<div class="schedule-item"><span class="si-del" onclick="deleteScheduleItem('${d}', ${i}); event.stopPropagation();">🗑️</span>🕐 ${item.time}<br>👥 ${item.group}</div>`);
+    else items.forEach((item, i) => h += `<div class="schedule-item"><span class="si-del" onclick="deleteScheduleItem('${d}', ${i}); event.stopPropagation();">🗑️</span><div class="si-time">🕐 ${item.time}</div><div class="si-group">👥 ${item.group}</div></div>`);
     h += `</td>`;
   });
   h += `</tr></tbody></table></div></div>`;
@@ -405,7 +352,7 @@ function loadDashboard() {
 
 function dismissNotification(id, element) { element.classList.add('dismissing'); setTimeout(() => { const n = notifications(); const idx = n.findIndex(x => x.id === id); if (idx > -1) { n[idx].seen = true; saveNotifications(n); } if (element.parentNode) element.remove(); }, 400); }
 
-// ==================== SCHEDULE PAGE (FULL) ====================
+// ==================== SCHEDULE PAGE ====================
 function loadSchedule() {
   const m = document.getElementById('main-content');
   const sch = schedule();
@@ -419,23 +366,23 @@ function loadSchedule() {
     </div>
   </h2>
   <div id="schedule-full">
-    <table style="width:100%;border-collapse:collapse;">
+    <table style="width:100%;border-collapse:separate;border-spacing:5px;">
       <thead><tr>`;
-  DAYS.forEach(d => h += `<th style="background:var(--primary);color:#fff;padding:16px;font-size:18px;">${d}</th>`);
+  DAYS.forEach(d => h += `<th style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:18px 10px;font-size:18px;border-radius:10px;">${d}</th>`);
   h += `</tr></thead><tbody><tr>`;
   DAYS.forEach(d => {
-    h += `<td style="padding:12px;vertical-align:top;border:1px solid var(--border);min-height:200px;">`;
-    h += `<div style="font-weight:900;color:var(--primary);margin-bottom:12px;cursor:pointer;font-size:16px;" onclick="addScheduleItem('${d}')">${d} ＋</div>`;
+    h += `<td style="padding:15px;vertical-align:top;border:2px solid #e2e8f0;border-radius:10px;min-height:200px;background:#fafafe;">`;
+    h += `<div style="font-weight:900;color:#6366f1;margin-bottom:12px;cursor:pointer;font-size:16px;" onclick="addScheduleItem('${d}')">${d} ＋</div>`;
     const items = sch[d] || [];
     if (items.length === 0) {
       h += `<div style="color:#94a3b8;padding:25px;cursor:pointer;" onclick="addScheduleItem('${d}')">＋ إضافة حصة</div>`;
     } else {
       items.forEach((item, i) => {
-        h += `<div style="background:#f0f0ff;padding:14px;border-radius:10px;margin:8px 0;position:relative;border-right:5px solid var(--primary);">
+        h += `<div style="background:linear-gradient(135deg,#ffffff,#f5f3ff);padding:15px;border-radius:10px;margin:8px 0;position:relative;border-right:5px solid #6366f1;box-shadow:0 2px 8px rgba(99,102,241,0.15);">
           <span style="position:absolute;left:10px;top:10px;cursor:pointer;font-size:18px;" onclick="deleteScheduleItem('${d}', ${i}); event.stopPropagation();">🗑️</span>
-          <div style="font-size:16px;font-weight:800;">🕐 ${item.time}</div>
+          <div style="font-size:16px;font-weight:800;color:#4f46e5;">🕐 ${item.time}</div>
           <div style="font-size:15px;margin:4px 0;">👥 ${item.group}</div>
-          <div style="font-size:13px;color:var(--text-light);">📚 ${item.subject || 'تاريخ'}</div>
+          <div style="font-size:13px;color:#64748b;">📚 ${item.subject || 'تاريخ'}</div>
         </div>`;
       });
     }
@@ -482,6 +429,105 @@ function addScheduleItem(dayName) {
 function deleteScheduleItem(day, index) {
   const sch = schedule();
   if (sch[day]) { sch[day].splice(index, 1); saveSchedule(sch); showToast('🗑️ تم الحذف'); loadSchedule(); }
+}
+
+// ==================== BOARD PAGE (السبورة) ====================
+function loadBoard() {
+  const m = document.getElementById('main-content');
+  const items = boardItems();
+
+  let h = `<div class="page"><h2>🖼️ السبورة
+    <div class="page-actions">
+      <button class="btn btn-img" onclick="shareAsImage('board-content', 'السبورة')">📸 صورة</button>
+      <button class="btn btn-pdf" onclick="shareAsPDF('board-content', 'السبورة')">📄 PDF</button>
+    </div>
+  </h2>
+  <div id="board-content">
+    <form id="bf">
+      <label class="file-label" for="bfile" style="padding:11px 16px;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;cursor:pointer;">📤 ارفع صورة أو ورقة</label>
+      <input type="file" id="bfile" accept="image/*,.pdf" multiple style="display:none;" onchange="document.getElementById('bfname').textContent = this.files.length + ' ملفات'">
+      <span id="bfname" style="font-size:13px;"></span>
+      <button type="submit">⬆️ رفع</button>
+    </form>
+    <div class="board-grid">`;
+
+  if (items.length === 0) {
+    h += '<p style="text-align:center;padding:30px;">لا توجد صور - ارفع أول ورقة</p>';
+  } else {
+    items.forEach(item => {
+      h += `
+      <div class="board-card">
+        <div class="board-icon">${item.type === 'pdf' ? '📄' : '🖼️'}</div>
+        <div class="board-name">${item.name}</div>
+        <div style="font-size:11px;color:var(--text-light);margin-bottom:10px;">${item.date}</div>
+        <div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
+          <a href="${item.data}" download="${item.name}" class="btn btn-download">📥</a>
+          <button class="btn btn-pdf" onclick="convertBoardToPDF('${item.id}')">📄 PDF</button>
+          <button class="btn btn-img" onclick="convertBoardToImage('${item.id}')">📸 صورة</button>
+          <button class="btn btn-del" onclick="deleteBoardItem('${item.id}')">🗑️</button>
+        </div>
+      </div>`;
+    });
+  }
+
+  h += `</div></div></div>`;
+  m.innerHTML = h;
+
+  document.getElementById('bf').onsubmit = async function(e) {
+    e.preventDefault();
+    const fileInput = document.getElementById('bfile');
+    if (!fileInput.files.length) return;
+    
+    const items = boardItems();
+    for (const file of fileInput.files) {
+      if (file.size > 20 * 1024 * 1024) {
+        alert('⚠️ ' + file.name + ' كبير جداً');
+        continue;
+      }
+      const data = await fileToBase64(file);
+      const ext = file.name.split('.').pop().toLowerCase();
+      items.push({
+        id: gid(),
+        name: file.name,
+        type: ext === 'pdf' ? 'pdf' : 'image',
+        date: new Date().toISOString().slice(0, 10),
+        data: data
+      });
+    }
+    saveBoard(items);
+    showToast('✅ تم الرفع');
+    loadBoard();
+  };
+}
+
+function convertBoardToPDF(id) {
+  const items = boardItems();
+  const item = items.find(x => x.id === id);
+  if (!item) return;
+  
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  doc.addImage(item.data, item.type === 'pdf' ? 'PDF' : 'PNG', 10, 10, 190, 280);
+  doc.save(item.name.replace(/\.[^.]+$/, '') + '.pdf');
+  showToast('✅ تم التحويل PDF');
+}
+
+function convertBoardToImage(id) {
+  const items = boardItems();
+  const item = items.find(x => x.id === id);
+  if (!item) return;
+  
+  const link = document.createElement('a');
+  link.download = item.name.replace(/\.[^.]+$/, '') + '.png';
+  link.href = item.data;
+  link.click();
+  showToast('✅ تم التحميل كصورة');
+}
+
+function deleteBoardItem(id) {
+  if (!confirm('حذف؟')) return;
+  saveBoard(boardItems().filter(x => x.id !== id));
+  loadBoard();
 }// ==================== STUDENTS PAGE ====================
 function loadStudents() {
   const m = document.getElementById('main-content'), gr = groups();
@@ -523,7 +569,7 @@ function filterStudentList() {
     list.sort((a, b) => {
       const ga = gr.find(x => x.id === a.groupId);
       const gb = gr.find(x => x.id === b.groupId);
-      return (ga?.name || '') .localeCompare(gb?.name || '', 'ar');
+      return (ga?.name || '').localeCompare(gb?.name || '', 'ar');
     });
   }
   return list;
@@ -754,8 +800,8 @@ function loadExams() {
       <input type="text" id="en" placeholder="اسم الامتحان" required>
       <input type="number" id="esc" placeholder="الدرجة" required>
       <input type="date" id="ed" required>
-      <label class="file-label" for="efile">📎 ملف</label>
-      <input type="file" id="efile" accept=".pdf,image/*" onchange="document.getElementById('fname').textContent=this.files[0]?.name||''">
+      <label class="file-label" for="efile" style="padding:11px 16px;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;cursor:pointer;">📎 ملف</label>
+      <input type="file" id="efile" accept=".pdf,image/*" style="display:none;" onchange="document.getElementById('fname').textContent=this.files[0]?.name||''">
       <span id="fname"></span>
       <button type="submit">➕ تسجيل</button>
     </form>
@@ -846,35 +892,6 @@ async function loadStore() {
 async function renameFile(id) { const files = await getStoreFiles(); const file = files.find(f => f.id === id); if (!file) return; const newName = prompt('الاسم الجديد:', file.name); if (!newName) return; files[files.findIndex(f => f.id === id)].name = newName.trim(); await saveStoreFiles(files); showToast('✅ تم التغيير'); loadStore(); }
 async function deleteStoreFile(id) { if (!confirm('حذف؟')) return; const files = await getStoreFiles(); await saveStoreFiles(files.filter(f => f.id !== id)); loadStore(); }
 
-// ==================== QUESTION BANK ====================
-function loadQuestionbank() {
-  const m = document.getElementById('main-content');
-  const qb = questionBank();
-  let h = `<div class="page"><h2>📚 بنك الأسئلة</h2>
-    <form id="qbf">
-      <select id="qb-stage"><option value="">المرحلة</option>${STAGES.map(s=>`<option value="${s}">${s}</option>`).join('')}</select>
-      <input type="text" id="qb-lesson" placeholder="الدرس">
-      <input type="text" id="qb-question" placeholder="السؤال" required>
-      <button type="submit">➕ إضافة</button>
-    </form>
-    <table><thead><tr><th>المرحلة</th><th>الدرس</th><th>السؤال</th><th>حذف</th></tr></thead><tbody>`;
-  qb.forEach(q => h += `<tr><td>${q.stage||'—'}</td><td>${q.lesson||'—'}</td><td style="text-align:right;">${q.question}</td><td><button class="btn btn-del" onclick="deleteQuestion('${q.id}')">🗑️</button></td></tr>`);
-  if (!qb.length) h += '<tr><td colspan="4">لا توجد أسئلة</td></tr>';
-  h += '</tbody></table></div>';
-  m.innerHTML = h;
-  document.getElementById('qbf').onsubmit = function(e) {
-    e.preventDefault();
-    const stage = document.getElementById('qb-stage').value;
-    const lesson = document.getElementById('qb-lesson').value.trim();
-    const question = document.getElementById('qb-question').value.trim();
-    if (!question) return;
-    saveQuestionBank([...questionBank(), { id: gid(), stage, lesson, question }]);
-    showToast('✅ تمت الإضافة');
-    loadQuestionbank();
-  };
-}
-function deleteQuestion(id) { if (!confirm('حذف؟')) return; saveQuestionBank(questionBank().filter(q => q.id !== id)); loadQuestionbank(); }
-
 // ==================== HOMEWORK ====================
 function loadHomework() {
   const m = document.getElementById('main-content');
@@ -909,32 +926,6 @@ function loadHomework() {
 }
 function toggleHomework(id) { const hw = homework(); const idx = hw.findIndex(h => h.id === id); if (idx > -1) { hw[idx].status = hw[idx].status === 'done' ? 'pending' : 'done'; saveHomework(hw); loadHomework(); } }
 function deleteHomework(id) { if (!confirm('حذف؟')) return; saveHomework(homework().filter(h => h.id !== id)); loadHomework(); }
-
-// ==================== TASKS ====================
-function loadTasks() {
-  const m = document.getElementById('main-content');
-  const taskList = tasks();
-  let h = `<div class="page"><h2>✅ المهام</h2>
-    <form id="tf">
-      <input type="text" id="task-desc" placeholder="المهمة" required>
-      <button type="submit">➕ إضافة</button>
-    </form>
-    <table><thead><tr><th>المهمة</th><th>الحالة</th><th>حذف</th></tr></thead><tbody>`;
-  taskList.forEach(t => h += `<tr><td>${t.description}</td><td><button class="btn ${t.done ? 'btn-save' : 'btn-edit'}" onclick="toggleTask('${t.id}')">${t.done ? '✅ تم' : '⏳ متبقي'}</button></td><td><button class="btn btn-del" onclick="deleteTask('${t.id}')">🗑️</button></td></tr>`);
-  if (!taskList.length) h += '<tr><td colspan="3">لا توجد مهام</td></tr>';
-  h += '</tbody></table></div>';
-  m.innerHTML = h;
-  document.getElementById('tf').onsubmit = function(e) {
-    e.preventDefault();
-    const desc = document.getElementById('task-desc').value.trim();
-    if (!desc) return;
-    saveTasks([...tasks(), { id: gid(), description: desc, done: false }]);
-    showToast('✅ تمت الإضافة');
-    loadTasks();
-  };
-}
-function toggleTask(id) { const taskList = tasks(); const idx = taskList.findIndex(t => t.id === id); if (idx > -1) { taskList[idx].done = !taskList[idx].done; saveTasks(taskList); loadTasks(); } }
-function deleteTask(id) { if (!confirm('حذف؟')) return; saveTasks(tasks().filter(t => t.id !== id)); loadTasks(); }
 
 // ==================== HALL OF FAME ====================
 function loadHalloffame() {
